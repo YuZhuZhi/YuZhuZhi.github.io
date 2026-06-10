@@ -2,9 +2,13 @@
 #import "@preview/physica:0.9.8": *
 #set math.mat(delim: "[")
 #show: template.with(
-  title: "量子计算(一)——前置知识",
-  description: "量子计算的前置知识介绍。",
+    title: "量子计算(一)——前置知识",
+    description: "量子计算的前置知识介绍。",
 )
+
+#tufted.full-width[
+    #image("header.jpg")
+]
 
 = 量子计算（一）——前置知识
 
