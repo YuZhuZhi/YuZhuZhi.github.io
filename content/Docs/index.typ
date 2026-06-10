@@ -1,18 +1,28 @@
 #import "../index.typ": template, tufted
 #show: template.with(
-  title: "Docs",
-  description: "Docs for Tufted Blog Template",
+  title: "文章列表",
+  description: "一些科普文章、一些教程、一些笔记",
 )
 
-= 文档 / Docs
+= 量子计算
 
-- 中文文档
-  - #link("website-config/", "网站配置")
-  - #link("typst-example/", "Typst 功能速览与样例")
-  - #link("github-deploy/", "GitHub 网站部署")
-  - #link("custom-styling/", "自定义样式")
-- English Documents
-  - #link("website-config-en/", "Website Configuration")
-  - #link("typst-example-en/", "Typst Example")
-  - #link("github-deploy-en/", "GitHub Deployment")
-  - #link("custom-styling-en/", "Custom Styling")
+- 量子计算简介
+
+// - 中文文档
+//   - #link("website-config/", "网站配置")
+//   - #link("typst-example/", "Typst 功能速览与样例")
+//   - #link("github-deploy/", "GitHub 网站部署")
+//   - #link("custom-styling/", "自定义样式")
+
+= 数学
+
+- 高等数学
+- 线性代数
+- 概率论与数理统计
+- 信号与系统
+- 离散数学
+
+= 物理
+
+
+

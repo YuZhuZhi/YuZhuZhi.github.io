@@ -1,30 +1,38 @@
 #import "../index.typ": template, tufted
 #show: template.with(
-  title: "Blog",
-  description: "Some blog examples",
+  title: "随笔",
+  description: "一些随笔记录",
 )
 
-= 博客 / Blog
+= 随笔
 
-中文博客样例可参考 #link("https://yousa-mirage.github.io/Blog")[我的个人网站]。
+// 中文博客样例可参考 #link("https://yousa-mirage.github.io/Blog")[我的个人网站]。
 
-== 2025
+== 2026
 
 #tufted.blog-entry(
-  date: datetime(year: 2025, month: 10, day: 30),
-  path: "2025-10-30-normal-distribution/",
-  title: "Normal Distribution",
-)
-#tufted.blog-entry(
-  date: datetime(year: 2025, month: 4, day: 16),
-  path: "2025-04-16-monkeys-apes",
-  title: "Monkeys vs Apes",
+  date: datetime(year: 2026, month: 6, day: 10),
+  path: "2026-06-10-starting-to-organize-this-website/",
+  title: "开始整理这个网站",
 )
 
-== 2024
+// == 2025
 
-#tufted.blog-entry(
-  date: "2024-10-04",
-  path: "2024-10-04-iterators-generators/",
-  title: "Iterators vs Generators in Python",
-)
+// #tufted.blog-entry(
+//   date: datetime(year: 2025, month: 10, day: 30),
+//   path: "2025-10-30-normal-distribution/",
+//   title: "Normal Distribution",
+// )
+// #tufted.blog-entry(
+//   date: datetime(year: 2025, month: 4, day: 16),
+//   path: "2025-04-16-monkeys-apes",
+//   title: "Monkeys vs Apes",
+// )
+
+// == 2024
+
+// #tufted.blog-entry(
+//   date: "2024-10-04",
+//   path: "2024-10-04-iterators-generators/",
+//   title: "Iterators vs Generators in Python",
+// )
