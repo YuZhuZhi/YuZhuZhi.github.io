@@ -1,6 +1,6 @@
 #import "../../index.typ": template, tufted
 #import "@preview/physica:0.9.8": *
-#set math.mat(delim: "[")
+#set math.mat(delim: "[", row-gap: 4pt, column-gap: 8pt)
 #show: template.with(
     title: "量子计算(二)——量子态与量子门",
     description: "量子态与量子门是量子计算的核心概念，理解它们的性质和相互关系对于深入学习量子算法至关重要。本文将系统地介绍量子态的分类、局部测量的影响以及常见的量子门及其构造方法。",
@@ -81,8 +81,8 @@ $
 
 $
     cases(
-        frac(1, abs(ket(psi_0))) ket(psi_0) = frac(1, sqrt(braket(psi_0, psi_0))) ket(psi_0)", "text("若测量结果为 0"),
-        frac(1, abs(ket(psi_1))) ket(psi_1) = frac(1, sqrt(braket(psi_1, psi_1))) ket(psi_1)", "text("若测量结果为 1"),
+        frac(1, abs(ket(psi_0))) ket(psi_0) = frac(1, sqrt(braket(psi_0, psi_0))) ket(psi_0)", "text("If measured 0"),
+        frac(1, abs(ket(psi_1))) ket(psi_1) = frac(1, sqrt(braket(psi_1, psi_1))) ket(psi_1)", "text("If measured 1"),
     )
 $
 
@@ -94,9 +94,9 @@ $
     alpha ket(00) + beta ket(11), "or" alpha ket(01) + beta ket(10)
 $
 
-对其进行*局部测量*时，我们发现剩下的一个量子位的量子态总会只剩下$ket(0)$或$ket(1)$，这相当于它也落入了一个百分百概率确定的状态，我们称这种量子态为*纠缠态*。纠缠态是一种特殊的叠加态。
+对其进行*局部测量*时，我们发现剩下的一个量子位的量子态总会只剩下 $ket(0)$ 或 $ket(1)$，这相当于它也落入了一个百分百概率确定的状态，我们称这种量子态为*纠缠态*。纠缠态是一种特殊的叠加态。
 
-纠缠态中最重要的四种又是*贝尔纠缠态*(也称*贝尔基*)，又称为EPR对，这在量子计算中极常用到：
+纠缠态中最重要的四种又是*贝尔纠缠态*(也称*贝尔基*)，又称为 EPR 对，这在量子计算中极常用到：
 
 $
     ket(Phi_(plus.minus)) = frac(1, sqrt(2)) (ket(00) plus.minus ket(11))
@@ -129,14 +129,23 @@ $
 来描述混合态。当然纯态也可以用密度矩阵来描述，它以概率 $1$ 出现在量子态$ket(psi)$，因而其密度矩阵就是$rho = ket(psi) bra(psi)$。
 
 一个量子系统所处的状态称为*量子态*，它*不是纯态就是混合态*。*叠加态和计算基态*只存在于纯态中。也就是说各种态的性质可以归纳如下：
+// $
+// text("量子态") cases(
+//     text("纯态") cases(
+//         text("叠加态"),
+//         text("计算基态"),
+//     ),
+//     text("混合态"),
+// )
+// $
 $
-text("量子态") cases(
-    text("纯态") cases(
-        text("叠加态"),
-        text("计算基态"),
-    ),
-    text("混合态"),
-)
+    "Quantum State" cases(
+        "Pure State" cases(
+            "Superposition",
+            "Computational Basis",
+        ),
+        "Mixed State",
+    )
 $
 当然在上一篇文章中也说过，如果您认为计算基态也是一种特殊的叠加态，这并无不妥；但我们说叠加态时，会侧重表现其*叠加*的性质。
 

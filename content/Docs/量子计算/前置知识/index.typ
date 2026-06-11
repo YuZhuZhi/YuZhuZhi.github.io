@@ -1,6 +1,6 @@
 #import "../../index.typ": template, tufted
 #import "@preview/physica:0.9.8": *
-#set math.mat(delim: "[")
+#set math.mat(delim: "[", row-gap: 4pt, column-gap: 8pt)
 #show: template.with(
     title: "量子计算(一)——前置知识",
     description: "量子计算的前置知识介绍。",
@@ -68,11 +68,11 @@ $
         p_(11) p_(21)
     )
     mat(
-      <-"取值为"00"的概率";
-      <-"取值为"01"的概率";
-      <-"取值为"10"的概率";
-      <-"取值为"11"的概率";
-      delim: #none
+        <-"probability of 00";
+        <-"probability of 01";
+        <-"probability of 10";
+        <-"probability of 11";
+        delim: #none
     )
 $
 
