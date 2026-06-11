@@ -11,7 +11,7 @@
 
 = 量子计算（二）——量子态与量子门
 
-#tufted.full-width()[
+#tufted.margin-note[
     #image("header.jpg")
 ]
 
