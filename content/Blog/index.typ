@@ -4,11 +4,21 @@
   description: "一些随笔记录",
 )
 
+#tufted.full-width[
+  #image("../imgs/albion-1.png")
+]
+
 = 随笔
 
 // 中文博客样例可参考 #link("https://yousa-mirage.github.io/Blog")[我的个人网站]。
 
 == 2026
+
+#tufted.blog-entry(
+  date: datetime(year: 2026, month: 6, day: 12),
+  path: "2026-06-12-regular/",
+  title: "好痛苦",
+)
 
 #tufted.blog-entry(
   date: datetime(year: 2026, month: 6, day: 10),
