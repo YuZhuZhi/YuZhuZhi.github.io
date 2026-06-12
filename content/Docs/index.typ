@@ -10,6 +10,7 @@
 + #link("量子计算/量子态与量子门/")[量子态与量子门]
 + #link("量子计算/布洛赫球/")[布洛赫球]
 + #link("量子计算/超密编码与量子隐形传态/")[超密编码与量子隐形传态]
++ #link("量子计算/Deutsch-Jozsa算法与Simon算法/")[Deutsch-Jozsa算法与Simon算法]
 
 // - 中文文档
 //   - #link("website-config/", "网站配置")
