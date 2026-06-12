@@ -125,8 +125,8 @@ $
 现在我们希望像上式最后一式那样，以求和的形式，写出 $ ket(x)= ket(x_0x_1...x_(n-1))$ 被 $H[0 ~ n-1]$ 操作的结果。难点在于如何确定 $ ket(y)$ 的符号。注意到单个量子哈达玛变换后 $ ket(0)$ 必是正的，因此当 $x_k=0$ 时不会对符号改变作出贡献(相当于用 $0$ 乘上某个数)。当 $x_k=1$ 时，符号就由 $ ket(y)= ket(y_0y_1...y_(n-1))$ 中有多少个 $1$ 决定了。由此可以得出：
 
 $
-    H[0 ~ n-1] ket(x)&= frac(1, sqrt(2^n))  sum_(y=0)^(2^{n}-1)(-1)^{ sum_(i=0)^(n-1)x_i y_i} ket(y)\
-    &= frac(1, sqrt(2^n))  sum_(y=0)^(2^{n}-1)(-1)^(bold(x) dot  bold(y)) ket(y)\
+    H[0 ~ n-1] ket(x)&= frac(1, sqrt(2^n))  sum_(y=0)^(2^(n)-1)(-1)^{ sum_(i=0)^(n-1)x_i y_i} ket(y)\
+    &= frac(1, sqrt(2^n))  sum_(y=0)^(2^(n)-1)(-1)^(bold(x) dot  bold(y)) ket(y)\
 $
 
 第二行中将指数部分的求和视作了向量点乘。
@@ -159,30 +159,30 @@ $
 
 $
     &*"After action of "H[0 ~ n]*\
-    "Origin"&= frac(1, sqrt(2^(n+1)))H[0 ~ n-1] dot attach(scripts(B_f), tr: 0~n-1, br:n) dot {  sum_(x=0)^(2^{n}-1) ket(x)  }( ket(0)- ket(1))\
+    "Origin"&= frac(1, sqrt(2^(n+1)))H[0 ~ n-1] dot attach(scripts(B_f), tr: 0~n-1, br:n) dot {  sum_(x=0)^(2^(n)-1) ket(x)  }( ket(0)- ket(1))\
     &*"After action of "attach(scripts(B_f), tr: 0~n-1, br:n)*\
-    &= frac(1, sqrt(2^(n+1)))H[0 ~ n-1] dot  {  sum_(x=0)^(2^{n}-1)(-1)^(f(x)) ket(x)  }( ket(0)- ket(1))\
+    &= frac(1, sqrt(2^(n+1)))H[0 ~ n-1] dot  {  sum_(x=0)^(2^(n)-1)(-1)^(f(x)) ket(x)  }( ket(0)- ket(1))\
     &*"After action of "H[0 ~ n-1]*\
-    &= frac(1, sqrt(2^(2n+1))) dot { sum_(x=0)^(2^{n}-1)(-1)^(f(x)) sum_(y=0)^(2^{n}-1)(-1)^(bold(x) dot bold(y)) ket(y)  }( ket(0)- ket(1))\
-    &= { sum_(y=0)^(2^{n}-1) ( frac(1, 2^n) sum_(x=0)^(2^{n}-1)(-1)^(f(x)+ bold(x) dot bold(y)) ) ket(y) } dot  frac(1, sqrt(2)) ( ket(0)- ket(1) )
+    &= frac(1, sqrt(2^(2n+1))) dot { sum_(x=0)^(2^(n)-1)(-1)^(f(x)) sum_(y=0)^(2^(n)-1)(-1)^(bold(x) dot bold(y)) ket(y)  }( ket(0)- ket(1))\
+    &= { sum_(y=0)^(2^(n)-1) ( frac(1, 2^n) sum_(x=0)^(2^(n)-1)(-1)^(f(x)+ bold(x) dot bold(y)) ) ket(y) } dot  frac(1, sqrt(2)) ( ket(0)- ket(1) )
 $
 
 也就是说，最后 $0 ~ n-1$ 号量子的状态是：
 
 $
-  sum_(y=0)^(2^{n}-1) ( frac(1, 2^n) sum_(x=0)^(2^{n}-1)(-1)^(f(x)+ bold(x) dot bold(y)) ) ket(y)
+  sum_(y=0)^(2^(n)-1) ( frac(1, 2^n) sum_(x=0)^(2^(n)-1)(-1)^(f(x)+ bold(x) dot bold(y)) ) ket(y)
 $
 
 其中，计算基态 $ ket(0^n)$ 的*振幅*是：
 
 $
-frac(1, 2^n)  sum_(x=0)^(2^{n}-1)(-1)^(f(x))
+frac(1, 2^n)  sum_(x=0)^(2^(n)-1)(-1)^(f(x))
 $
 
 因此，当函数是*常量的*时，计算基态 $ ket(0^n)$ 的*概率*是：
 
 $
-abs(frac(1, 2^n) sum_(x=0)^(2^{n}-1)(-1)^(0" or "1))^2=1
+abs(frac(1, 2^n) sum_(x=0)^(2^(n)-1)(-1)^(0" or "1))^2=1
 $
 
 而问题又是受承诺的，因此当测量结果并非全 $0$ 时，函数就必然是平衡的了。
