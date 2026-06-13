@@ -15,7 +15,7 @@
   ),
   
   /// 网站的站点标题。会显示在浏览器标签页以及 SEO/社交分享卡片中。
-  website-title: "YuZhuZhi 小站主页",
+  website-title: "不认识御伫之？很正常！",
   /// 网站作者。用于生成 <meta name="author"> 标签。（可选）
   author: "@YuZhuZhi",
   /// 网站描述。用于 SEO 搜索引擎摘要和社交媒体分享预览。（可选）
@@ -31,12 +31,12 @@
   /// 自定义页眉元素列表 (content 数组)。显示在页面顶部。
   header-elements: (
     [Ciallo～(∠・ω< )⌒☆],
-    [欢迎访问御伫之的小站！],
+    [众里寻她千百度，蓦然回首],
   ),
   /// 自定义页脚元素列表 (content 数组)，显示在页面底部。
   footer-elements: (
     "© 2026 YuZhuZhi",
-    [Powered by #link("https://github.com/YuZhuZhi/YuZhuZhi.github.io")[YuZhuZhi.github.io]],
+    [今天又被谁偷瞄了呢(\*╹▽╹\*)],
   ),
 )
 

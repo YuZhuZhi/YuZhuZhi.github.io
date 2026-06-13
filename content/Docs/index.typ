@@ -4,11 +4,11 @@
   description: "一些科普文章、一些教程、一些笔记",
 )
 
-#tufted.full-width[
-  #image("../imgs/albion-2.png")
-  _--霜天夜雨落花残，墨色浮生总孑然。寒尽春生始流转，万千思缕剪不断。\
-  她笑语盈盈：且莫叹。回首我处，为君灯火阑珊。--_
-]
+// #tufted.full-width[
+//   #image("../imgs/albion-2.png")
+//   _--霜天夜雨落花残，墨色浮生总孑然。寒尽春生始流转，万千思缕剪不断。\
+//   她笑语盈盈：且莫叹。回首我处，为君灯火阑珊。--_
+// ]
 
 = 量子计算
 
@@ -26,6 +26,8 @@
 //   - #link("github-deploy/", "GitHub 网站部署")
 //   - #link("custom-styling/", "自定义样式")
 
+#html.hr()
+
 = 数学
 
 - 高等数学
@@ -33,8 +35,37 @@
 - 概率论与数理统计
 - 信号与系统
 - 离散数学
+- 
+#html.hr()
 
 = 物理
 
+#html.hr()
 
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+
+#tufted.full-width[
+  #image("../imgs/albion-2.png")
+  _--霜天夜雨落花残，墨色浮生总孑然。寒尽春生始流转，万千思缕剪不断。\
+  她笑语盈盈：且莫叹。回首我处，为君灯火阑珊。--_
+]
 

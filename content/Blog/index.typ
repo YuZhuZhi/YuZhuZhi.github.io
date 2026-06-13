@@ -4,9 +4,9 @@
   description: "一些随笔记录",
 )
 
-#tufted.full-width[
-  #image("../imgs/albion-1.png")
-]
+// #tufted.full-width[
+//   #image("../imgs/albion-1.png")
+// ]
 
 = 随笔
 
@@ -46,3 +46,28 @@
 //   path: "2024-10-04-iterators-generators/",
 //   title: "Iterators vs Generators in Python",
 // )
+
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+#html.br()
+
+#tufted.full-width[
+  #image("../imgs/albion-1.png")
+]
