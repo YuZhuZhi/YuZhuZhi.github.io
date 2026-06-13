@@ -60,7 +60,7 @@ $
 的三角函数系 $[1,cos  k x, sin  k x],k=1,2,...$ 正是这样一种性质优异的正交函数系，因为：
 
 $
-    integral_(- pi)^(pi)cos k x=  integral_(- pi)^(pi)sin k x  d x=0\
+    integral_(- pi)^(pi)cos k x d x = integral_(- pi)^(pi)sin k x  d x=0\
     integral_(- pi)^(pi)cos k x dot sin  n x  d x=0, quad k != n\
     integral_(- pi)^(pi)cos k x dot cos  n x  d x=0, quad k != n\
     integral_(- pi)^(pi)sin k x dot sin  n x  d x=0, quad k != n\
