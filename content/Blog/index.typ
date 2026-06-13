@@ -69,5 +69,5 @@
 #html.br()
 
 #tufted.full-width[
-  #image("../imgs/albion-1.png")
+  #image("../imgs/albion-2.png")
 ]
