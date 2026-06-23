@@ -15,6 +15,12 @@
 == 2026
 
 #tufted.blog-entry(
+  date: datetime(year: 2026, month: 6, day: 20),
+  path: "2026-06-20-graduation-thesis-ackownledgement/",
+  title: "我的毕业论文致谢",
+)
+
+#tufted.blog-entry(
   date: datetime(year: 2026, month: 6, day: 12),
   path: "2026-06-12-regular/",
   title: "好痛苦",
@@ -26,11 +32,6 @@
   title: "开始整理这个网站",
 )
 
-#tufted.blog-entry(
-  date: datetime(year: 2026, month: 6, day: 20),
-  path: "2026-06-20-graduation-thesis-ackownledgement/",
-  title: "我的毕业论文致谢",
-)
 
 // == 2025
 
@@ -76,6 +77,6 @@
 
 #tufted.full-width[
   #image("../imgs/albion-2.png")
-  _--银丝散作云痕，纤手轻拂香温。浮窗晴翠渐暖，笑谈昨夜星辰。\
+  _--银丝散作云痕，素手轻拂香温。浮窗晴翠渐暖，笑谈昨夜星辰。\
   寂寥空寒衾枕，惊觉四顾昏昏。方知清梦满船，惟余晓色纷纷。--_
 ]
