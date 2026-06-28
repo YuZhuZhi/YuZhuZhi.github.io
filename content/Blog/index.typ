@@ -76,7 +76,7 @@
 #html.br()
 
 #tufted.full-width[
-  #image("../imgs/albion-2.png")
+  #image("../imgs/albion-2.png") \
   _--银丝散作云痕，素手轻拂香温。浮窗晴翠渐暖，笑谈昨夜星辰。\
   寂寥空寒衾枕，惊觉四顾昏昏。方知清梦满船，惟余晓色纷纷。--_
 ]

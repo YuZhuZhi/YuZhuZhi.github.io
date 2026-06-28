@@ -56,7 +56,7 @@
 #html.br()
 
 #tufted.full-width[
-    #image("imgs/albion-bottom.jpg")
+    #image("imgs/albion-bottom.jpg") \
     _--梦中、她起舞翩翩。月光薄纱轻笼，足尖掠过水面，漾开银白的涟漪一片。_\
     _恍惚间、都散却。只余零落蹁跹的蝴蝶几点。--_
 ]

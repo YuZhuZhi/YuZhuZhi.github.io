@@ -64,7 +64,7 @@
 #html.br()
 
 #tufted.full-width[
-  #image("../imgs/albion-5.jpg")
+  #image("../imgs/albion-5.jpg") \
   _--霜天夜雨落花残，墨色浮生总孑然。寒尽春来始流转，万千思缕剪不断。\
   她笑语盈盈：且莫叹。回首我处，为君灯火阑珊。--_
 ]
