@@ -85,13 +85,133 @@ section > figure:not(.fullwidth) > svg {
 
 /* Fullwidth content */
 .fullwidth {
-	max-width: 90%;
+	width: 90vw;
+	min-width: 90vw;
+	margin-left: calc(50% - 50vw);
+	margin-right: calc(50% - 50vw);
 	clear: both;
 }
 
 .fullwidth img,
 .fullwidth svg {
 	max-width: 100%;
+}
+
+/*******************************************************************************
+MATH NOTATION
+*******************************************************************************/
+
+.math-block {
+	display: block;
+	width: 55%;
+	text-align: center;
+	margin: 1em 0;
+	padding: 0.5em 0;
+	font-size: 1.4em;
+	line-height: 1.2;
+	white-space: nowrap;
+	overflow-x: auto;
+	overflow-y: hidden;
+}
+
+figure > .math-block {
+	width: 100%;
+	margin: 0 auto;
+	max-width: 100%;
+}
+
+.fullwidth > .math-block {
+	width: 100%;
+	margin: 1em auto;
+	max-width: 100%;
+}
+
+.math-inline {
+	display: inline-block;
+	vertical-align: baseline;
+	margin: 0 0.1em;
+	text-indent: 0;
+}
+
+.math-inline.is-copyable,
+.math-block.is-copyable {
+	position: relative;
+	cursor: pointer;
+}
+
+.math-inline.is-copyable:focus-visible,
+.math-block.is-copyable:focus-visible {
+	outline: 1px solid currentColor;
+	outline-offset: 0.15em;
+}
+
+.math-inline.is-copyable::after,
+.math-block.is-copyable::after {
+	content: "Copy MathML";
+	position: absolute;
+	z-index: 1;
+	padding: 0.15em 0.45em;
+	color: var(--theme-copy-btn-text, #666);
+	background: var(--theme-copy-btn-bg, #fff);
+	border: 1px solid var(--theme-copy-btn-border, #ccc);
+	border-radius: var(--radius-sm);
+	font-size: 0.75rem;
+	font-style: normal;
+	line-height: 1.4;
+	white-space: nowrap;
+	pointer-events: none;
+	opacity: 0;
+	transition:
+		opacity 120ms ease,
+		transform 120ms ease;
+}
+
+.math-inline.is-copyable::after {
+	left: 50%;
+	bottom: 100%;
+	transform: translate(-50%, 0.2em);
+}
+
+.math-block.is-copyable::after {
+	top: 0.35em;
+	right: 0.35em;
+	transform: translateY(-0.2em);
+}
+
+.math-inline.is-copyable:hover::after,
+.math-inline.is-copyable:focus-visible::after {
+	opacity: 1;
+	transform: translate(-50%, -0.15em);
+}
+
+.math-block.is-copyable:hover::after,
+.math-block.is-copyable:focus-visible::after {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+.math-inline.is-copyable.is-copied::after,
+.math-block.is-copyable.is-copied::after {
+	content: "Copied";
+	color: var(--theme-copy-btn-copied-text, #008000);
+	border-color: var(--theme-copy-btn-copied-border, #008000);
+	background: var(--theme-copy-btn-copied-bg, #e6fffa);
+	opacity: 1;
+}
+
+.math-inline > math,
+.math-block > math {
+	color: inherit;
+}
+
+.math-inline > svg,
+.math-block > svg {
+	display: inline-block;
+}
+
+.math-block > svg {
+	min-width: max-content;
+	text-align: center;
 }
 
 /*******************************************************************************
@@ -390,94 +510,95 @@ table tbody tr:hover {
 }
 
 /*******************************************************************************
-MATH NOTATION
-*******************************************************************************/
-
-/* Block math equations - display as block, centered */
-figure[role="math"] {
-	display: block;
-	width: 55%;
-	text-align: center;
-	margin: 1em 0;
-	padding: 0.5em 0;
-	font-size: 1.4em;
-	line-height: 1.2;
-	overflow-x: auto;
-	overflow-y: hidden;
-}
-
-/* Math content wrapper - prevent shrinking */
-figure[role="math"] > * {
-	display: inline-block;
-	min-width: max-content;
-	text-align: center;
-}
-
-figure > figure[role="math"] {
-	display: block;
-	width: 100%;
-	text-align: center;
-	margin: 0 auto;
-	padding: 0.5em 0;
-	max-width: 100%;
-	overflow-x: auto;
-	overflow-y: hidden;
-}
-
-/* Math content wrapper for nested figures */
-figure > figure[role="math"] > * {
-	display: inline-block;
-	min-width: max-content;
-	text-align: center;
-}
-
-/* Inline math - smaller size, aligned with text baseline */
-span[role="math"] {
-	display: inline-block;
-	vertical-align: baseline;
-	margin: 0 0.1em;
-	text-indent: 0;
-}
-
-/*******************************************************************************
 THEOREMS AND PROOFS
 *******************************************************************************/
 
 .tufted-theorem,
+.tufted-corollary,
+.tufted-remark,
+.tufted-definition,
+.tufted-lemma,
+.tufted-proposition,
 .tufted-proof {
+	--env-accent: var(--theme-table-border, #ccc);
+	--env-bg: color-mix(in srgb, var(--theme-pre-bg, #f7f7f7) 65%, transparent);
 	width: 55%;
 	margin: 1.5em 0;
 	padding: 0.85em 1em;
 	box-sizing: border-box;
 	clear: none;
 	border-radius: var(--radius-sm);
-	font-size: inherit;
+	border: 1px solid var(--env-accent);
+	background: var(--env-bg);
+	font-size: 1.5rem;
 	line-height: 2.2rem;
 	overflow-wrap: break-word;
 }
 
 .tufted-theorem {
-	border: 1px solid var(--theme-table-border, #ccc);
-	background: color-mix(in srgb, var(--theme-pre-bg, #00ff80) 55%, transparent);
+	--env-accent: #2f6f8f;
+	--env-bg: color-mix(in srgb, #d7eef8 72%, var(--theme-bg, #fffff8));
 	font-family: KaiTi, STKaiti, "Kaiti SC", serif;
-	font-size: 1.25rem;
+}
+
+.tufted-corollary {
+	--env-accent: #4f7d45;
+	--env-bg: color-mix(in srgb, #e0f1d8 72%, var(--theme-bg, #fffff8));
+	font-family: KaiTi, STKaiti, "Kaiti SC", serif;
+}
+
+.tufted-definition {
+	--env-accent: #8065a8;
+	--env-bg: color-mix(in srgb, #eadff6 72%, var(--theme-bg, #fffff8));
+	font-family: KaiTi, STKaiti, "Kaiti SC", serif;
+}
+
+.tufted-lemma {
+	--env-accent: #a36b2c;
+	--env-bg: color-mix(in srgb, #f6e4c8 72%, var(--theme-bg, #fffff8));
+	font-family: KaiTi, STKaiti, "Kaiti SC", serif;
+}
+
+.tufted-proposition {
+	--env-accent: #8b5f73;
+	--env-bg: color-mix(in srgb, #f1dce5 72%, var(--theme-bg, #fffff8));
+	font-family: KaiTi, STKaiti, "Kaiti SC", serif;
+}
+
+.tufted-remark {
+	--env-accent: #7b7560;
+	--env-bg: color-mix(in srgb, #ece8d6 72%, var(--theme-bg, #fffff8));
+	font-family: inherit;
 }
 
 .tufted-proof {
-	border-left: 2px solid var(--theme-table-border, #ccc);
+	--env-accent: var(--theme-table-border, #ccc);
+	--env-bg: color-mix(in srgb, var(--theme-pre-bg, #f7f7f7) 72%, var(--theme-bg, #fffff8));
+	border-width: 0 0 0 2px;
 	padding-left: 1em;
 	font-family: inherit;
 }
 
 .tufted-theorem-heading,
+.tufted-corollary-heading,
+.tufted-remark-heading,
+.tufted-definition-heading,
+.tufted-lemma-heading,
+.tufted-proposition-heading,
 .tufted-proof-heading {
 	font-weight: bold;
 	font-style: normal;
+	color: var(--env-accent);
 	font-size: inherit;
 	line-height: inherit;
 }
 
 .tufted-theorem-body > p,
+.tufted-corollary-body > p,
+.tufted-remark-body > p,
+.tufted-definition-body > p,
+.tufted-lemma-body > p,
+.tufted-proposition-body > p,
 .tufted-proof-body > p {
 	width: 100%;
 	margin: 0.45em 0;
@@ -487,13 +608,28 @@ THEOREMS AND PROOFS
 }
 
 .tufted-theorem a,
+.tufted-corollary a,
+.tufted-remark a,
+.tufted-definition a,
+.tufted-lemma a,
+.tufted-proposition a,
 .tufted-proof a,
 .tufted-theorem-heading,
+.tufted-corollary-heading,
+.tufted-remark-heading,
+.tufted-definition-heading,
+.tufted-lemma-heading,
+.tufted-proposition-heading,
 .tufted-proof-heading {
 	overflow-wrap: anywhere;
 }
 
 .tufted-theorem-body > figure[role="math"],
+.tufted-corollary-body > figure[role="math"],
+.tufted-remark-body > figure[role="math"],
+.tufted-definition-body > figure[role="math"],
+.tufted-lemma-body > figure[role="math"],
+.tufted-proposition-body > figure[role="math"],
 .tufted-proof-body > figure[role="math"] {
 	width: 100%;
 	max-width: 100%;
@@ -505,6 +641,11 @@ THEOREMS AND PROOFS
 }
 
 .tufted-theorem-body > figure[role="math"] > *,
+.tufted-corollary-body > figure[role="math"] > *,
+.tufted-remark-body > figure[role="math"] > *,
+.tufted-definition-body > figure[role="math"] > *,
+.tufted-lemma-body > figure[role="math"] > *,
+.tufted-proposition-body > figure[role="math"] > *,
 .tufted-proof-body > figure[role="math"] > * {
 	min-width: 0;
 	max-width: 100%;
@@ -513,10 +654,30 @@ THEOREMS AND PROOFS
 .tufted-theorem-body > ul,
 .tufted-theorem-body > ol,
 .tufted-theorem-body > dl,
+.tufted-corollary-body > ul,
+.tufted-corollary-body > ol,
+.tufted-corollary-body > dl,
+.tufted-remark-body > ul,
+.tufted-remark-body > ol,
+.tufted-remark-body > dl,
+.tufted-definition-body > ul,
+.tufted-definition-body > ol,
+.tufted-definition-body > dl,
+.tufted-lemma-body > ul,
+.tufted-lemma-body > ol,
+.tufted-lemma-body > dl,
+.tufted-proposition-body > ul,
+.tufted-proposition-body > ol,
+.tufted-proposition-body > dl,
 .tufted-proof-body > ul,
 .tufted-proof-body > ol,
 .tufted-proof-body > dl,
 .tufted-theorem-body > table,
+.tufted-corollary-body > table,
+.tufted-remark-body > table,
+.tufted-definition-body > table,
+.tufted-lemma-body > table,
+.tufted-proposition-body > table,
 .tufted-proof-body > table {
 	width: 100%;
 	max-width: 100%;
@@ -526,6 +687,16 @@ THEOREMS AND PROOFS
 
 .tufted-theorem-body > img,
 .tufted-theorem-body > svg,
+.tufted-corollary-body > img,
+.tufted-corollary-body > svg,
+.tufted-remark-body > img,
+.tufted-remark-body > svg,
+.tufted-definition-body > img,
+.tufted-definition-body > svg,
+.tufted-lemma-body > img,
+.tufted-lemma-body > svg,
+.tufted-proposition-body > img,
+.tufted-proposition-body > svg,
 .tufted-proof-body > img,
 .tufted-proof-body > svg {
 	max-width: 100%;
@@ -534,11 +705,21 @@ THEOREMS AND PROOFS
 }
 
 .tufted-theorem-body > :first-child,
+.tufted-corollary-body > :first-child,
+.tufted-remark-body > :first-child,
+.tufted-definition-body > :first-child,
+.tufted-lemma-body > :first-child,
+.tufted-proposition-body > :first-child,
 .tufted-proof-body > :first-child {
 	margin-top: 0;
 }
 
 .tufted-theorem-body > :last-child,
+.tufted-corollary-body > :last-child,
+.tufted-remark-body > :last-child,
+.tufted-definition-body > :last-child,
+.tufted-lemma-body > :last-child,
+.tufted-proposition-body > :last-child,
 .tufted-proof-body > :last-child {
 	margin-bottom: 0;
 }
@@ -546,13 +727,16 @@ THEOREMS AND PROOFS
 .tufted-proof-qed {
 	text-align: right;
 	line-height: 1;
-}
 
 /*******************************************************************************
 RESPONSIVE LAYOUT
 *******************************************************************************/
 
 @media (max-width: 760px) {
+	.math-block {
+		width: 100%;
+	}
+
 	/* Margin notes render inline on narrow screens */
 	.marginnote {
 		display: block;
@@ -639,16 +823,6 @@ RESPONSIVE LAYOUT
 		transform: none;
 		margin-left: auto;
 		margin-right: auto;
-	}
-
-	/* Math equations take full width on mobile */
-	figure[role="math"] {
-		width: 100%;
-	}
-
-	.tufted-theorem,
-	.tufted-proof {
-		width: 100%;
 	}
 
 	/* Blog index rows take full width on mobile */

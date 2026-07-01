@@ -7,7 +7,7 @@
 #import "links.typ": template-links
 #import "metadata.typ": metadata
 #import "byline.typ": template-byline
-#import "theorems.typ": theorem, proof, reset-theorems
+#import "theorems.typ": theorem, corollary, remark, definition, lemma, proposition, proof, reset-theorems
 
 /// The main wrapper function of Tufted Blog Template.
 ///
@@ -88,6 +88,7 @@
           "/assets/marginnote-toggle.js",
           "/assets/toc.js",
           "/assets/back-to-top.js",
+          "/assets/math-copy.js",
         )
         for (js-src) in (base-js + js-scripts).dedup() {
           html.script(src: js-src)
