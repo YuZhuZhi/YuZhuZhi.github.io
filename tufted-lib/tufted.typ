@@ -7,6 +7,7 @@
 #import "links.typ": template-links
 #import "metadata.typ": metadata
 #import "byline.typ": template-byline
+#import "theorems.typ": theorem, proof, reset-theorems
 
 /// The main wrapper function of Tufted Blog Template.
 ///

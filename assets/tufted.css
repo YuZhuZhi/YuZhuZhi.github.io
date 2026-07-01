@@ -440,6 +440,114 @@ span[role="math"] {
 }
 
 /*******************************************************************************
+THEOREMS AND PROOFS
+*******************************************************************************/
+
+.tufted-theorem,
+.tufted-proof {
+	width: 55%;
+	margin: 1.5em 0;
+	padding: 0.85em 1em;
+	box-sizing: border-box;
+	clear: none;
+	border-radius: var(--radius-sm);
+	font-size: inherit;
+	line-height: 2.2rem;
+	overflow-wrap: break-word;
+}
+
+.tufted-theorem {
+	border: 1px solid var(--theme-table-border, #ccc);
+	background: color-mix(in srgb, var(--theme-pre-bg, #f7f7f7) 55%, transparent);
+	font-family: KaiTi, STKaiti, "Kaiti SC", serif;
+}
+
+.tufted-proof {
+	border-left: 2px solid var(--theme-table-border, #ccc);
+	padding-left: 1em;
+	font-family: KaiTi, STKaiti, "Kaiti SC", serif;
+}
+
+.tufted-theorem-heading,
+.tufted-proof-heading {
+	font-weight: bold;
+	font-style: normal;
+	font-size: inherit;
+	line-height: inherit;
+}
+
+.tufted-theorem-body > p,
+.tufted-proof-body > p {
+	width: 55%;
+	margin: 0.45em 0;
+	font-size: inherit;
+	line-height: inherit;
+	text-align: justify;
+}
+
+.tufted-theorem a,
+.tufted-proof a,
+.tufted-theorem-heading,
+.tufted-proof-heading {
+	overflow-wrap: anywhere;
+}
+
+.tufted-theorem-body > figure[role="math"],
+.tufted-proof-body > figure[role="math"] {
+	width: 100%;
+	max-width: 100%;
+	margin: 0.75em 0;
+	padding: 0.35em 0;
+	font-size: inherit;
+	line-height: 1.2;
+	box-sizing: border-box;
+}
+
+.tufted-theorem-body > figure[role="math"] > *,
+.tufted-proof-body > figure[role="math"] > * {
+	min-width: 0;
+	max-width: 100%;
+}
+
+.tufted-theorem-body > ul,
+.tufted-theorem-body > ol,
+.tufted-theorem-body > dl,
+.tufted-proof-body > ul,
+.tufted-proof-body > ol,
+.tufted-proof-body > dl,
+.tufted-theorem-body > table,
+.tufted-proof-body > table {
+	width: 100%;
+	max-width: 100%;
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.tufted-theorem-body > img,
+.tufted-theorem-body > svg,
+.tufted-proof-body > img,
+.tufted-proof-body > svg {
+	max-width: 100%;
+	left: auto;
+	transform: none;
+}
+
+.tufted-theorem-body > :first-child,
+.tufted-proof-body > :first-child {
+	margin-top: 0;
+}
+
+.tufted-theorem-body > :last-child,
+.tufted-proof-body > :last-child {
+	margin-bottom: 0;
+}
+
+.tufted-proof-qed {
+	text-align: right;
+	line-height: 1;
+}
+
+/*******************************************************************************
 RESPONSIVE LAYOUT
 *******************************************************************************/
 
@@ -534,6 +642,11 @@ RESPONSIVE LAYOUT
 
 	/* Math equations take full width on mobile */
 	figure[role="math"] {
+		width: 100%;
+	}
+
+	.tufted-theorem,
+	.tufted-proof {
 		width: 100%;
 	}
 

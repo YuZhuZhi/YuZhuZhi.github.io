@@ -19,6 +19,7 @@
 + #link("量子计算/Deutsch-Jozsa算法与Simon算法/")[Deutsch-Jozsa算法与Simon算法]
 + #link("量子计算/量子傅里叶变换与相位估计/")[量子傅里叶变换与相位估计]
 + #link("量子计算/振幅放大与振幅估计/")[振幅放大与振幅估计]
++ #link("量子计算/QAOA/")[QAOA算法]
 
 // - 中文文档
 //   - #link("website-config/", "网站配置")
