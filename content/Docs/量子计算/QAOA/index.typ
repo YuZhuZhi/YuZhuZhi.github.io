@@ -88,7 +88,7 @@ $ <eq-IsingHamiltonianQuadratic>
 $
   min  cal(C)(x) + lambda cal(P)(x),
 $
-其中 $cal(P)(x)$ 是约束条件 $cal(U)(x)$ 对应的惩罚函数； $lambda > 0 $ 是任取的惩罚系数，一般不应取太小。表@tab-约束条件及其对应惩罚函数 给出了一些典型约束条件应转换到的惩罚函数。
+其中 $cal(P)(x)$ 是约束条件 $cal(U)(x)$ 对应的惩罚函数； $lambda > 0 $ 是任取的惩罚系数，一般不应取太小。@tab-约束条件及其对应惩罚函数 给出了一些典型约束条件应转换到的惩罚函数。
 
 #figure(
   caption: [约束条件及其对应惩罚函数],
@@ -136,7 +136,7 @@ $
 $ <eq-QuestionHamiltonian>
 其中 $bold(Z) $ 即泡利Z矩阵，且 $bold(Z)^(0)= bold(Z)^(2)= bold(I) $ 、 $bold(Z)^(1)= bold(Z) $ ， $bold(Z)_(i)$ 等价于将在第 $i $ 量子比特上作用Z门。之所以这样替换，是因为可以自然地将物理可观测量——自旋沿 $z $ 轴的分量，即泡利 Z 矩阵与自旋变量 $s $ 对应起来。针对问题哈密顿量 $bHC$ ，有以下定理：
 
-#tufted.theorem[问题哈密顿量的特征向量和特征值#cite(<Grange2023-An-introduction-to-variational-quantum-algorithms-for-combinatorial-optimization-problems>)][
+#tufted.theorem()[问题哈密顿量的特征向量和特征值#cite(<Grange2023-An-introduction-to-variational-quantum-algorithms-for-combinatorial-optimization-problems>)][
   问题哈密顿量 $bHC$ 的特征向量是从 $ket(0)$ 到 $ket(2^(n)- 1)$ 的计算基态，且每个特征向量 $ket(x)$ 对应的特征值是代价函数在相应解 $x $ 下的函数值 $cal(C)(x)$ （在不忽略常数项的情况下）。
 ]
 
@@ -166,7 +166,7 @@ $ <eq-QuestionHamiltonian>
 
 #html.hr()
 
-== 三、分段近似模拟绝热演化
+== 三、分段近似模拟绝热演化 <sec-分段近似模拟绝热演化>
 
 接下来首先给出QAOA的整体结构与电路图，之后再分模块介绍。QAOA的算法过程可以用下式完整表示：
 $
@@ -187,7 +187,7 @@ $ <eq-QAOAUnitaryOperatorDefine>
   caption: [QAOA量子电路示意],
 ) <fig-QAOAGlobal>
 
-若在式 @eq-QAOAUnitaryOperatorDefine 中代入 $bHB$ 与 $beta $ ，那么可做如下计算： /* Begin subequations */
+若在式 @eq-QAOAUnitaryOperatorDefine 中代入 $bHB$ 与 $beta $ ，那么可做如下计算：
 $
   U(bHB, beta) &= upright(e)^(- upright(i) beta sum_(i = 1)^(n) bold(X)_(i)) \
   &= product_(i = 1)^(n) upright(e)^(- upright(i) beta bold(X)_(i)) \
@@ -196,7 +196,6 @@ $
   &= times.o.big_(i = 1)^(n) R X_(i)(2 beta),
 $
 
-/* End subequations */
 这说明混合酉算子 $U(bHB, beta)$ 的作用就是在每一个量子比特上都作用一个 $R X(2 beta)$ 门，如@fig-MixerUnitaryOperatorEffect 所示。 $R X(theta)$ 门是： 
 $
   R X(theta) = mat(delim: "[", cos theta/2, - upright(i) sin theta/2 ; - upright(i) sin theta/2, cos theta/2)
@@ -494,6 +493,118 @@ $
 到这里相信读者能够看出，上式形式上已经基本对应到 QAOA 的整体分层形式即式(9.115)了。不妨直接记 $L_k = exp{ -upright(i) (1 - frac(t_k, T)) Delta t bH_0 } dot exp{ -upright(i) frac(t_k, T) Delta t bHC }$ ，再同时令 $beta_k = (1 - frac(t_k, T)) Delta t$ 、 $gamma_k = frac(t_k, T) Delta t$ ，则 $bU(T) approx product_(k = 1)^(p) L_k(gamma_k, beta_k)$ ，便得到前述的QAOA 构造了。
 
 读者大概会疑惑于：既然按照如上的推导，角度参数 $gabe$ 应当已经是唯一指定的了，又为何在 QAOA 中需要一个经典参数的训练步骤呢？首先，显然地，依据式(9.133)，当 QAOA 的层数 $p != 1$ 时，电路运行结果就是理想情况下量子退火得到的最优解。但是，当 $p$ 是有限值时，便可以视作后续所有层酉算子都是 $bold(I)$ ，对应能量景观函数值必然大于等于最优解对应的能量。这就会引入误差，影响收敛性，所以使用上述指定值时基本得不到足够好的结果，故而重新训练这些角度参数反而是更好的选择。
+
+#html.hr()
+
+== 六、PUBO 电路构造中的构建块与合并
+
+#tufted.definition[$n$ 次 单项式 $T(n)$][
+  $T(n)$ 表示 $n$ 次单项式。若参与该项的变量编号为 $i_(1) < i_(2) < ... < i_(n)$ ，则：
+  $
+    T(n) = x_(i_(1)) x_(i_(2)) ... x_(i_(n)).
+  $
+]
+
+#tufted.definition[$n$ 重 Pauli-$Z$ 张量积 $Z(n)$][
+  $Z(n)$ 表示 $n$ 重 Pauli-$Z$ 张量积。若参与该项的量子比特编号为 $i_(1) < i_(2) < ... < i_(n)$ ，则：
+  $
+    Z(n) = times.o.big_(r = 1)^(n) bold(Z)_(i_(r)).
+  $
+]
+
+在@sec-分段近似模拟绝热演化 已经说明，QAOA 中真正随具体优化问题改变的是问题酉算子 $U(bHC, gamma)$ 。若问题是 PUBO 形式，那么高阶单项式会在问题哈密顿量中产生多重 $Z$ 张量积。因此，直接把 PUBO 问题送入 QAOA 的核心问题可以重新表述为：如何从标量形式中的 $T(n)$ 出发，得到若干个带系数的 $Z(n)$ 算子，并将这些 $Z(n)$ 算子系统地翻译为量子线路。
+
+直觉上，最直接的方法是“按 $T(n)$ 构造”：对 PUBO 标量哈密顿量中的每个单项式分别展开，并为其产生的每个 $Z(k)$ 项添加对应的电路构建块。不过，这种方法会在不同单项式之间反复生成相同的构建块。例如 $x_(1)x_(2)x_(3)$ 和 $x_(1)x_(2)x_(4)$ 在展开后都会产生作用于同一组量子比特的 $Z(1)$ 、 $Z(2)$ 以及 $Z(1)Z(2)$ 项，这可以参考@T3-circuit；如果逐个 $T(n)$ 直接生成线路，这些相同结构的构建块就会重复出现，只是 $R Z$ 门的角度不同，造成大量冗余。正因为如此，实际构造时更应当先把所有 $T(n)$ 展开到 $Z(n)$ 的线性组合中，再合并相同的 $Z(n)$ 项，最后按 $Z(n)$ 构造电路。
+
+#figure(
+  image("images/T2-circuit.png"), 
+  caption: [$T(2)$对应的量子电路]
+)
+
+#tufted.full-width[
+    #image("images/T3-circuit.png")
+]
+#tufted.margin-note[
+    #figure(caption: [$T(3)$对应的量子电路])[] <T3-circuit>
+]
+
+由#ref(<coro-MultiFoldZGate-QuantumCircuit>)和#ref(<fig-MultiFoldZGate-QuantumCircuit>)或者@Zk-building-block 可知，若 $Z(k)$ 前带有系数 $alpha $ ，那么其对应的电路基本构建块（Building Block）为：
+$
+  U(alpha Z(n), gamma) &= upright(e)^(- upright(i) alpha gamma Z(n)) \
+  &= (product_(k = 1)^(n - 1)"CNOT"_(i_(n))^(i_(k))) dot R Z_(i_(n))(2 alpha gamma) dot (product_(k = 1)^(n - 1)"CNOT"_(i_(n))^(i_(n - k))).
+$ <eq-PUBOZBuildingBlock>
+#figure(
+  image("images/UZk-circuit.png"), 
+  caption: [$Z(k)$对应的基本构建块]
+) <Zk-building-block>
+也就是说，先按 $i_(1),...,i_(n - 1)$ 的顺序把这些量子比特作为控制位、 $i_(n)$ 作为目标位作用 $"CNOT"$ 门；再在 $i_(n)$ 上作用 $R Z(2 alpha gamma)$ ；最后按反向顺序再次应用这些 $"CNOT"$ 门。这种结构就是 PUBO 线路构造中最基本的构建块。
+
+#tufted.definition[子序列][
+  对序列 $S = (s_(1), s_(2), ..., s_(n))$ ，若 $S' = (s_(i_(1)), s_(i_(2)), ..., s_(i_(k)))$ 满足 $1 <= i_(1) < i_(2) < ... < i_(k) <= n$ ，则称 $S'$ 是 $S$ 的一个子序列。它可以通过删除 $S$ 中的一些元素得到，同时保持剩余元素的相对顺序不变。
+]
+
+现在先说明“按 $T(n)$ 构造”会发生什么。考虑一个 $n$ 次 PUBO 单项式：
+$
+  T_l (n) = x_(i_(1)) x_(i_(2)) ... x_(i_(n)).
+$
+由于每个二进制变量满足 $x = (1 - s)/2$ ，而量子哈密顿量中 $s_(i)$ 对应 $bold(Z)_(i)$ ，所以该单项式会被展开为：
+$
+  alpha_l T_l (n) arrow.r.long frac(alpha_l, 2^(n)) product_(r = 1)^(n)(bold(I) - bold(Z)_(i_(r))).
+$
+展开后，除了常数项以外，每一个非空子序列 $(i_(j_(1)), ..., i_(j_(k)))$ 都对应一个 $k$ 重 $Z$ 算子：
+$
+  times.o.big_(m = 1)^(k) bold(Z)_(i_(j_(m))).
+$
+因此，从一个 $n$ 次单项式出发，会产生所有非空子序列对应的构建块。子序列中的编号说明相应的 $Z(k)$ 算子具体作用在哪些量子比特上。
+
+由此可以得到一种直接但朴素的构造方式：逐项遍历代价函数中的每个 $alpha_l T_l (n)$ ，并对它展开出的每个非空子序列添加相应的构建块。对 $T_l (n)$ 而言，若选取其中 $k$ 个变量形成 $Z(k)$ ，则对应 $R Z$ 门角度中的系数符号为 $(-1)^k$ ，系数量级为 $alpha_l / 2^n$ ；换言之，其构建块中的 $R Z$ 参数可写成：
+$
+  2 dot ((-1)^k frac(alpha_l, 2^n)) gamma = (-1)^k frac(alpha_l gamma, 2^(n - 1)).
+$ <eq-PUBOTermBuildingBlockAngle>
+这种方法的优点是直观：从 PUBO 的标量形式出发，不需要先整理整个矩阵形式的哈密顿量。但它的问题也正发生在这里：每一个 $T(n)$ 都会展开出 $2^n - 1$ 个非空子序列，而不同的 $T(n)$ 往往共享变量，因此它们展开出的许多 $Z(k)$ 会作用在完全相同的一组量子比特上。如果逐项添加线路，就会反复加入结构相同、只差角度的构建块。
+
+更好的方法是先在哈密顿量层面做合并、再生成线路，也就是“按 $Z(n)$ 构造”。由于所有 $Z(k)$ 算子都是对角矩阵，所以它们两两对易，意味着每个构建块都可以在量子电路上随意摆放；而相同目标量子比特集合的构建块只是在同一个相位旋转角上累加。例如两个不同的三重 $Z$ 算子的构建块可以合并成一个构建块：
+$
+  R_(Z Z)^(i,j,k)(gamma_(1)) dot R_(Z Z)^(i,j,k)(gamma_(2)) = R_(Z Z)^(i,j,k)(gamma_(1) + gamma_(2)).
+$ <eq-PUBOBuildingBlockMerge>
+其中 $R_(Z Z)^(i,j,k)(gamma)$ 表示：
+$
+  "CNOT"_(k)^(i) dot "CNOT"_(k)^(j) dot R Z_(k)(gamma) dot "CNOT"_(k)^(j) dot "CNOT"_(k)^(i).
+$
+式@eq-PUBOBuildingBlockMerge 的直观含义是：相连且相反的CNOT链会相互抵消，之后两个 $R Z$ 旋转可以合并成一个角度为 $gamma_(1) + gamma_(2)$ 的 $R Z$ 旋转。一般的 $Z(k)$ 构建块也具有同样的合并规则。
+
+因此，基于 $Z(n)$ 的线路生成可以按如下步骤完成@Direct-Application-of-QAOA-Algorithm-to-PUBO-Problem。它和按 $T(n)$ 构造的区别在于：前两步只在哈密顿量表达式中收集和合并项，还不立即生成电路；只有合并完成后，才为每个剩余的 $Z(k)$ 项生成一次构建块。
+
++ 将 PUBO 标量哈密顿量逐项展开为 $Z(k)$ 算子的线性组合。对 $T_l (n)=x_(i_(1))...x_(i_(n))$ ，遍历序列 $(i_(1),...,i_(n))$ 的所有非空子序列，并记录每个子序列对应的系数。
++ 将作用在同一组量子比特上的 $Z(k)$ 项合并：若两个子序列完全相同，则把它们的系数相加。
++ 遍历合并后的 $Z(k)$ 项，并对每一项使用式@eq-PUBOZBuildingBlock 生成一个构建块。遍历顺序不影响结果，因为这些 $Z(k)$ 项彼此对易。
+
+#tufted.theorem(label: <theo-PUBOZBuildingBlockGateCount>)[ $Z(k)$ 构建块的门数][
+  一个 $k$ 重 $Z$ 算子的构建块需要 $1$ 个 $R Z$ 门和 $2(k - 1)$ 个 $"CNOT"$ 门。
+]
+
+#tufted.proof[
+  由式@eq-PUBOZBuildingBlock 或@Zk-building-block 立即可知。
+]
+
+#tufted.theorem(label: <theo-PUBOTermBuildingBlockCount>)[ $T(n)$ 所需构建块数量][
+  一个 $n$ 次单项式 $T(n)$ 会产生 $2^n - 1$ 个构建块。其中， $Z(k)$ 类型的构建块数量为 $binom(n, k)$ 。
+]
+
+#tufted.proof[
+  $T(n)$ 的展开需要遍历 $n$ 个变量指标构成的序列的所有非空子序列。非空子序列的数量等于 $n$ 元集合的非空子集数量，即 $2^n - 1$ 。其中长度为 $k$ 的子序列数量就是从 $n$ 个指标中选出 $k$ 个指标的方式数，因此为 $binom(n, k)$ 。
+]
+
+#tufted.corollary[无合并情况下 $T(n)$ 对应量子电路的门数量][
+  若不对不同构建块进行合并，那么一个 $n$ 次单项式 $T(n)$ 需要 $2^n - 1$ 个 $R Z$ 门，以及：
+  $
+    sum_(k = 1)^(n) 2(k - 1) binom(n, k) &= n 2^n - 2(2^n - 1) \
+    &= (n - 2)2^n + 2
+  $
+  个 $"CNOT"$ 门。
+]
+
+由此可见，若机械地从每个 $T(n)$ 单项式生成线路， $R Z$ 门数量按 $O(2^n)$ 增长，而 $"CNOT"$ 门数量按 $O(n 2^n)$ 增长。更重要的是，这个估计还没有计入不同 $T(n)$ 之间的重复构建块：如果多个高阶单项式共享变量，按 $T(n)$ 构造会把同一组量子比特上的 $Z(k)$ 构建块反复生成。对 NISQ 设备而言， $"CNOT"$ 门通常更昂贵也更容易引入噪声，因此合并构建块是直接处理 PUBO 问题时必须重视的预处理步骤。先合并相同量子比特集合上的 $Z(k)$ 项，再按 $Z(n)$ 生成电路，往往能显著减少冗余的 $"CNOT"$ 门。但必须承认：该合并不会改变门数量的渐近复杂度，仍然是指数级增长。
 
 #set text(lang: "en")
 

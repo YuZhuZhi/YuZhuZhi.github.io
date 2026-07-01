@@ -520,15 +520,17 @@ THEOREMS AND PROOFS
 .tufted-lemma,
 .tufted-proposition,
 .tufted-proof {
-	--env-accent: var(--theme-table-border, #ccc);
-	--env-bg: color-mix(in srgb, var(--theme-pre-bg, #f7f7f7) 65%, transparent);
+	--env-accent: var(--theme-table-border, #8c8c8c);
+	--env-bg: color-mix(in srgb, var(--env-accent) 6%, var(--theme-bg, #fffff8));
+	--env-border: color-mix(in srgb, var(--env-accent) 24%, var(--theme-bg, #fffff8));
 	width: 55%;
 	margin: 1.5em 0;
-	padding: 0.85em 1em;
+	padding: 0.55em 1em 0.65em;
 	box-sizing: border-box;
 	clear: none;
-	border-radius: var(--radius-sm);
-	border: 1px solid var(--env-accent);
+	border: 0;
+	border-inline-start: 0.25em solid var(--env-accent);
+	border-radius: 0;
 	background: var(--env-bg);
 	font-size: 1.5rem;
 	line-height: 2.2rem;
@@ -548,45 +550,45 @@ figure:has(> .tufted-proposition) {
 }
 
 .tufted-theorem {
-	--env-accent: #006d12;
-	--env-bg: color-mix(in srgb, #D9F4DA 72%, var(--theme-bg, #fffff8));
+	--env-accent: #b91c1c;
+	--env-bg: color-mix(in srgb, var(--env-accent) 5%, var(--theme-bg, #fffff8));
 	font-family: KaiTi, STKaiti, "Kaiti SC", serif;
 }
 
 .tufted-corollary {
-	--env-accent: #a0840a;
-	--env-bg: color-mix(in srgb, #eeedb9 72%, var(--theme-bg, #fffff8));
+	--env-accent: #a21caf;
+	--env-bg: color-mix(in srgb, var(--env-accent) 5%, var(--theme-bg, #fffff8));
 	font-family: KaiTi, STKaiti, "Kaiti SC", serif;
 }
 
 .tufted-definition {
-	--env-accent: #1978f5;
-	--env-bg: color-mix(in srgb, #eadff6 72%, var(--theme-bg, #fffff8));
+	--env-accent: #c2410c;
+	--env-bg: color-mix(in srgb, var(--env-accent) 5%, var(--theme-bg, #fffff8));
 	font-family: KaiTi, STKaiti, "Kaiti SC", serif;
 }
 
 .tufted-lemma {
-	--env-accent: #a36b2c;
-	--env-bg: color-mix(in srgb, #f6e4c8 72%, var(--theme-bg, #fffff8));
+	--env-accent: #0f766e;
+	--env-bg: color-mix(in srgb, var(--env-accent) 5%, var(--theme-bg, #fffff8));
 	font-family: KaiTi, STKaiti, "Kaiti SC", serif;
 }
 
 .tufted-proposition {
-	--env-accent: #8b5f73;
-	--env-bg: color-mix(in srgb, #f1dce5 72%, var(--theme-bg, #fffff8));
+	--env-accent: #2563eb;
+	--env-bg: color-mix(in srgb, var(--env-accent) 5%, var(--theme-bg, #fffff8));
 	font-family: KaiTi, STKaiti, "Kaiti SC", serif;
 }
 
 .tufted-remark {
-	--env-accent: #7b7560;
-	--env-bg: color-mix(in srgb, #ece8d6 72%, var(--theme-bg, #fffff8));
+	--env-accent: #118d8d;
+	--env-bg: color-mix(in srgb, var(--env-accent) 5%, var(--theme-bg, #fffff8));
 	font-family: inherit;
 }
 
 .tufted-proof {
-	--env-accent: var(--theme-table-border, #ff13df);
-	--env-bg: color-mix(in srgb, var(--theme-pre-bg, #fdc8ff) 72%, var(--theme-bg, #fffff8));
-	border-width: 0 0 0 2px;
+	--env-accent: #6b7280;
+	--env-bg: transparent;
+	border-inline-start-width: 0.2em;
 	padding-left: 1em;
 	font-family: inherit;
 }

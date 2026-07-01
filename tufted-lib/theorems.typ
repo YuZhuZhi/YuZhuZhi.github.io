@@ -38,7 +38,7 @@
     if label != none {
       [#figure(kind: "tufted-theorem", supplement: name, caption: none)[#html-body] #label]
     } else {
-      figure(kind: "tufted-theorem", supplement: name, caption: none)[html-body]
+      figure(kind: "tufted-theorem", supplement: name, caption: none)[#html-body]
     }
   } else {
     block[
@@ -73,7 +73,7 @@
     if label != none {
       [#figure(kind: "tufted-corollary", supplement: name, caption: none)[#html-body] #label]
     } else {
-      figure(kind: "tufted-corollary", supplement: name, caption: none)[html-body]
+      figure(kind: "tufted-corollary", supplement: name, caption: none)[#html-body]
     }
   } else {
     block[
@@ -108,7 +108,7 @@
     if label != none {
       [#figure(kind: "tufted-remark", supplement: name, caption: none)[#html-body] #label]
     } else {
-      figure(kind: "tufted-remark", supplement: name, caption: none)[html-body]
+      figure(kind: "tufted-remark", supplement: name, caption: none)[#html-body]
     }
   } else {
     block[
@@ -143,7 +143,7 @@
     if label != none {
       [#figure(kind: "tufted-definition", supplement: name, caption: none)[#html-body] #label]
     } else {
-      figure(kind: "tufted-definition", supplement: name, caption: none)[html-body]
+      figure(kind: "tufted-definition", supplement: name, caption: none)[#html-body]
     }
   } else {
     block[
@@ -178,7 +178,7 @@
     if label != none {
       [#figure(kind: "tufted-lemma", supplement: name, caption: none)[#html-body] #label]
     } else {
-      figure(kind: "tufted-lemma", supplement: name, caption: none)[html-body]
+      figure(kind: "tufted-lemma", supplement: name, caption: none)[#html-body]
     }
   } else {
     block[
@@ -213,7 +213,7 @@
     if label != none {
       [#figure(kind: "tufted-proposition", supplement: name, caption: none)[#html-body] #label]
     } else {
-      figure(kind: "tufted-proposition", supplement: name, caption: none)[html-body]
+      figure(kind: "tufted-proposition", supplement: name, caption: none)[#html-body]
     }
   } else {
     block[
