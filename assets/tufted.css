@@ -535,20 +535,32 @@ THEOREMS AND PROOFS
 	overflow-wrap: break-word;
 }
 
+figure:has(> .tufted-theorem),
+figure:has(> .tufted-corollary),
+figure:has(> .tufted-remark),
+figure:has(> .tufted-definition),
+figure:has(> .tufted-lemma),
+figure:has(> .tufted-proposition) {
+	width: 100%;
+	max-width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
 .tufted-theorem {
-	--env-accent: #2f6f8f;
-	--env-bg: color-mix(in srgb, #d7eef8 72%, var(--theme-bg, #fffff8));
+	--env-accent: #006d12;
+	--env-bg: color-mix(in srgb, #D9F4DA 72%, var(--theme-bg, #fffff8));
 	font-family: KaiTi, STKaiti, "Kaiti SC", serif;
 }
 
 .tufted-corollary {
-	--env-accent: #4f7d45;
-	--env-bg: color-mix(in srgb, #e0f1d8 72%, var(--theme-bg, #fffff8));
+	--env-accent: #a0840a;
+	--env-bg: color-mix(in srgb, #eeedb9 72%, var(--theme-bg, #fffff8));
 	font-family: KaiTi, STKaiti, "Kaiti SC", serif;
 }
 
 .tufted-definition {
-	--env-accent: #8065a8;
+	--env-accent: #1978f5;
 	--env-bg: color-mix(in srgb, #eadff6 72%, var(--theme-bg, #fffff8));
 	font-family: KaiTi, STKaiti, "Kaiti SC", serif;
 }
@@ -572,8 +584,8 @@ THEOREMS AND PROOFS
 }
 
 .tufted-proof {
-	--env-accent: var(--theme-table-border, #ccc);
-	--env-bg: color-mix(in srgb, var(--theme-pre-bg, #f7f7f7) 72%, var(--theme-bg, #fffff8));
+	--env-accent: var(--theme-table-border, #ff13df);
+	--env-bg: color-mix(in srgb, var(--theme-pre-bg, #fdc8ff) 72%, var(--theme-bg, #fffff8));
 	border-width: 0 0 0 2px;
 	padding-left: 1em;
 	font-family: inherit;
@@ -727,6 +739,7 @@ THEOREMS AND PROOFS
 .tufted-proof-qed {
 	text-align: right;
 	line-height: 1;
+}
 
 /*******************************************************************************
 RESPONSIVE LAYOUT
