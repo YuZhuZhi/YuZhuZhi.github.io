@@ -8,7 +8,7 @@
 )
 
 #set math.mat(delim: "[", row-gap: 4pt, column-gap: 8pt)
-#set math.equation(numbering: "(1.1)")
+#set math.equation(numbering: "(1)")
 
 #let bH = $bold(cal(H))$
 #let bHC = $bold(cal(H))_(cal(C))$
@@ -34,7 +34,11 @@
 
 //-------------------------------------------------------//
 
-= QAOA算法
+= 量子计算（八）——QAOA算法
+
+#tufted.full-width[
+    #image("header.jpg")
+]
 
 量子近似优化算法（Quantum Approximate Optimization Algorithm，QAOA）是一种混合量子–经典架构的变分算法，即用经典优化器迭代训练一个含参量子线路，主要用于求解组合优化问题。所谓组合优化问题，典型的如旅行商问题、背包问题等，是在有限且离散的解空间中寻找最优解的优化问题，这一解空间会随着问题规模指数增长，因此一般是NP-hard的，可以给出数学模型为：
 $
@@ -46,7 +50,7 @@ $ <eq-chap9-CombinatorialOptimizationModel>
 
 QAOA一般要求问题的数学模型要进一步约化到二次无约束二值优化（Quadratic Unconstrained Binary Optimization，QUBO）问题，即要求代价函数$cal(C)(x)$是最高次项不超过2的多项式，变量$x $取值为0或1，并且没有任何约束条件。实际上，QAOA亦可直接应用于多项式无约束二值优化（Polynomial Unconstrained Binary Optimization，PUBO）问题。相较于仅包含二次项的QUBO问题，PUBO问题推广了交互项的阶数，能够编码包含高阶关联的复杂目标函数。本节将从QUBO和PUBO问题的数学模型入手，详细说明QAOA算法的构造步骤与运行原理。
 
-== 伊辛模型，QUBO问题与PUBO问题 <subsec-chap9-伊辛模型.QUBO问题与PUBO问题>
+== 一、伊辛模型，QUBO问题与PUBO问题 <subsec-chap9-伊辛模型.QUBO问题与PUBO问题>
 
 伊辛模型 @Ising1925-Beitrag-zur-Theorie-des-Ferromagnetismus 是统计物理中最具代表性的模型之一，用于研究自旋系统中的相变行为。伊辛模型定义在一个离散格点系综上，系统的总能量由*伊辛哈密顿量*给出： 
 $
@@ -117,7 +121,7 @@ cal(C)(x) &= sum_(i_(1))T_(i_(1))x_(i_(1)) + sum_(i_(1) < i_(2))T_(i_(1)i_(2))x_
 $
 其中$n $是变量的数量。通过变量代换、添加约束并转换为惩罚项的方式，PUBO问题总能被归约为QUBO问题。相关算法在文献#cite(<dattani-2019-QuadratizationDiscreteOptimizationQuantum>)中有详尽的总结。利用变换式$s = 2 x - 1 $能将PUBO问题转换为高阶伊辛模型。
 
-== 将问题编码为厄米矩阵
+== 二、将问题编码为厄米矩阵
 
 在#ref(<subsec-chap9-伊辛模型.QUBO问题与PUBO问题>)节中已提到，使用自旋变量 $s $ 与布尔变量 $x $的变量代换$s = 2 x - 1 $即可将QUBO问题或PUBO问题转换为伊辛模型（包括高阶伊辛模型）。要应用QAOA算法，下一步就是将伊辛模型编码为厄米矩阵。现假设已经得到的伊辛哈密顿量为： 
 $
@@ -129,7 +133,7 @@ bHC = sum_(delta =(delta_(1),...,delta_(n)) in {0,1 }^(n)) h_(delta)times.o.big_
 $ <eq-chap9-QuestionHamiltonian>
 其中 $bold(Z) $即泡利Z矩阵，且 $bold(Z)^(0)= bold(Z)^(2)= bold(I) $、$bold(Z)^(1)= bold(Z) $，$bold(Z)_(i)$等价于将在第$i $量子比特上作用Z门。之所以这样替换，是因为可以自然地将物理可观测量——自旋沿 $z $ 轴的分量，即泡利 Z 矩阵与自旋变量 $s $ 对应起来。针对问题哈密顿量$bHC$，有以下定理：
 
-#tufted.theorem[#cite(<Grange2023-An-introduction-to-variational-quantum-algorithms-for-combinatorial-optimization-problems>)][
+#tufted.theorem[问题哈密顿量的特征向量和特征值#cite(<Grange2023-An-introduction-to-variational-quantum-algorithms-for-combinatorial-optimization-problems>)][
   问题哈密顿量 $bHC$ 的特征向量是从 $ket(0)$ 到 $lr(| 2^(n)- 1 chevron.r)$ 的计算基态，且每个特征向量$ket(x)$对应的特征值是代价函数在相应解$x $下的函数值$cal(C)(x)$（在不忽略常数项的情况下）。
 ] 
 
@@ -171,7 +175,7 @@ $ <eq-chap9-QuestionHamiltonian>
 
 *Theorem 2.* _量子绝热定理 对于一个缓慢变化的、无简并的哈密顿量，如果系统初始处于其基态或某个瞬时能级的本征态，则系统在随时间演化的过程中将始终保持在相应的瞬时能级态上，而不会跃迁到其他能级。  _
 
-== 分段近似模拟绝热演化
+== 三、分段近似模拟绝热演化
 
 接下来首先给出QAOA的整体结构与电路图，之后再分模块介绍。QAOA的算法过程可以用下式完整表示： 
 $
@@ -283,7 +287,7 @@ _Proof._  证明留给读者作为习题。提示：使用数学归纳法。  #h
 // 由推论#ref(<coro-chap9-MultiFoldZGate-QuantumCircuit>)，
 任意PUBO问题也能转化为量子电路。但千万别忘了：QAOA的终态$ket(bgabe)$是由$bgabe $中共$2 p $个角度参数决定的，这些参数直接影响了算法对量子绝热过程的近似模拟的好坏。因此QAOA的下一步，是寻找到一组足够好的参数、以尽可能地模拟真实的量子绝热过程，或者说输出足够好的结果。
 
-== 经典参数的训练
+== 四、经典参数的训练
 
 与经典计算中的机器学习、神经网络类似，这些角度参数也通常通过梯度下降法训练。衡量结果好坏的标准是——终态$ket(bgabe)$所代表的自旋构型$s $输入到伊辛哈密顿量后得到的期望能量值，即如式@eq-chap9-IsingHamiltonianPolynomial 所示的$cal(H)(s)$，越低越好。显然该值也可以使用问题哈密顿量计算出： 
 $
@@ -447,7 +451,7 @@ _Proof._  该推论为读者留作习题。  #h(1fr) $square.stroked$
 
 在这种特殊情况下，利用$bold(beta) $参数的周期性，可以进一步将参数空间缩小到$[0, pi /2 ]^(p) times[0, pi /2 ]^(p)$。
 
-== QAOA 背后的图景
+== 五、QAOA 背后的图景
 
 量子绝热算法利用量子绝热定理，通过设计一条演化路径，将易于制备基态的初始哈密顿量连续演化为问题哈密顿量。若演化足够缓慢且满足绝热条件，系统最终将处于问题哈密顿量的基态，此时对该态进行测量即可得到优化问题的解。QAOA 则借鉴量子绝热算法的思想，使用参数化量子电路分段近似模拟这一绝热演化过程。那么，QAOA 算法究竟是如何推演得到的呢？下面阐述这个问题。
 

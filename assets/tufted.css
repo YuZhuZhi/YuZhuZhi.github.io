@@ -458,14 +458,15 @@ THEOREMS AND PROOFS
 
 .tufted-theorem {
 	border: 1px solid var(--theme-table-border, #ccc);
-	background: color-mix(in srgb, var(--theme-pre-bg, #f7f7f7) 55%, transparent);
+	background: color-mix(in srgb, var(--theme-pre-bg, #00ff80) 55%, transparent);
 	font-family: KaiTi, STKaiti, "Kaiti SC", serif;
+	font-size: 1.25rem;
 }
 
 .tufted-proof {
 	border-left: 2px solid var(--theme-table-border, #ccc);
 	padding-left: 1em;
-	font-family: KaiTi, STKaiti, "Kaiti SC", serif;
+	font-family: inherit;
 }
 
 .tufted-theorem-heading,
@@ -478,7 +479,7 @@ THEOREMS AND PROOFS
 
 .tufted-theorem-body > p,
 .tufted-proof-body > p {
-	width: 55%;
+	width: 100%;
 	margin: 0.45em 0;
 	font-size: inherit;
 	line-height: inherit;
