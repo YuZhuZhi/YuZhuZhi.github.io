@@ -49,7 +49,9 @@ ket(psi) =te^(ti phi_0)(cos theta ket(0) +te^(ti (phi_1 - phi_0)) sin theta ket(
 => ket(psi) attach(stretch(eq, size: #100%), t: phi = phi_1 - phi_0) cos theta ket(0) + te^(ti  phi) sin theta ket(1)
 $ 
 
+#tufted.remark[][
 扔掉 $te^(ti  phi_0)$ 的操作是合情合理的。在同时使用 $te^(ti  phi_0), te^(ti  phi_1)$ 的时候，是分别对计算基态 $ket(0) , ket(1)$ 的相位做偏移，这个时候称为*绝对相位*。提取并丢弃 $te^(ti  phi_0)$ 时，是以 $ket(0)$ 的相位为基准，或者说强制使其相位为 $0$，来标定 $ket(1)$ 的相位，这时称为*相对相位*。相对相位 $phi= phi_1- phi_0$ 正体现了 $phi_0, phi_1$ 之间的关系。两种表示方法是等价的，但相对相位更加方便——因为使用绝对相位的时候，我们并不能预先知道相位为 $0$ 的标准！就像物理学中研究势能场时，必须指定势能零点，否则是无意义的。
+]
 
 #html.hr()
 
@@ -57,7 +59,7 @@ $
 
 == 1.目前的纯态表示方法
 
-在确定了两个角度变量 $theta, phi$ 之后，纯态显然可以被标识在一个单位球面上了
+在确定了两个角度变量 $theta, phi$ 之后，纯态显然可以被标识在一个*单位球面*上了
 #footnote[但需要注意，与前一节所述不同，这个球的坐标轴*不是*由计算基态张成的，而是普通的$x y z$坐标系。]！
 规定 $phi$表示矢量在 $x O y$ 平面上的投影与 $x$ 轴的张角，$theta$表示矢量与$z$轴的夹角。也就如 @布洛赫球面上的纯态 所示。
 
@@ -85,11 +87,11 @@ $
 == 2.真实的布洛赫球面
 
 在上述的球面中，要寻找与纯态正交的另一个纯态略显复杂了。解决方法是，由于研究纯态与研究其相反数是一样的，所以完全可以在球面上将相反的纯态全部剔除。“正的”纯态集中于上半球面，因此将这一部分重新映射到整个球面上——这是做变换 $theta -> frac(theta, 2)$。此时，纯态被记为：
-
-$
-ket(psi) = cos frac(theta, 2) ket(0) + te^(ti phi)sin frac(theta, 2) ket(1)
-$ 
-
+#tufted.definition[纯态的布洛赫球表示（Bloch Sphere Representation）][
+  $
+    ket(psi) = cos frac(theta, 2) ket(0) + te^(ti phi)sin frac(theta, 2) ket(1)
+  $ 
+]
 而两个计算基态分别位于球面的*北极点和南极点*，如 @实际计算基态的位置 所示。
 
 #figure(caption: [计算基态在布洛赫球面上的实际位置])[

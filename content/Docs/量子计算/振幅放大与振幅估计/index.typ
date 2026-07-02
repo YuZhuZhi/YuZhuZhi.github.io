@@ -28,12 +28,14 @@
 
 = 零、声明
 
-这篇文章基于Brassard的论文*Quantum amplitude amplification and estimation* @Quantum-amplitude-amplification-and-estimation 写成，大致概括了其中的算法思路，并具体计算了其中一些内容。因此这篇文章的主题就是*数学计算*，难度相比之前会有较大的跃升。但之后会回到原先基础算法的简单讲解。
+这篇文章基于Brassard的论文_Quantum amplitude amplification and estimation_ @Quantum-amplitude-amplification-and-estimation 写成，大致概括了其中的算法思路，并具体计算了其中一些内容。因此这篇文章的主题就是*数学计算*，难度相比之前会有较大的跃升。但之后会回到原先基础算法的简单讲解。
 
 事实上，如果读完了这篇文章，基本就相当于理解了 Grover 算法的原理。笔者原准备讲述完 Grover 算法之后再发出这篇文章，但现在笔者正在思考是否应该在下一篇文章中更细致地讲 Grover 算法。
 
-另外，请读者务必注意：文章中符号众多，并且在后面再次提及时*不会*重新解释其含义，因此请读者在阅读过程中务必*直接记住*各符号的含义。
-
+另外，请读者务必注意：
+#tufted.remark[][
+文章中符号众多，并且在后面再次提及时*不会*重新解释其含义，因此请读者在阅读过程中务必*直接记住*各符号的含义。
+]
 
 #html.hr()
 
@@ -121,6 +123,13 @@ $
 
 == 2.振幅如何被放大
 
+计算可得$ ket(Psi)$ 被施加 $k$ 次 $ upright(bold(Q))$ 算符后得到：
+$
+ upright(bold(Q))^k ket(Phi)= frac(1, sqrt(1-a))cos((2k+1) theta) ket(Phi_0)+ frac(1, sqrt(a))sin((2k+1) theta) ket(Phi_1)
+$
+即测得*好纯态*的概率是 $sin^2 ( (2k+1) theta )$。得到的结果中出现了角度参数，这意味着算法在几何上一定有直观的表现。
+
+#tufted.proof[
 假设对 $ ket(Psi)$ 施加 $k-1$ 次 $ upright(bold(Q))$ 算符后：
 
 $
@@ -177,12 +186,7 @@ $
     &= frac(- te^(ti ( frac(pi, 2)+(2k+1) theta)), 2 sqrt(a))+ frac(te^(ti ( frac(pi, 2)-(2k+1) theta)), 2 sqrt(a))\
     &= frac(1, sqrt(a)) dot sin ( (2k+1) theta  )\
 $
-
-因此，作用 $ upright(bold(Q))$ 算符 $k$ 次后，测得*好纯态*的概率就是 $sin^2 ( (2k+1) theta  )$ 。我们可以将结论记为：
-
-$
- upright(bold(Q))^k ket(Phi)= frac(1, sqrt(1-a))cos((2k+1) theta) ket(Phi_0)+ frac(1, sqrt(a))sin((2k+1) theta) ket(Phi_1)
-$
+]
 
 == 3.算符 $ upright(bold(Q))$ 的几何意义
 
@@ -271,9 +275,9 @@ $
 
 由上节我们已经知道，在已知 $a$ 的情况下，使用 $ upright(bold(Q))^m cal(A) ket(0^n)$ 即可使我们得到好纯态的概率为 $sin^2 ( (2m+1) theta  ) >= max { a,1-a  }$ 。然而我们依然有可能使这个概率为 $1$ ，这就是量子算法的*去随机化*。论文中给出两种方法：
 
-== 1. $ theta$ 微调
+== 1. $theta$ 微调
 
-当 $m= tilde(m)$ 时，也就是 $ frac(pi, 4 theta)- frac(1, 2)$ 恰是*整数*，那么 $ upright(bold(Q))^m cal(A) ket(0^n)$ 就自然完全得到好纯态。另一方面，若记 $overline(m)= ceil( tilde(m))$ ，那么 $overline(m)$ 次迭代又稍微多了点，因此不妨使角度 $ theta$ 更小点，取 $overline(theta)}=frac(pi,4overline(m)+2)$ 。因此，只要调整算法的初始准确率至 $overline(a)=sin^2overline( theta)}$ ，那么 $overline(m)$ 次迭代就恰恰好了。
+当 $m= tilde(m)$ 时，也就是 $ frac(pi, 4 theta)- frac(1, 2)$ 恰是*整数*，那么 $ upright(bold(Q))^m cal(A) ket(0^n)$ 就自然完全得到好纯态。另一方面，若记 $overline(m)= ceil( tilde(m))$ ，那么 $overline(m)$ 次迭代又稍微多了点，因此不妨使角度 $ theta$ 更小点，取 $overline(theta)=frac(pi,4overline(m)+2)$ 。因此，只要调整算法的初始准确率至 $overline(a)=sin^2overline( theta)$ ，那么 $overline(m)$ 次迭代就恰恰好了。
 
 于是问题转化为如何使算法 $ cal(A)$ 的初始准确率从 $a$ 变为 $overline(a)$ 。这很简单：只要构建另一个算法 $ cal(B)$ 使得其作用在单个量子位上时：
 
@@ -407,13 +411,16 @@ else goto step3;    // 否则，goto step3。
 == 2.利用相位估计的振幅估计
 
 将*相位估计*中的 $U$ 矩阵替换为 $ upright(bold(Q))$ 即可，如下图所示：
-#tufted.full-width[
-    #image("imgs/amplitude-estimation.png")
-]
-#tufted.margin-note[
-    #figure(caption: [振幅估计的量子电路图])[] <AmplitudeEstimationCircuit>
-]
-
+#figure(
+    image("imgs/amplitude-estimation.png"),
+    caption: [振幅估计的量子电路图]
+) <AmplitudeEstimationCircuit>
+// #tufted.full-width[
+//     #image("imgs/amplitude-estimation.png")
+// ]
+// #tufted.margin-note[
+//     #figure(caption: [振幅估计的量子电路图])[] <AmplitudeEstimationCircuit>
+// ]
 
 于是 $y$ 就代表了 $ upright(bold(Q))$ 特征值中的相位，对比 $ upright(bold(Q))$ 的特征值可得 $ti 2 theta=ti 2 pi  frac(y, n)$ 即 $ theta= pi  frac(y, n)$ ，从而可以得到 $a$ 的一个*估计值*：
 

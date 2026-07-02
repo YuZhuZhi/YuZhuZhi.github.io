@@ -3,7 +3,7 @@
 
 #import "../../index.typ": template, tufted
 #show: template.with(
-    title: "量子计算（八）——QAOA算法",
+    title: "量子计算（八）——QAOA量子近似优化算法",
     description: "量子近似优化算法（Quantum Approximate Optimization Algorithm，QAOA）是一种混合量子–经典架构的变分算法，即用经典优化器迭代训练一个含参量子线路，主要用于求解组合优化问题。所谓组合优化问题，典型的如旅行商问题、背包问题等，是在有限且离散的解空间中寻找最优解的优化问题，这一解空间会随着问题规模指数增长，因此一般是NP-hard的。",
 )
 
@@ -34,7 +34,7 @@
 
 //-------------------------------------------------------//
 
-= 量子计算（八）——QAOA算法
+= 量子计算（八）——QAOA量子近似优化算法
 
 #tufted.full-width[
     #image("header.jpg")
@@ -68,8 +68,10 @@ $
   cal(C)(x) = sum_(i,j = 1 \ i <= j)^(n) Q '_(i j) x_(i) x_(j) + sum_(i = 1)^(n) c_(i) x_(i),
 $ <eq-QUBOCostFuncSumForm>
 从而更加方便地转换为伊辛模型。需要注意：
-  + 式 @eq-QUBOCostFuncSumForm 中的 $Q '_(i j)$ 不一定等于式 @eq-QUBOCostFuncQuadraticForm 中二次型矩阵 $bold(Q) $ 的第 $i $ 行第 $j $ 列元素 $Q_(i j)$ ，而应视 $bold(Q) $ 的形式决定。例如，若 $bold(Q) $ 是对称矩阵，那么 $Q '_(i j)= 2 Q_(i j)$ 。
-  + $Q '_(i j)$ 允许 $i = j $ ，这似乎会造成与一次项求和部分的冗余。但允许 $i = j $ 会使之后转换伊辛模型的计算更加简单。事实上，可以令 $Q '_(i i)= 0,c_(i)= Q_(i i)$ 以消除冗余，此时求和号下 $i <= j $ 改为 $i < j $ 不影响结果。
+#tufted.remark[][
+  1. 式 @eq-QUBOCostFuncSumForm 中的 $Q '_(i j)$ 不一定等于式 @eq-QUBOCostFuncQuadraticForm 中二次型矩阵 $bold(Q) $ 的第 $i $ 行第 $j $ 列元素 $Q_(i j)$ ，而应视 $bold(Q) $ 的形式决定#footnote[例如，$mat(2, 2, 2; 0, 4, 4; 0, 0, 6)$ 和 $mat(2, 1, 1; 1, 4, 2; 1, 2, 6)$ 都表示同一个二次型 $2 x_(1)^(2) + 4 x_(1) x_(2) + 6 x_(2)^(2)$ ，但前者的 $Q '_(1 2)= 8$ ，后者的 $Q '_(1 2)= 4$ 。]。例如，若 $bold(Q) $ 是对称矩阵，那么 $Q '_(i j)= 2 Q_(i j)$ 。
+  2. $Q '_(i j)$ 允许 $i = j $ ，这似乎会造成与一次项求和部分的冗余。但允许 $i = j $ 会使之后转换伊辛模型的计算更加简单。事实上，可以令 $Q '_(i i)= 0,c_(i)= Q_(i i)$ 以消除冗余，此时求和号下 $i <= j $ 改为 $i < j $ 不影响结果。
+]
 
 为了将代价函数转换为伊辛模型，只需将布尔变量 $x_(i)$ 转换为自旋变量 $s_(i)$ 。通过代入变换关系 $x_(i) = frac(s_(i) + 1, 2)$ ，即可得到伊辛哈密顿量： /* Begin subequations */
  <eq-IsingHamiltonianWithConst>
@@ -288,10 +290,7 @@ $ <eq-QuestionUnitaryOperatorEffectWithCoeffientB>
   证明留给读者作为习题。提示：使用数学归纳法。
 ]
 
-// 由定理#ref(<theo-SingleCoupleFoldZGate-QuantumCircuit>)，
-任意QUBO问题都能轻易地转化为QAOA量子电路了；进一步地，
-// 由推论#ref(<coro-MultiFoldZGate-QuantumCircuit>)，
-任意PUBO问题也能转化为量子电路。但千万别忘了：QAOA的终态 $ket(bgabe)$ 是由 $bgabe $ 中共 $2 p $ 个角度参数决定的，这些参数直接影响了算法对量子绝热过程的近似模拟的好坏。因此QAOA的下一步，是寻找到一组足够好的参数、以尽可能地模拟真实的量子绝热过程，或者说输出足够好的结果。
+由定理#ref(<theo-SingleCoupleFoldZGate-QuantumCircuit>)，任意QUBO问题都能轻易地转化为QAOA量子电路了；进一步地，由推论#ref(<coro-MultiFoldZGate-QuantumCircuit>)，任意PUBO问题也能转化为量子电路。但千万别忘了：QAOA的终态 $ket(bgabe)$ 是由 $bgabe $ 中共 $2 p $ 个角度参数决定的，这些参数直接影响了算法对量子绝热过程的近似模拟的好坏。因此QAOA的下一步，是寻找到一组足够好的参数、以尽可能地模拟真实的量子绝热过程，或者说输出足够好的结果。
 
 #html.hr()
 

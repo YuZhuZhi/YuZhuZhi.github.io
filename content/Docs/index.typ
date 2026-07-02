@@ -10,38 +10,50 @@
 //   她笑语盈盈：且莫叹。回首我处，为君灯火阑珊。--_
 // ]
 
-= 量子计算
+#html.elem(
+  "div",
+  attrs: (class: "docs-tabs"),
+)[
+  #html.elem("input", attrs: (class: "docs-tab-input", type: "radio", name: "docs-tab", id: "docs-tab-quantum", checked: "checked"), "")
+  #html.elem("input", attrs: (class: "docs-tab-input", type: "radio", name: "docs-tab", id: "docs-tab-math"), "")
+  #html.elem("input", attrs: (class: "docs-tab-input", type: "radio", name: "docs-tab", id: "docs-tab-physics"), "")
 
-+ #link("量子计算/前置知识/")[前置知识]
-+ #link("量子计算/量子态与量子门/")[量子态与量子门]
-+ #link("量子计算/布洛赫球/")[布洛赫球]
-+ #link("量子计算/超密编码与量子隐形传态/")[超密编码与量子隐形传态]
-+ #link("量子计算/Deutsch-Jozsa算法与Simon算法/")[Deutsch-Jozsa算法与Simon算法]
-+ #link("量子计算/量子傅里叶变换与相位估计/")[量子傅里叶变换与相位估计]
-+ #link("量子计算/振幅放大与振幅估计/")[振幅放大与振幅估计]
-+ #link("量子计算/QAOA/")[QAOA算法]
+  #html.elem(
+    "div",
+    attrs: (class: "docs-tab-buttons", role: "tablist", aria-label: "文章分类"),
+  )[
+    #html.elem("label", attrs: (class: "docs-tab-button", "for": "docs-tab-quantum", role: "tab"))[量子计算]
+    #html.elem("label", attrs: (class: "docs-tab-button", "for": "docs-tab-math", role: "tab"))[数学]
+    #html.elem("label", attrs: (class: "docs-tab-button", "for": "docs-tab-physics", role: "tab"))[物理]
+  ]
 
-// - 中文文档
-//   - #link("website-config/", "网站配置")
-//   - #link("typst-example/", "Typst 功能速览与样例")
-//   - #link("github-deploy/", "GitHub 网站部署")
-//   - #link("custom-styling/", "自定义样式")
+  #html.elem("section", attrs: (class: "docs-tab-panel docs-tab-panel-quantum"))[
+    = 量子计算
 
-#html.hr()
+    + #link("量子计算/前置知识/")[前置知识]
+    + #link("量子计算/量子态与量子门/")[量子态与量子门]
+    + #link("量子计算/布洛赫球/")[布洛赫球]
+    + #link("量子计算/超密编码与量子隐形传态/")[超密编码与量子隐形传态]
+    + #link("量子计算/Deutsch-Jozsa算法与Simon算法/")[Deutsch-Jozsa算法与Simon算法]
+    + #link("量子计算/量子傅里叶变换与相位估计/")[量子傅里叶变换与相位估计]
+    + #link("量子计算/振幅放大与振幅估计/")[振幅放大与振幅估计]
+    + #link("量子计算/QAOA量子近似优化算法/")[QAOA量子近似优化算法]
+  ]
 
-= 数学
+  #html.elem("section", attrs: (class: "docs-tab-panel docs-tab-panel-math"))[
+    = 数学
 
-- 高等数学
-- 线性代数
-- 概率论与数理统计
-- 信号与系统
-- 离散数学
-- 
-#html.hr()
+    - 高等数学
+    - 线性代数
+    - 概率论与数理统计
+    - 信号与系统
+    - 离散数学
+  ]
 
-= 物理
-
-#html.hr()
+  #html.elem("section", attrs: (class: "docs-tab-panel docs-tab-panel-physics"))[
+    = 物理
+  ]
+]
 
 #html.br()
 #html.br()

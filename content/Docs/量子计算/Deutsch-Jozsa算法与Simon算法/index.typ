@@ -62,12 +62,16 @@ $
 == 3.Deutsch算法的实现
 
 Deutsch算法的完整量子电路如 @DeutschCircuit 所示。
-#tufted.full-width[
-    #image("imgs/deutsch.png")
-]
-#tufted.margin-note[
-    #figure(caption: [Deutsch算法的量子电路图])[] <DeutschCircuit>
-]
+#figure(
+    image("imgs/deutsch.png"),
+    caption: [Deutsch算法的量子电路图]
+) <DeutschCircuit>
+// #tufted.full-width[
+//     #image("imgs/deutsch.png")
+// ]
+// #tufted.margin-note[
+//     #figure(caption: [Deutsch算法的量子电路图])[] <DeutschCircuit>
+// ]
 
 也即可以用下列公式表示：
 $
@@ -96,9 +100,16 @@ $
 $
 
 由最后一式可以看出， $0$ 号量子的测量结果必然为 $f(0) plus.o f(1)$ ，也正如之前经典算法所述，此*异或结果就是函数的性质*！在这个算法中，我们只运行了一次线路即得到了结果。
-#footnote[另一个有趣的点在于，线路最后的运行结果 $0$ 号量子和 $1$ 号量子并非是纠缠的，不论测量谁都不影响另一个量子；而且，最后只有 $0$ 号量子包含我们需要的信息， $1$ 号量子则被丢弃。]
-#footnote[如果仔细观察，Deustch算法中，在 $H[0,1]$ 作用后， $1$ 号量子的状态为 $ frac(1, sqrt(2))( ket(0)- ket(1))$ ； $B_f$ 作用后， $1$ 号量子的状态依然为 $ frac(1, sqrt(2))( ket(0)- ket(1))$ ！此事的蹊跷之处在于，我们一开始引入黑箱量子门 $B_f$ 时，状态不变的是 $0$ 号量子， $1$ 号量子反而才是应该发生改变的！]
-#footnote[像这种“本应改变的量子位(通常是受控位)没变、不应变的量子位(通常是控制位)反而发生改变”的现象称为*相位反冲*(Phase Kick-back)。这一现象会是许多量子算法的基础。]
+#tufted.remark[相位反冲][
+    另一个有趣的点在于，线路最后的运行结果 $0$ 号量子和 $1$ 号量子并非是纠缠的，不论测量谁都不影响另一个量子；而且，最后只有 $0$ 号量子包含我们需要的信息， $1$ 号量子则被丢弃。
+
+    如果仔细观察，Deustch算法中，在 $H[0,1]$ 作用后， $1$ 号量子的状态为 $ frac(1, sqrt(2))( ket(0)- ket(1))$ ； $B_f$ 作用后， $1$ 号量子的状态依然为 $ frac(1, sqrt(2))( ket(0)- ket(1))$ ！此事的蹊跷之处在于，我们一开始引入黑箱量子门 $B_f$ 时，状态不变的是 $0$ 号量子， $1$ 号量子反而才是应该发生改变的！
+
+    像这种“本应改变的量子位(通常是受控位)没变、不应变的量子位(通常是控制位)反而发生改变”的现象称为*相位反冲*(Phase Kick-back)。这一现象会是许多量子算法的基础。
+]
+// #footnote[另一个有趣的点在于，线路最后的运行结果 $0$ 号量子和 $1$ 号量子并非是纠缠的，不论测量谁都不影响另一个量子；而且，最后只有 $0$ 号量子包含我们需要的信息， $1$ 号量子则被丢弃。]
+// #footnote[如果仔细观察，Deustch算法中，在 $H[0,1]$ 作用后， $1$ 号量子的状态为 $ frac(1, sqrt(2))( ket(0)- ket(1))$ ； $B_f$ 作用后， $1$ 号量子的状态依然为 $ frac(1, sqrt(2))( ket(0)- ket(1))$ ！此事的蹊跷之处在于，我们一开始引入黑箱量子门 $B_f$ 时，状态不变的是 $0$ 号量子， $1$ 号量子反而才是应该发生改变的！]
+// #footnote[像这种“本应改变的量子位(通常是受控位)没变、不应变的量子位(通常是控制位)反而发生改变”的现象称为*相位反冲*(Phase Kick-back)。这一现象会是许多量子算法的基础。]
 
 #html.hr()
 
@@ -107,28 +118,27 @@ $
 == 1.哈达玛变换再探
 
 对于哈达玛变换我们已经知道：
-
 $
 cases(
     H ket(0)= frac(1, sqrt(2))( ket(0)+ ket(1)),
     H ket(1)= frac(1, sqrt(2))( ket(0)- ket(1)),
 )
 $
-
 可以合并写为：
-
+#tufted.proposition[单哈达玛门的计算][
+    $
+        H ket(x)&= frac(1, sqrt(2))( ket(0)+(-1)^(x) ket(1))\
+        &= frac(1, sqrt(2))  sum_(y=0)^(1)(-1)^(x y) ket(y)\
 $
-    H ket(x)&= frac(1, sqrt(2))( ket(0)+(-1)^(x) ket(1))\
-    &= frac(1, sqrt(2))  sum_(y=0)^(1)(-1)^(x y) ket(y)\
-$
+]
 
 现在我们希望像上式最后一式那样，以求和的形式，写出 $ ket(x)= ket(x_0x_1...x_(n-1))$ 被 $H[0 ~ n-1]$ 操作的结果。难点在于如何确定 $ ket(y)$ 的符号。注意到单个量子哈达玛变换后 $ ket(0)$ 必是正的，因此当 $x_k=0$ 时不会对符号改变作出贡献(相当于用 $0$ 乘上某个数)。当 $x_k=1$ 时，符号就由 $ ket(y)= ket(y_0y_1...y_(n-1))$ 中有多少个 $1$ 决定了。由此可以得出：
-
-$
-    H[0 ~ n-1] ket(x)&= frac(1, sqrt(2^n))  sum_(y=0)^(2^(n)-1)(-1)^{ sum_(i=0)^(n-1)x_i y_i} ket(y)\
-    &= frac(1, sqrt(2^n))  sum_(y=0)^(2^(n)-1)(-1)^(bold(x) dot  bold(y)) ket(y)\
-$
-
+#tufted.proposition[多哈达玛门的计算][
+    $
+        H[0 ~ n-1] ket(x)&= frac(1, sqrt(2^n))  sum_(y=0)^(2^(n)-1)(-1)^{ sum_(i=0)^(n-1)x_i y_i} ket(y)\
+        &= frac(1, sqrt(2^n))  sum_(y=0)^(2^(n)-1)(-1)^(bold(x) dot  bold(y)) ket(y)\
+    $
+]
 第二行中将指数部分的求和视作了向量点乘。
 
 == 2.Deutsch-Josza算法的实现
@@ -145,12 +155,16 @@ $
 #footnote[值得一提的是，黑箱量子门 $B_f$ 必然是一个*置换矩阵*(Permutation Matrix)，即每行每列都有且只有一个 $1$ ，其余元素均为 $0$ 。这也正是 $B_f$ 是一个量子门(酉矩阵)的基础。(当然这也说明置换矩阵不一定是 $B_f$ ，因为置换矩阵的转置共轭矩阵不一定与自身相等。)]
 
 解决这个问题的算法即是Deutsch算法的推广——*Deutsch-Josza算法*。它使用的量子电路如 @DeutschJoszaCircuit 与Deutsch算法几乎一致：
-#tufted.full-width[
-    #image("imgs/dj.png")
-]
-#tufted.margin-note[
-    #figure(caption: [Deutsch-Josza算法的量子电路图])[] <DeutschJoszaCircuit>
-]
+#figure(
+    image("imgs/dj.png"),
+    caption: [Deutsch-Josza算法的量子电路图]
+) <DeutschJoszaCircuit>
+// #tufted.full-width[
+//     #image("imgs/dj.png")
+// ]
+// #tufted.margin-note[
+//     #figure(caption: [Deutsch-Josza算法的量子电路图])[] <DeutschJoszaCircuit>
+// ]
 $
 H[0 ~ n-1] dot attach(scripts(B_f), tr: 0~n-1, br:n) dot H[0 ~ n] dot  ket(00...01)
 $
@@ -187,7 +201,9 @@ $
 
 而问题又是受承诺的，因此当测量结果并非全 $0$ 时，函数就必然是平衡的了。
 
+#tufted.remark[][
 总结：这个算法的测量结果*全部*为 $0$ 时，函数是常量的；否则是平衡的。
+]
 
 == 3.与经典算法对比
 
@@ -216,12 +232,16 @@ $
 == 2.Simon算法的实现
 
 Simon算法使用的量子电路如 @SimonCircuit 和 式@SimonEquation 所示。
-#tufted.full-width[
-    #image("imgs/simon.png")
-]
-#tufted.margin-note[
-    #figure(caption: [Simon算法的量子电路图])[] <SimonCircuit>
-]
+#figure(
+    image("imgs/simon.png"),
+    caption: [Simon算法的量子电路图]
+) <SimonCircuit>
+// #tufted.full-width[
+//     #image("imgs/simon.png")
+// ]
+// #tufted.margin-note[
+//     #figure(caption: [Simon算法的量子电路图])[] <SimonCircuit>
+// ]
 $
 H[0 ~ n-1] dot attach(scripts(B_f), tr: 0~n-1, br: n~2n-1) dot H[0 ~ n-1] dot  ket(0^n) ket(0^n)
 $ <SimonEquation>

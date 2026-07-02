@@ -863,6 +863,10 @@ RESPONSIVE LAYOUT
 	.article-byline {
 		width: 100%;
 	}
+
+	.docs-tabs {
+		width: 100%;
+	}
 }
 
 /*******************************************************************************
@@ -988,6 +992,84 @@ POST TILES
 
 .post-tile p {
 	margin: 0.25rem 0 0;
+}
+
+/*******************************************************************************
+DOCS CATEGORY TABS
+*******************************************************************************/
+
+.docs-tabs {
+	width: 55%;
+	margin: 0.25em 0 1.2em;
+}
+
+body:has(.docs-tabs) > article {
+	padding-top: 0.35rem;
+}
+
+.docs-tab-input {
+	position: absolute;
+	inline-size: 1px;
+	block-size: 1px;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.docs-tabs > p:has(.docs-tab-input) {
+	display: none;
+}
+
+.docs-tab-buttons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1em;
+	margin: 0 0 0.45em;
+}
+
+.docs-tab-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	inline-size: 5.25em;
+	min-height: 0;
+	padding: 0.2em 0.4em;
+	border: 0;
+	border-radius: var(--radius-sm);
+	background: transparent;
+	color: var(--theme-text, #111);
+	font-size: 1.5rem;
+	line-height: 1.2;
+	cursor: pointer;
+	user-select: none;
+	transition: background-color 120ms ease;
+}
+
+.docs-tab-button:hover,
+.docs-tab-button:focus-visible {
+	background: var(--highlight-weak);
+	outline: none;
+}
+
+.docs-tab-panel {
+	display: none;
+}
+
+.docs-tabs:has(#docs-tab-quantum:checked) .docs-tab-panel-quantum,
+.docs-tabs:has(#docs-tab-math:checked) .docs-tab-panel-math,
+.docs-tabs:has(#docs-tab-physics:checked) .docs-tab-panel-physics {
+	display: block;
+}
+
+.docs-tabs:has(#docs-tab-quantum:checked) label[for="docs-tab-quantum"],
+.docs-tabs:has(#docs-tab-math:checked) label[for="docs-tab-math"],
+.docs-tabs:has(#docs-tab-physics:checked) label[for="docs-tab-physics"] {
+	background: var(--highlight-weak);
+	color: var(--theme-text, #111);
+	font-weight: bold;
+}
+
+.docs-tab-panel > h2 {
+	margin-top: 0.2em;
 }
 
 /*******************************************************************************

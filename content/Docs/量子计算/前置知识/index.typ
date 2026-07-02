@@ -76,30 +76,30 @@ $
     )
 $
 
-这个向量的生成可以用*张量积*(Tensor Product)来表示。张量积像下述这样简单地计算：假如有矩阵 $A, B$，并且：
-
-$
-    A = mat(
-        a_(11), a_(12), dots, a_(1 m);
-        a_(21), a_(22), dots, a_(2 m);
-        dots.v, dots.v, dots.down, dots.v;
-        a_(n 1), a_(n 2), dots, a_(n m)
-    )
-$
-
-那么 $A$ 与 $B$ 的张量积 $A times.o B$：
-
-$
-    A times.o B = mat(
-        a_(11) B, a_(12) B, dots, a_(1 m) B;
-        a_(21) B, a_(22) B, dots, a_(2 m) B;
-        dots.v, dots.v, dots.down, dots.v;
-        a_(n 1) B, a_(n 2) B, dots, a_(n m) B
-    )
-$
+这个向量的生成可以用*张量积*(Tensor Product)来表示。张量积像下述这样简单地计算：
+#tufted.definition[张量积(Kronecker积)][
+    若有分别是 $n times m$ 和 $p times q$ 的矩阵 $A, B$，其中 $A$ 是：
+    $
+        A = mat(
+            a_(11), a_(12), dots, a_(1 m);
+            a_(21), a_(22), dots, a_(2 m);
+            dots.v, dots.v, dots.down, dots.v;
+            a_(n 1), a_(n 2), dots, a_(n m)
+        )
+    $
+    那么 $A$ 与 $B$ 的张量积 $A times.o B$是一个 $n p times m q$ 的矩阵：
+    $
+        A times.o B = mat(
+            a_(11) B, a_(12) B, dots, a_(1 m) B;
+            a_(21) B, a_(22) B, dots, a_(2 m) B;
+            dots.v, dots.v, dots.down, dots.v;
+            a_(n 1) B, a_(n 2) B, dots, a_(n m) B
+        )
+    $
+]
 
 可以发现这种运算对两个矩阵的行数列数是没有特殊要求的。张量积具有很多优秀的性质。除交换律不成立即 $A times.o B != B times.o A$ 外，它符合下列运算：
-
+#tufted.proposition[张量积的性质][
 $
     (A times.o B) times.o C &= A times.o (B times.o C) \
     (A times.o B) (C times.o D) &= (A C) times.o (B D) \
@@ -107,7 +107,7 @@ $
     (A + B) times.o C &= A times.o C + B times.o C \
     (alpha A) times.o B &= A times.o (alpha B) = alpha (A times.o B)
 $
-
+]
 因此对于上述例中的二位概率向量有 $v = v_1 times.o v_2$。但是，张量积输出的矩阵体积会随着 $B$ 的大小成倍增长，这给手写手算带来极大不便。为此引入*狄拉克符号*(Dirac Notation)。我们发现，对于一个位，在测量后必定会坍塌为两种*对立确定*的状态，即：
 
 $
@@ -137,7 +137,9 @@ $
 
 就能简单方便地表示为 $v = p_0 ket(0) + p_1 ket(1)$。
 
-事实上狄拉克符号应用在经典情况下并不太适合，但是我们需要提前引入这种记号来辅助推进接下来对量子情况下的说明。
+#tufted.remark[][
+    事实上狄拉克符号应用在经典情况下并不太适合，但是我们需要提前引入这种记号来辅助推进接下来对量子情况下的说明。
+]
 
 #html.hr()
 
@@ -209,7 +211,7 @@ $
 这两个元素并非真正的概率，而是*振幅*(Amplitude)。根据上述的量子力学的基本内容，其概率之和应恒为 $1$：
 
 $
-    |alpha|^2 + |beta|^2 = 1
+    abs(alpha)^2 + abs(beta)^2 = 1
 $
 
 这在量子力学中称为*归一化条件*。上述内容亦可推广至多个量子位的情形，例如叠加态 $mat(alpha, beta, phi, phi.alt)^T$ 具有四个元素，就表示了一个 $log_2(4) = 2$ 位的量子系统：
@@ -221,7 +223,7 @@ $
 根据归一化条件，下式恒成立：
 
 $
-    |alpha|^2 + |beta|^2 + |phi|^2 + |phi.alt|^2 = 1
+    abs(alpha)^2 + abs(beta)^2 + abs(phi)^2 + abs(phi.alt)^2 = 1
 $
 
 #footnote[按照定义，叠加态中包含计算基态，只是这种特殊的叠加态中某组分的概率幅的模长恰为 $1$ 而其他组分均为 $0$。但当我们提起“叠加态”时，会更侧重于说明它确实是叠加而来的。叠加态与计算基态都是*量子态*(Quantum State)的形式，但量子态还包含其他形式，会在之后的文章中说明。]

@@ -37,20 +37,20 @@ $
     =& ( sum_(k=1)^(n)x_k^2  )^(frac(1, 2))
 $
 
-在线性空间中更规范的称呼是 $2-$ 范数，记为 $ norm(bold(x))_(2)$ ，特点是将其在各分量上的大小平方累加后再开方。对于函数 $f(x)$ 就能以类似的方法定义其 $2-$ 范数，只要将函数在各点上与 $x$ 轴围成的面积视作分量大小即可——当然这也意味着我们必须事先指定函数的定义域，其 $2-$ 范数才是有意义的：
-
-$
-    norm(f(x))_(2)=&
-    lim_(Delta x  -> 0) ( sum_(k=1)^(frac(b-a, Delta x)) f^2(a+k Delta x) dot  Delta x  )^(frac(1, 2))\
-    =& (  integral_(a)^(b)f^2(x) d x  )^(frac(1, 2))
-$
-
-现在可以思考如何衡量函数的方向了——当然在这里我们只关心如何确定函数正交。在熟知的线性空间中，向量的 $2-$ 范数也可视作自内积后开方，而两个向量正交则是由内积后是否为 $0$ 来判断的！由此仿照向量内积、结合函数 $2-$ 范数的形式，即可定义两个函数 $f(x),g(x)$ 的内积 $(f,g)$ ：
-
+在线性空间中更规范的称呼是 2-范数，记为 $ norm(bold(x))_(2)$ ，特点是将其在各分量上的大小平方累加后再开方。对于函数 $f(x)$ 就能以类似的方法定义其 2-范数，只要将函数在各点上与 $x$ 轴围成的面积视作分量大小即可——当然这也意味着我们必须事先指定函数的定义域，其 2-范数才是有意义的：
+#tufted.definition[函数的2-范数][
+    $
+        norm(f(x))_(2)=&
+        lim_(Delta x  -> 0) ( sum_(k=1)^(frac(b-a, Delta x)) f^2(a+k Delta x) dot  Delta x  )^(frac(1, 2))\
+        =& (  integral_(a)^(b)f^2(x) d x  )^(frac(1, 2))
+    $
+]
+现在可以思考如何衡量函数的方向了——当然在这里我们只关心如何确定函数正交。在熟知的线性空间中，向量的 2-范数也可视作自内积后开方，而两个向量正交则是由内积后是否为 $0$ 来判断的！由此仿照向量内积、结合函数 2-范数的形式，即可定义两个函数 $f(x),g(x)$ 的内积 $(f,g)$ ：
+#tufted.definition[函数的内积][
 $
 (f,g)= integral_(a)^(b)f(x) dot g(x) d x
 $
-
+]
 当内积为 $0$ 时，就可以称 $f(x),g(x)$ 是正交的了。
 
 == 2.正交函数系与三角拟合
@@ -119,10 +119,11 @@ y_k= frac(1, N)  sum_(j= chevron.l N  chevron.r)x_j te^(ti j frac(2 pi, N)k)
 $
 
 另一方面，式前的系数 $ frac(1, N)$ 取什么也并不重要，或者说只在特定的场景下重要(其实际作用是为了归一化)——而在量子傅里叶变换中，只有取 $ frac(1, sqrt(N))$ 才是重要的。这样我们终于得到在量子傅里叶变换中我们所期望的离散傅里叶变换形式：
-
-$
-y_k=  frac(1, sqrt(N)) sum_(j=0)^(N-1)x_j dot  te^(ti  frac(2 pi, N)j k)
-$
+#tufted.definition[离散傅里叶变换][
+    $
+        y_k=  frac(1, sqrt(N)) sum_(j=0)^(N-1)x_j dot  te^(ti  frac(2 pi, N)j k)
+    $
+]
 
 #html.hr()
 
@@ -319,7 +320,6 @@ $
 $
 
 可以发现，本应由受控位独占的全局相位，却被控制位吸收为局部相位；而应当改变的受控位反而没有发生变化。
-
 #footnote[笔者个人的理解是：对于控制位而言，其包含的 $ ket(0)$ 态与 $ ket(1)$ 态并不是平权的。例如，当控制位为 $1$ 时，那么在作用之后恰好是 $ te^(ti 2 pi theta) beta ket(1) ket(psi)$ ，此时引入了全局相位；而控制位为 $0$ 时，则不会引入相位改变。于是由于叠加态原理，控制位的两个计算基态间的相位差发生改变，也就导致了相对相位的产生或改变。]
 
 现在让我们考虑当受控位不是本征态的情况。由于 $U$ 是酉矩阵，其各本征态自然是正交的，因此任意(等量子位数的)量子态 $ ket(phi.alt)$ 都可以表示为其本征态之线性和：
@@ -359,12 +359,16 @@ $
 
 为了分析简便，取受控位为 $U$ 的本征态 $ ket(psi)$ 。在相位反冲之前，我们要让控制位都进入叠加态——否则要么不引入相位、要么引入全局相位。为此首先让控制位从初始零态做一次量子傅里叶变换，如 @QFTEquivCircuit 所示。
 #footnote[值得注意的是，对 $ ket(0^n)$ 做 QFT 与在每个量子位上作用 $H$ 门的效果是等价的。因为此时受控 $R_k$ 门均不起作用，可以直接从量子傅里叶变换的线路图中删去。此时控制位进入均匀叠加态。]
-#tufted.full-width[
-    #image("imgs/QFT0.png")
-]
-#tufted.margin-note[
-    #figure(caption: [对 $ket(0^n)$ 做 QFT 与在每个量子位上作用 $H$ 门的效果是等价的])[] <QFTEquivCircuit>
-]
+#figure(
+    image("imgs/QFT0.png"),
+    caption: [对 $ket(0^n)$ 做 QFT 与在每个量子位上作用 $H$ 门的效果是等价的]
+) <QFTEquivCircuit>
+// #tufted.full-width[
+//     #image("imgs/QFT0.png")
+// ]
+// #tufted.margin-note[
+//     #figure(caption: [对 $ket(0^n)$ 做 QFT 与在每个量子位上作用 $H$ 门的效果是等价的])[] <QFTEquivCircuit>
+// ]
 
 现在考虑如何使 $U$ 的相位反冲到控制位上。我们再次将本征值 $ te^(ti 2 pi theta)$ 中的 $ theta$ 也写为二进制小数形式：
 
@@ -403,12 +407,13 @@ $
 $
 
 所以在逆傅里叶变换之后的状态是：
+// #set math.mat(column-gap: 100pt)
 $
     & frac(1, 2^(N)) mat(
         1 , 1 , 1 ,  dots , 1;
         1 ,  omega^(-1) ,  omega^(-2) ,  dots ,  omega^(-(2^N-1));
         1 ,  omega^(-2) ,  omega^(-4) ,  dots ,  omega^(-2(2^N-1));
-         dots.v ,  dots.v ,  dots.v ,  dots.down ,  dots.v;
+        dots.v ,  dots.v ,  dots.v ,  dots.down ,  dots.v;
         1 ,  omega^(-(2^N-1)) ,  omega^(-2(2^N-1)) ,  dots ,  omega^(-(2^N-1)^2);
     ) mat(
          te^(ti 2 pi dot 0 theta) ;   te^(ti 2 pi dot 1 theta) ;   te^(ti 2 pi dot 2 theta) ;   dots.v ;   te^(ti 2 pi dot (2^N-1) theta)
@@ -419,18 +424,20 @@ $
     &= sum_(j=0)^(2^N-1) (  frac(1, 2^(N)) sum_(k=0)^(2^N-1) te^(ti 2 pi k  (  theta- frac(j, 2^N)  ))  ) ket(j)\
 $
 
-为什么呢？虽然之前并未说明过量子傅里叶逆变换如何计算，但是注意到量子傅里叶变换本身可以用矩阵形式写出：
-$
-     cal(F) { ket(j) }&=  frac(1, 2^(N/2)) sum_(k=0)^(2^N-1) te^(ti frac(2 pi, 2^N)j k) ket(k)\
-    &= frac(1, 2^(N/2)) mat(
-        1 , 1 , 1 ,  dots , 1;
-        1 ,  omega ,  omega^(2) ,  dots ,  omega^(2^N-1);
-        1 ,  omega^(2) ,  omega^(4) ,  dots ,  omega^(2(2^N-1));
-         dots.v ,  dots.v ,  dots.v ,  dots.down ,  dots.v;
-        1 ,  omega^(2^N-1) ,  omega^(2(2^N-1)) ,  dots ,  omega^((2^N-1)^2);
-    ) ket(j)
-$
-其中 $ omega= te^(ti  frac(2 pi, 2^N))$ 。不妨将其中的矩阵也记为 $ cal(F)$。 这一方面是一个范德蒙矩阵，但另一方面——既然它对应量子傅里叶变换的整体量子门，那么它就是一个酉矩阵。因此要计算量子傅里叶逆变换，只要计算 $ cal(F)^(-1)= cal(F)^ dagger$ ，也就是 $ cal(F)$ 的转置共轭即可！
+#tufted.remark[量子傅里叶逆变换][
+    但这是为什么呢？虽然之前并未说明过量子傅里叶逆变换如何计算，但是注意到量子傅里叶变换本身可以用矩阵形式写出：
+    $
+        cal(F) { ket(j) }&=  frac(1, 2^(N/2)) sum_(k=0)^(2^N-1) te^(ti frac(2 pi, 2^N)j k) ket(k)\
+        &= frac(1, 2^(N/2)) mat(
+            1 , 1 , 1 ,  dots , 1;
+            1 ,  omega ,  omega^(2) ,  dots ,  omega^(2^N-1);
+            1 ,  omega^(2) ,  omega^(4) ,  dots ,  omega^(2(2^N-1));
+            dots.v ,  dots.v ,  dots.v ,  dots.down ,  dots.v;
+            1 ,  omega^(2^N-1) ,  omega^(2(2^N-1)) ,  dots ,  omega^((2^N-1)^2);
+        ) ket(j)
+    $
+    其中 $ omega= te^(ti  frac(2 pi, 2^N))$ 。不妨将其中的矩阵也记为 $ cal(F)$。 这一方面是一个范德蒙矩阵，但另一方面——既然它对应量子傅里叶变换的整体量子门，那么它就是一个酉矩阵。因此要计算量子傅里叶逆变换，只要计算 $ cal(F)^(-1)= cal(F)^ dagger$ ，也就是 $ cal(F)$ 的转置共轭即可！
+]
 
 因此测量结果为 $ ket(j)$ 的概率就是：
 $
