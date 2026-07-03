@@ -4,7 +4,7 @@
 #let dt = $d t$
 #let Ev = $"Ev"$
 #let Od = $"Od"$
-#let leftrightarrow(body) = $limits(stretch(math.arrow.l.r)^#body)$
+#let leftrightarrow(body) = $limits(stretch(arrow.l.r)^#body)$
 #show: template.with(
     title: "信号系统（八）——滤波，采样与调制",
     description: "",
@@ -17,8 +17,7 @@
 #let ti = $"i"$
 
 
-=! https://zhuanlan.zhihu.com/p/706064532
-= 信号系统(八)——滤波，采样与调制
+= 信号系统（八）——滤波，采样与调制
 
 = 一、滤波器
 
@@ -32,8 +31,8 @@
 
 $
 H(j omega)= cases(
-    1, quadabs(omega) <= omega_c,
-    0, quadabs(omega)> omega_c,
+    1, quad abs(omega) <= omega_c,
+    0, quad abs(omega)> omega_c,
 )
 $
 
@@ -43,8 +42,8 @@ $
 
 $
 H(j omega)= cases(
-    1, quadabs(omega) >= omega_c,
-    0, quadabs(omega)< omega_c,
+    1, quad abs(omega) >= omega_c,
+    0, quad abs(omega)< omega_c,
 )
 $
 
@@ -73,13 +72,13 @@ $
 一种最理想的采样即是*冲激串采样*，利用单位冲激函数的采样性质可以将模拟信号等间隔地提取为离散信号。这个冲激串采样的*采样函数*为：
 
 $
-p(t)=  sum_(n=- infinity)^(+ infinity) delta(t-nT)
+p(t)=  sum_(n=- infinity)^(+ infinity) delta(t-n T)
 $
 
 其中 $T$ 即是采样间隔。于是原信号 $x(t)$ 在采样函数的作用下为：
 
 $
-x_p(t)=x(t)p(t)=  sum_(n=- infinity)^(+ infinity)x(nT) delta(t-nT)
+x_p(t)=x(t)p(t)=  sum_(n=- infinity)^(+ infinity)x(n T) delta(t-n T)
 $
 
 为了求出 $x_p(t)$ 的傅里叶变换，不妨利用信号相乘性质。为此，查表得到 $p(t)$ 的傅里叶变换为(记 $ omega_s= frac(2 pi, T)$ ，称为*采样频率*。实际求取时应使用周期函数的傅里叶变换)：
@@ -136,24 +135,24 @@ $
 在上文“变中心频率的频率选择性滤波器”中我们已经举了一个例子，在这里它的前半部分就是一个信号调制的过程。具体而言，这个例子中载波信号是复指数信号，在一般情况下是：
 
 $
-c(t)=e^(j( omega_ct+ theta_c))
+c(t)=e^(j( omega_c t+ theta_c))
 $
 
  $ omega_c$ 称为*载波频率*，简便起见总令 $ theta_c=0$ 。于是，原信号在载波信号的作用下，即 $y(t)=x(t)c(t)$ ，其频率增加了 $ omega_c$ ——也就成为了高频信号。
 
 注意到时域上的调制过程被表示为 $y(t)=x(t)c(t)$ ，直观上来看相当于使原信号 $x(t)$ 的幅度产生 $c(t)$ 的变化，因此将这种调制称为*幅度调制*。
 
-在现实中，载波信号往往会取三角函数，称为*正弦载波*——然而实际上用的是*余弦函数* $c(t)=cos( omega_ct+ theta_c)$ ，大概是因为将其拆为复指数函数之和时系数是实数。还是取 $ theta_c=0$ ，那么：
+在现实中，载波信号往往会取三角函数，称为*正弦载波*——然而实际上用的是*余弦函数* $c(t)=cos( omega_c t+ theta_c)$ ，大概是因为将其拆为复指数函数之和时系数是实数。还是取 $ theta_c=0$ ，那么：
 
 $
-c(t)=cos   omega_ct= frac(1, 2)e^(j omega_ct)+ frac(1, 2)e^(-j omega_ct)
+c(t)=cos   omega_c t= frac(1, 2)e^(j omega_c t)+ frac(1, 2)e^(-j omega_c t)
 $
 
 因此使用正弦载波时，显然原信号频谱会向两边分裂为两个，其平移尺度为 $ omega_c$ 。此时由于在频谱上同时具有两个原信号频谱之平移(当然，还有幅度上的变化)，因此这里有类似于采样定理中的限制——要求原信号是*带限信号*，频率上限是 $ omega_M$ ；同时需令 $ omega_c >= omega_M$ ，否则会产生重叠，后续对解调产生影响。
 
 == 2.解调
 
-“变中心频率的频率选择性滤波器”中例子的后半部分就是以复指数函数作为载波信号的信号解调了。乘上 $e^(-j omega_ct)$ 即可使其频率降低 $ omega_c$ ，恢复为原信号。
+“变中心频率的频率选择性滤波器”中例子的后半部分就是以复指数函数作为载波信号的信号解调了。乘上 $e^(-j omega_c t)$ 即可使其频率降低 $ omega_c$ ，恢复为原信号。
 
 以复指数函数作为载波信号的信号解调相当直接。但对于正弦载波，则需要多加观察与*注意*了。以下介绍*同步解调*与*非同步解调*，虽然是针对正弦载波分析，但对于复指数载波也同样适用。。
 
@@ -162,22 +161,22 @@ $
 现在已知调制后的信号为：
 
 $
-y(t)=x(t)c(t)=x(t)cos   omega_ct
+y(t)=x(t)c(t)=x(t)cos   omega_c t
 $
 
 *注意到*三角函数的降幂性质：
 
 $
-cos^2   omega_ct= frac(1, 2)+ frac(1, 2)cos  2 omega_ct
+cos^2   omega_c t= frac(1, 2)+ frac(1, 2)cos  2 omega_c t
 $
 
 所以将调制后信号再用原载波信号调制，就相当于一部分解调了：
 
 $
-y(t)cos   omega_ct= frac(1, 2)x(t)+ frac(1, 2)x(t)cos  2 omega_ct
+y(t)cos   omega_c t= frac(1, 2)x(t)+ frac(1, 2)x(t)cos  2 omega_c t
 $
 
-可见此时两次调制后的信号中有一部分是原信号的一半，而另一部分则是原信号(的一半)用 $cos  2 omega_ct$ 调制的结果。这样，只要在上述的基础上再通过一个截止频率为 $ omega_M ~2 omega_c- omega_M$ 的低通滤波器，即可得到原信号的一半。
+可见此时两次调制后的信号中有一部分是原信号的一半，而另一部分则是原信号(的一半)用 $cos  2 omega_c t$ 调制的结果。这样，只要在上述的基础上再通过一个截止频率为 $ omega_M ~2 omega_c- omega_M$ 的低通滤波器，即可得到原信号的一半。
 
 注意到这里使用的载波信号与用来解调用的信号是完全相同的——不仅是频率，更重要的是相位。也就是说两者是*完全同步*的，这就是这种解调方法称为“*同步解调*”的原因。
 
@@ -188,7 +187,7 @@ $
 *注意到*时域上的信号调制过程：
 
 $
-y(t)=x(t)c(t)=x(t)cos   omega_ct
+y(t)=x(t)c(t)=x(t)cos   omega_c t
 $
 
 当 $x(t)$ *恒正*、且载波频率 $ omega_c$ *远大于*调制信号的频率上限时，那么 $y(t)$ 的*包络线*就已近似描绘了原信号 $x(t)$ 。此时只要提取出 $y(t)$ 的*极值*，就能相当近似地获得 $x(t)$ 。这一解调方法不要求同步。

@@ -355,21 +355,25 @@ $
 
 以下给出一些常见函数的*双边* $Z$ *变换*表：
 
-$
- mat(
-    , x[n]  quad, quad, X(z)= cal(Z) {x[n] }  quad, quad, ROC ;
-    ,  delta[n]  quad, quad, 1  quad, quad, All  z ;
-    ,  delta[n-n_0]  quad, quad, z^(-n_0)  quad, quad, abs(z)!=0  quad, quad, m>0;
-    ,  delta[n-n_0]  quad, quad, z^(-n_0)  quad, quad, abs(z)!=infinity  quad, quad, m<0;
-    , u[n]  quad, quad,  frac(1, 1-z^(-1))  quad, quad, abs(z)>1 ;
-    , -u[-n-1]  quad, quad,  frac(1, 1-z^(-1))  quad, quad, abs(z)<1 ;
-    ,  alpha^n u[n]  quad, quad,  frac(1, 1- alpha z^(-1))  quad, quad, abs(z)>abs(alpha) ;
-    , n alpha^n u[n]  quad, quad,  frac(alpha z^(-1), (1- alpha z^(-1))^2)  quad, quad, abs(z)>abs(alpha) ;
-    , - alpha^n u[-n-1]  quad, quad,  frac(1, 1- alpha z^(-1))  quad, quad, abs(z)<abs(alpha) ;
-    , -n alpha^n u[-n-1]  quad, quad,  frac(alpha z^(-1), (1- alpha z^(-1))^2)  quad, quad, abs(z)<abs(alpha) ;
-    , cos(omega_0 n) dot u[n]  quad, quad,  frac(1-(cos omega_0)z^(-1), 1-(2 cos omega_0)z^(-1)+z^(-2))  quad, quad, abs(z)>1 ;
-    , sin(omega_0 n) dot u[n]  quad, quad,  frac((sin omega_0)z^(-1), 1-(2 cos omega_0)z^(-1)+z^(-2))  quad, quad, abs(z)>1 ;
-    , r^n cos(omega_0 n) dot u[n]  quad, quad,  frac(1-(r cos omega_0)z^(-1), 1-(2 r cos omega_0)z^(-1)+r^2 z^(-2))  quad, quad, abs(z)>r ;
-    , r^n sin(omega_0 n) dot u[n]  quad, quad,  frac((r sin omega_0)z^(-1), 1-(2 r cos omega_0)z^(-1)+r^2 z^(-2))  quad, quad, abs(z)>r ;
+#figure(
+    table(
+        columns: 3,
+        align: left,
+        [*信号*], [*Z 变换*], [*ROC*],
+        [$x[n]$], [$X(z)=cal(Z)\{x[n]\}$], [全部 $z$],
+        [$delta[n]$], [$1$], [全部 $z$],
+        [$delta[n-n_0]$], [$z^(-n_0)$], [满足 $n_0>0$ 时 $z!=0$],
+        [$delta[n-n_0]$], [$z^(-n_0)$], [满足 $n_0<0$ 时 $z!=infinity$],
+        [$u[n]$], [$frac(1, 1-z^(-1))$], [$abs(z)>1$],
+        [$-u[-n-1]$], [$frac(1, 1-z^(-1))$], [$abs(z)<1$],
+        [$alpha^n u[n]$], [$frac(1, 1-alpha z^(-1))$], [$abs(z)>abs(alpha)$],
+        [$n alpha^n u[n]$], [$frac(alpha z^(-1), (1-alpha z^(-1))^2)$], [$abs(z)>abs(alpha)$],
+        [$-alpha^n u[-n-1]$], [$frac(1, 1-alpha z^(-1))$], [$abs(z)<abs(alpha)$],
+        [$-n alpha^n u[-n-1]$], [$frac(alpha z^(-1), (1-alpha z^(-1))^2)$], [$abs(z)<abs(alpha)$],
+        [$cos(omega_0 n) dot u[n]$], [$frac(1-(cos omega_0) z^(-1), 1-(2 cos omega_0) z^(-1)+z^(-2))$], [$abs(z)>1$],
+        [$sin(omega_0 n) dot u[n]$], [$frac((sin omega_0) z^(-1), 1-(2 cos omega_0) z^(-1)+z^(-2))$], [$abs(z)>1$],
+        [$r^n cos(omega_0 n) dot u[n]$], [$frac(1-(r cos omega_0) z^(-1), 1-(2 r cos omega_0) z^(-1)+r^2 z^(-2))$], [$abs(z)>r$],
+        [$r^n sin(omega_0 n) dot u[n]$], [$frac((r sin omega_0) z^(-1), 1-(2 r cos omega_0) z^(-1)+r^2 z^(-2))$], [$abs(z)>r$],
+    ),
+    caption: [基本 $Z$ 变换表],
 )
-$

@@ -5,7 +5,7 @@
 #let du = $d u$
 #let Ev = $"Ev"$
 #let Od = $"Od"$
-#let leftrightarrow(body) = $limits(stretch(math.arrow.l.r)^#body)$
+#let leftrightarrow(body) = $limits(stretch(arrow.l.r)^#body)$
 #show: template.with(
     title: "信号系统（二）——单位冲激函数与卷积",
     description: "",
@@ -19,7 +19,7 @@
 #let tj = $"j"$
 
 
-= 信号系统(二)——单位冲激函数与卷积
+= 信号系统（二）——单位冲激函数与卷积
 
 = 一、卷积和——离散情况
 

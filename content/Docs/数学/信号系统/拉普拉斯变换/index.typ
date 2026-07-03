@@ -351,23 +351,27 @@ $
 
 以下给出一些常见函数的*双边拉普拉斯*变换表：
 
-$
- mat(
-    , x(t)  quad, quad, X(s)= cal(L) {x(t) }  quad, quad, ROC ;
-    ,  delta(t)  quad, quad, 1  quad, quad, All  s ;
-    ,  delta(t-t_0)  quad, quad, e^(-s t_0)  quad, quad, All  s ;
-    ,  frac(d^n, dt^n) delta(t)  quad, quad, s^n  quad, quad, All  s ;
-    , u(t)  quad, quad,  frac(1, s)  quad, quad,  cal(Re) {s }>0 ;
-    , -u(-t)  quad, quad,  frac(1, s)  quad, quad,  cal(Re) {s }<0 ;
-    ,  frac(t^(n-1), (n-1)!)u(t)  quad, quad,  frac(1, s^n)  quad, quad,  cal(Re) {s }>0 ;
-    , - frac(t^(n-1), (n-1)!)u(-t)  quad, quad,  frac(1, s^n)  quad, quad,  cal(Re) {s }<0 ;
-    , e^(- alpha t)u(t)  quad, quad,  frac(1, s+ alpha)  quad, quad,  cal(Re) {s }>- alpha ;
-    , -e^(- alpha t)u(-t)  quad, quad,  frac(1, s+ alpha)  quad, quad,  cal(Re) {s }<- alpha ;
-    ,  frac(t^(n-1), (n-1)!)e^(- alpha t)u(t)  quad, quad,  frac(1, (s+ alpha)^n)  quad, quad,  cal(Re) {s }>- alpha ;
-    , - frac(t^(n-1), (n-1)!)e^(- alpha t)u(-t)  quad, quad,  frac(1, (s+ alpha)^n)  quad, quad,  cal(Re) {s }<- alpha ;
-    , cos   omega_0 t dot u(t)  quad, quad,  frac(s, s^2+ omega_0^2)  quad, quad,  cal(Re) {s }>0 ;
-    , sin   omega_0 t dot u(t)  quad, quad,  frac(omega_0, s^2+ omega_0^2)  quad, quad,  cal(Re) {s }>0 ;
-    , e^(- alpha t)cos   omega_0 t dot u(t)  quad, quad,  frac(s+ alpha, (s+ alpha)^2+ omega_0^2)  quad, quad,  cal(Re) {s }>- alpha ;
-    , e^(- alpha t)sin   omega_0 t dot u(t)  quad, quad,  frac(omega_0, (s+ alpha)^2+ omega_0^2)  quad, quad,  cal(Re) {s }>- alpha ;
+#figure(
+    table(
+        columns: 3,
+        align: left,
+        [*信号*], [*拉普拉斯变换*], [*ROC*],
+        [$x(t)$], [$X(s)=cal(L)\{x(t)\}$], [全部 $s$],
+        [$delta(t)$], [$1$], [全部 $s$],
+        [$delta(t-t_0)$], [$e^(-s t_0)$], [全部 $s$],
+        [$frac(d^n, dt^n) delta(t)$], [$s^n$], [全部 $s$],
+        [$u(t)$], [$frac(1, s)$], [$cal(Re)\{s\}>0$],
+        [$-u(-t)$], [$frac(1, s)$], [$cal(Re)\{s\}<0$],
+        [$frac(t^(n-1), (n-1)!)u(t)$], [$frac(1, s^n)$], [$cal(Re)\{s\}>0$],
+        [$-frac(t^(n-1), (n-1)!)u(-t)$], [$frac(1, s^n)$], [$cal(Re)\{s\}<0$],
+        [$e^(-alpha t)u(t)$], [$frac(1, s+alpha)$], [$cal(Re)\{s\}>-alpha$],
+        [$-e^(-alpha t)u(-t)$], [$frac(1, s+alpha)$], [$cal(Re)\{s\}<-alpha$],
+        [$frac(t^(n-1), (n-1)!)e^(-alpha t)u(t)$], [$frac(1, (s+alpha)^n)$], [$cal(Re)\{s\}>-alpha$],
+        [$-frac(t^(n-1), (n-1)!)e^(-alpha t)u(-t)$], [$frac(1, (s+alpha)^n)$], [$cal(Re)\{s\}<-alpha$],
+        [$cos(omega_0 t) dot u(t)$], [$frac(s, s^2+omega_0^2)$], [$cal(Re)\{s\}>0$],
+        [$sin(omega_0 t) dot u(t)$], [$frac(omega_0, s^2+omega_0^2)$], [$cal(Re)\{s\}>0$],
+        [$e^(-alpha t) cos(omega_0 t) dot u(t)$], [$frac(s+alpha, (s+alpha)^2+omega_0^2)$], [$cal(Re)\{s\}>-alpha$],
+        [$e^(-alpha t) sin(omega_0 t) dot u(t)$], [$frac(omega_0, (s+alpha)^2+omega_0^2)$], [$cal(Re)\{s\}>-alpha$],
+    ),
+    caption: [基本拉普拉斯变换表],
 )
-$
