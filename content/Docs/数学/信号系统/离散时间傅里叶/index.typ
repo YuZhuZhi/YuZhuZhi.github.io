@@ -45,6 +45,10 @@
 
 = 信号系统（四）——离散时间傅里叶
 
+#tufted.full-width[
+    #image("header.jpg")
+]
+
 在#link("数学/信号系统/连续时间傅里叶")[连续时间傅里叶]中我们介绍了连续时间周期信号的傅里叶级数，以及非周期信号与周期信号的狭义与广义傅里叶变换。那么，对于离散信号而言，也应当存在类似的级数与变换。
 
 = 一、离散傅里叶级数的计算
@@ -502,7 +506,7 @@ $
 == 12.频域微分
 
 $
-n x[n]limits(stretch(arrow.r.l))^(cal(F))j frac(dX(te^(tj omega)), d omega)
+n x[n]limits(stretch(arrow.r.l))^(cal(F))tj frac(dX(te^(tj omega)), d omega)
 $
 
 #html.hr()
@@ -517,21 +521,21 @@ $
         align: left,
         [*信号*], [*傅里叶变换*], [*条件或说明*],
         [$x[n]$], [$X(te^(tj omega))=cal(F)\{x[n]\}$], [---],
-        [$1$], [$2 pi display(sum)_(l=-infinity)^(+infinity) delta(omega-2 pi l)$], [---],
-        [$e^(tj omega_0 n)$], [$2 pi display(sum)_(l=-infinity)^(+infinity) delta(omega-omega_0-2 pi l)$], [---],
-        [$display(sum)_(k=-infinity)^(+infinity) a_k e^(tj k omega_0 n)$], [$2 pi display(sum)_(k=-infinity)^(+infinity) a_k delta(omega-k omega_0)$], [---],
+        [$1$], [$2 pi display(limits(sum))_(l=-infinity)^(+infinity) delta(omega-2 pi l)$], [---],
+        [$te^(tj omega_0 n)$], [$2 pi display(limits(sum))_(l=-infinity)^(+infinity) delta(omega-omega_0-2 pi l)$], [---],
+        [$display(limits(sum))_(k=-infinity)^(+infinity) a_k te^(tj k omega_0 n)$], [$2 pi display(limits(sum))_(k=-infinity)^(+infinity) a_k delta(omega-k omega_0)$], [---],
         [$delta[n]$], [$1$], [---],
-        [$delta[n-n_0]$], [$e^(-tj omega n_0)$], [---],
-        [$u[n]$], [$frac(1, 1-e^(tj omega))+pi display(sum)_(k=-infinity)^(+infinity) delta(omega-2 pi k)$], [---],
-        [$display(sum)_(k=-infinity)^(+infinity) delta[n-k N]$], [$frac(2 pi, N) display(sum)_(k=-infinity)^(+infinity) delta(omega-frac(2 k pi, N))$], [---],
-        [$cos(omega_0 n)$], [$pi display(sum)_(l=-infinity)^(+infinity)(delta(omega-omega_0-2 pi l)+delta(omega+omega_0-2 pi l))$], [---],
-        [$sin(omega_0 n)$], [$frac(pi, j) display(sum)_(l=-infinity)^(+infinity)(delta(omega-omega_0-2 pi l)-delta(omega+omega_0-2 pi l))$], [---],
-        [$a^n u[n], abs(a)<1$], [$frac(1, 1-a e^(-tj omega))$], [---],
-        [$n a^n u[n], abs(a)<1$], [$frac(1, (1-a e^(-tj omega))^2)$], [---],
-        [$frac((n+r-1)!, n!(r-1)!) a^n u[n], abs(a)<1$], [$frac(1, (1-a e^(-tj omega))^r)$], [---],
+        [$delta[n-n_0]$], [$te^(-tj omega n_0)$], [---],
+        [$u[n]$], [$frac(1, 1-te^(tj omega))+pi display(limits(sum))_(k=-infinity)^(+infinity) delta(omega-2 pi k)$], [---],
+        [$display(limits(sum))_(k=-infinity)^(+infinity) delta[n-k N]$], [$frac(2 pi, N) display(limits(sum))_(k=-infinity)^(+infinity) delta(omega-frac(2 k pi, N))$], [---],
+        [$cos(omega_0 n)$], [$pi display(limits(sum))_(l=-infinity)^(+infinity)(delta(omega-omega_0-2 pi l)+delta(omega+omega_0-2 pi l))$], [---],
+        [$sin(omega_0 n)$], [$frac(pi, tj) display(limits(sum))_(l=-infinity)^(+infinity)(delta(omega-omega_0-2 pi l)-delta(omega+omega_0-2 pi l))$], [---],
+        [$a^n u[n]$], [$frac(1, 1-a te^(-tj omega))$], [$abs(a)<1$],
+        [$n a^n u[n]$], [$frac(1, (1-a te^(-tj omega))^2)$], [$abs(a)<1$],
+        [$frac((n+r-1)!, n!(r-1)!) a^n u[n]$], [$frac(1, (1-a te^(-tj omega))^r)$], [$abs(a)<1$],
         [$frac(sin(W n), pi n)$], [$X(omega)=cases(1", " abs(omega)<W, 0", " W<abs(omega)<pi)$], [---],
         [$cases(1", " abs(n)<N_1, 0", " abs(n)>N_1)$], [$frac(sin(omega(N_1+frac(1, 2))), sin(frac(omega, 2)))$], [---],
-        [$cases(1", " abs(n)<N_1, 0", " N_1<abs(n)<=frac(N, 2), x[n+N]=x[n])$], [$2 pi display(sum)_(k=-infinity)^(+infinity) c_k delta(omega-k omega_0)$], [---],
+        [$cases(1", " abs(n)<N_1, 0", " N_1<abs(n)<=frac(N, 2), x[n+N]=x[n])$], [$2 pi display(limits(sum))_(k=-infinity)^(+infinity) c_k delta(omega-k omega_0)$], [---],
     ),
     caption: [基本傅里叶变换表],
 )

@@ -7,7 +7,7 @@
 #let All = $"All"$
 #let Ev = $"Ev"$
 #let Od = $"Od"$
-#let leftrightarrow(body) = $limits(stretch(math.arrow.l.r)^#body)$
+#let leftrightarrow(body) = $limits(stretch(arrow.l.r))^#body)$
 #let UZ = $"UZ"$
 #let UL = $"UL"$
 #show: template.with(
@@ -20,10 +20,14 @@
 #let CNOT = $"CNOT"$
 #let te = $"e"$
 #let ti = $"i"$
+#let tj = $"j"$
 
 
-=! https://zhuanlan.zhihu.com/p/705516335
-= 信号系统(六)——Z变换
+= 信号系统（六）——Z变换
+
+#tufted.full-width[
+    #image("header.jpg")
+]
 
 = 一、双边 $Z$ 变换的计算
 
@@ -32,26 +36,24 @@
 类似于从连续傅里叶变换推广到拉普拉斯变换，也可以从离散傅里叶变换推广为 $Z$ 变换——可以说， $Z$ 变换就是离散形式的拉普拉斯变换。离散傅里叶变换的定义是：
 
 $
-X(e^(j omega))= cal(F) {x[n] }=  sum_(n=- infinity)^(+ infinity)x[n]e^(-j omega n)
+X(te^(tj omega))= cal(F) {x[n] }=  sum_(n=- infinity)^(+ infinity)x[n]te^(-tj omega n)
 $
 
-显然 $e^(j omega)$ 是复平面上的一个*单位圆*。现在要将 $e^(j omega)$ 扩展为整个复平面，最简单的做法当然是为其附上长度，也就是复数的*极坐标表示法*：
+显然 $te^(tj omega)$ 是复平面上的一个*单位圆*。现在要将 $te^(tj omega)$ 扩展为整个复平面，最简单的做法当然是为其附上长度，也就是复数的*极坐标表示法*：
 
 $
-z=r e^(j omega)
+z=r te^(tj omega)
 $
 
 这样推广之后就是*双边* $Z$ *变换*：
-
+#tufted.definition[双边 $Z$ 变换][
 $
-
     X(z)&= cal(Z) {x[n] }=  sum_(n=- infinity)^(+ infinity)x[n]z^(-n)\
-    &= sum_(n=- infinity)^(+ infinity)(x[n]r^(-n))e^(-j omega n)\
+    &= sum_(n=- infinity)^(+ infinity)(x[n]r^(-n))te^(-tj omega n)\
     &= cal(F) {x[n]r^(-n) }
-
 $
-
-也就是说， $Z$ 变换可以看做 $x[n]r^(-n)$ 的离散傅里叶变换，而 $x[n]$ 的傅里叶变换也可以看做 $z=e^(-j omega n)$ 即 $r=1$ 时的 $Z$ 变换。
+]
+也就是说， $Z$ 变换可以看做 $x[n]r^(-n)$ 的离散傅里叶变换，而 $x[n]$ 的傅里叶变换也可以看做 $z=te^(-tj omega n)$ 即 $r=1$ 时的 $Z$ 变换。
 
 == 2. $Z$ 变换的收敛域，零点与极点
 
@@ -82,7 +84,7 @@ $
 同样地，由离散傅里叶逆变换可以推出 $Z$ *逆变换*：
 
 $
-x[n]=  frac(1, 2 pi j)∮ X(z)z^(n-1)   d z
+x[n]=  frac(1, 2 pi tj)integral.cont X(z)z^(n-1)  d z
 $
 
 然而我们只关注具有有理分式形式的 $X(z)$ 。可以像拉普拉斯逆变换那样，将 $X(z)$ 拆写为*简单有理分式之和*：
@@ -131,13 +133,12 @@ $
 
 == 5.右边序列
 
-如果信号 $x[n]$ 是*右边序列*，那么其收敛域就由*内边界*向外(无穷远)延伸。结合性质 $4$ ，如果 $X(z)$ 还是*有理分式*的话，那么收敛域就由*最外的极点*开始延伸至无穷远(但不一定包括无穷远)。在此基础上，如果 $x[n]$ 还是个*因果信号*，那么收敛域包含 $abs(z)= infinity$ 。
-
->所谓最外的极点，指的是模长 $abs(z)$ 最大的那个极点。同理，最内的极点是指模长最小的极点。
+如果信号 $x[n]$ 是*右边序列*，那么其收敛域就由*内边界*向外(无穷远)延伸。结合性质 $4$ ，如果 $X(z)$ 还是*有理分式*的话，那么收敛域就由*最外的极点*开始延伸至无穷远#footnote[但不一定包括无穷远]。在此基础上，如果 $x[n]$ 还是个*因果信号*，那么收敛域包含 $abs(z)= infinity$ 。
+#footnote[所谓最外的极点，指的是模长 $abs(z)$ 最大的那个极点。同理，最内的极点是指模长最小的极点。]
 
 == 6.左边序列
 
-如果信号 $x[n]$ 是*左边序列*，那么其收敛域就由*外边界*向内(原点)缩小。结合性质 $4$ ，如果 $X(z)$ 还是*有理分式*的话，那么收敛域就由*最内的极点*开始缩小至原点(但不一定包括原点)。在此基础上，如果 $x[n]$ 还是个*反因果信号*，那么收敛域包含 $abs(z)=0$ 。
+如果信号 $x[n]$ 是*左边序列*，那么其收敛域就由*外边界*向内(原点)缩小。结合性质 $4$ ，如果 $X(z)$ 还是*有理分式*的话，那么收敛域就由*最内的极点*开始缩小至原点#footnote[但不一定包括原点]。在此基础上，如果 $x[n]$ 还是个*反因果信号*，那么收敛域包含 $abs(z)=0$ 。
 
 == 7.双边序列
 
@@ -147,14 +148,14 @@ $
 
 = 三、 $Z$ 变换的性质
 
-假设有信号 $x_1[n]\xleftrightarrow{ cal(Z)}X_1(z),x_2[n]\xleftrightarrow{ cal(Z)}X_2(z)$ ，并且分别具有收敛域 $R_1,R_2$ 。
+假设有信号 $x_1[n]limits(stretch(arrow.l.r))^(cal(Z))X_1(z),x_2[n]limits(stretch(arrow.l.r))^(cal(Z))X_2(z)$ ，并且分别具有收敛域 $R_1,R_2$ 。
 
 == 1.时间平移
 
 若时间发生平移 $n -> n-n_0$ ：
 
 $
-x[n-n_0]\xleftrightarrow{ cal(Z)}z^(-n_0)X(z)
+x[n-n_0]limits(stretch(arrow.l.r))^(cal(Z))z^(-n_0)X(z)
 $
 
 其收敛域还是 $R$ ，但*可能会增加或剔除* $abs(z)=0$ 或 $abs(z)= infinity$ 。
@@ -164,7 +165,7 @@ $
 若时间发生伸缩变换 $n ->  frac(n, alpha)$ (要求 $ alpha >=1$ ，也就是对于离散信号而言，只考虑时间的膨胀)：
 
 $
-x [ frac(n, alpha) ]\xleftrightarrow{ cal(Z)}X ( z^ alpha  )
+x [ frac(n, alpha) ]limits(stretch(arrow.l.r))^(cal(Z))X ( z^ alpha  )
 $
 
 此时收敛域为 $R^(frac(1, alpha))$ 。
@@ -172,7 +173,7 @@ $
 时间反演相当于取 $ alpha = -1$ ，此时有：
 
 $
-x[-n]\xleftrightarrow{ cal(Z)}X(z^(-1))
+x[-n]limits(stretch(arrow.l.r))^(cal(Z))X(z^(-1))
 $
 
 == 3.复域伸缩
@@ -180,21 +181,23 @@ $
 由于我们现在是以极坐标的形式考虑复数，因此考虑 $ frac(z, z_0)$ 就变得有意义起来。在一般情况下有：
 
 $
-z_0^n x[n]\xleftrightarrow{ cal(Z)}X (  frac(z, z_0)  )
+z_0^n x[n]limits(stretch(arrow.l.r))^(cal(Z))X (  frac(z, z_0)  )
 $
 
-而其收敛域为 $z_0R$ 。当取 $r=abs(z_0)=1$ 时，即 $z_0=e^(j omega_0)$ ，就得到了我们之前常常见到的形式：
+而其收敛域为 $z_0R$ 。当取 $r=abs(z_0)=1$ 时，即 $z_0=te^(tj omega_0)$ ，就得到了我们之前常常见到的形式：
 
 $
-e^(j omega_0 n)x[n]\xleftrightarrow{ cal(Z)}X ( e^(-j omega_0)z  )
+te^(tj omega_0 n)x[n]limits(stretch(arrow.l.r))^(cal(Z))X ( te^(-tj omega_0)z  )
 $
 
->应当指出， $ frac(z, z_0)$ 相当于使 $z$ 的模长缩小 $abs(z_0)$ 倍，而相位则减少 $ omega_0= arg(z_0)$ 。因此复域伸缩实际还包含了*旋转*的操作，会使所有零点极点顺时针旋转 $ omega_0$ 的同时，向原点缩短 $abs(z_0)$ 倍。
+#tufted.remark[][
+应当指出， $ frac(z, z_0)$ 相当于使 $z$ 的模长缩小 $abs(z_0)$ 倍，而相位则减少 $ omega_0= arg(z_0)$ 。因此复域伸缩实际还包含了*旋转*的操作，会使所有零点极点顺时针旋转 $ omega_0$ 的同时，向原点缩短 $abs(z_0)$ 倍。
+]
 
 另一个重要的特例是当 $z_0$ 取实数时即 $z_0= alpha$ ，相应地有：
 
 $
- alpha^n x[n]\xleftrightarrow{ cal(Z)}X (  alpha^(-1)z  )
+ alpha^n x[n]limits(stretch(arrow.l.r))^(cal(Z))X (  alpha^(-1)z  )
 $
 
 == 4.信号共轭
@@ -202,7 +205,7 @@ $
 当取信号的共轭 $x[n] ->  overline(x[n])$ ：
 
 $
- overline(x[n])\xleftrightarrow{ cal(Z)} overline(X( overline(z)))
+ overline(x[n])limits(stretch(arrow.l.r))^(cal(Z)) overline(X( overline(z)))
 $
 
 其收敛域还是 $R$ 。
@@ -210,41 +213,41 @@ $
 == 5.信号相加(线性)
 
 $
- alpha x_1[n]+ beta x_2[n]\xleftrightarrow{ cal(Z)} alpha X_1(z)+ beta X_2(z)
+ alpha x_1[n]+ beta x_2[n]limits(stretch(arrow.l.r))^(cal(Z)) alpha X_1(z)+ beta X_2(z)
 $
 
-其收敛域*至少*是 $R_1∩R_2$ 。
+其收敛域*至少*是 $R_1 inter R_2$ 。
 
 == 6.信号差分
 
 $
-x[n]-x[n-1]\xleftrightarrow{ cal(Z)}(1-z^(-1))X(z)
+x[n]-x[n-1]limits(stretch(arrow.l.r))^(cal(Z))(1-z^(-1))X(z)
 $
 
-其收敛域*至少*是 $R∩(abs(z)>0)$ 。
+其收敛域*至少*是 $R inter (abs(z)>0)$ 。
 
 == 7.信号累加
 
 $
-  sum_(k=- infinity)^(n)x[k]\xleftrightarrow{ cal(Z)} frac(1, 1-z^(-1))X(z)
+  sum_(k=- infinity)^(n)x[k]limits(stretch(arrow.l.r))^(cal(Z)) frac(1, 1-z^(-1))X(z)
 $
 
-其收敛域*至少*是 $R∩(abs(z)>1)$ 。
+其收敛域*至少*是 $R inter (abs(z)>1)$ 。
 
 == 8.时域卷积(复域相乘)
 
 $
-x_1[n]*x_2[n]\xleftrightarrow{ cal(Z)}X_1(z)X_2(z)
+x_1[n]*x_2[n]limits(stretch(arrow.l.r))^(cal(Z))X_1(z)X_2(z)
 $
 
-其收敛域*至少*是 $R_1∩R_2$ 。
+其收敛域*至少*是 $R_1 inter R_2$ 。
 
 == 9.复域微分
 
 若对 $X(z)$ 在复域上微分：
 
 $
-n x[n]\xleftrightarrow{ cal(Z)}-z frac(d, ds)X(z)
+n x[n]limits(stretch(arrow.l.r))^(cal(Z))-z frac(d, ds)X(z)
 $
 
 其收敛域还是 $R$ 。
@@ -309,13 +312,13 @@ $
 也就是：
 
 $
-x[n-1]\xleftrightarrow{ cal(UZ)}z^(-1) cal(X)(z)+x[-1]
+x[n-1]limits(stretch(arrow.l.r))^(cal(UZ))z^(-1) cal(X)(z)+x[-1]
 $
 
 归纳而言，在一般情况下存在(要求 $m>0$ )：
 
 $
-x[n-m]\xleftrightarrow{ cal(UZ)}z^(-m) cal(X)(z)+z^(-m+1)x[-1]+z^(-m+2)x[-2]+...+x[-m]
+x[n-m]limits(stretch(arrow.l.r))^(cal(UZ))z^(-m) cal(X)(z)+z^(-m+1)x[-1]+z^(-m+2)x[-2]+...+x[-m]
 $
 
 以上对应的是*时延*。而另一方面，对于*时间超前*：
@@ -332,13 +335,13 @@ $
 也就是：
 
 $
-x[n+1]\xleftrightarrow{ cal(UZ)}z cal(X)(z)-z x[0]
+x[n+1]limits(stretch(arrow.l.r))^(cal(UZ))z cal(X)(z)-z x[0]
 $
 
 归纳而言，在一般情况下存在(要求 $m>0$ )：
 
 $
-x[n+m]\xleftrightarrow{ cal(UZ)}z^m cal(X)(z)-z^(m)x[0]-z^(m-1)x[1]-...-z x[m]
+x[n+m]limits(stretch(arrow.l.r))^(cal(UZ))z^m cal(X)(z)-z^(m)x[0]-z^(m-1)x[1]-...-z x[m]
 $
 
 == 3.信号差分
@@ -346,7 +349,7 @@ $
 因此，利用时间平移的性质，可以得到单边 $Z$ 变换下的信号差分性质：
 
 $
-x[n]-x[n-1]\xleftrightarrow{ cal(UZ)}(1-z^(-1)) cal(X)(z)-x[-1]
+x[n]-x[n-1]limits(stretch(arrow.l.r))^(cal(UZ))(1-z^(-1)) cal(X)(z)-x[-1]
 $
 
 #html.hr()

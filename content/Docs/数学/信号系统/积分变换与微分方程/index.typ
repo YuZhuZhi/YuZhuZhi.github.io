@@ -16,10 +16,14 @@
 #let CNOT = $"CNOT"$
 #let te = $"e"$
 #let ti = $"i"$
+#let tj = $"j"$
 
 
-=! https://zhuanlan.zhihu.com/p/705773402
-= 信号系统(七)——积分变换与微分方程
+= 信号系统（七）——积分变换与微分方程
+
+#tufted.full-width[
+    #image("header.jpg")
+]
 
 到目前为止，我们还只是简单认为，直接知道输入 $x(t)$ 到输出 $y(t)$ 之间的映射是什么，或者直接知道在给定输入 $x(t)$ 的情况下会得到怎样的输出 $y(t)$ 。在此情况下，利用信号卷积，系统函数 $H(...)$ 显然就是：
 
@@ -50,16 +54,16 @@ $
 进一步利用*信号微分*：
 
 $
-  sum_(k=0)^(N)a_k (j omega)^(k)Y(j omega)= sum_(k=0)^(M)b_k (j omega)^(k)X(j omega)
+  sum_(k=0)^(N)a_k (tj omega)^(k)Y(tj omega)= sum_(k=0)^(M)b_k (tj omega)^(k)X(tj omega)
 $
 
- $X(j omega),Y(j omega)$ 中不含 $k$ ，因此可以提取到求和号外。于是系统函数就非常显然了：
+ $X(tj omega),Y(tj omega)$ 中不含 $k$ ，因此可以提取到求和号外。于是系统函数就非常显然了：
 
 $
-H(j omega)= frac(Y(j omega), X(j omega))= frac(sum_(k=0)^(M)b_k(j omega)^(k), sum_(k=0)^(N)a_k(j omega)^(k))
+H(tj omega)= frac(Y(tj omega), X(tj omega))= frac(sum_(k=0)^(M)b_k(tj omega)^(k), sum_(k=0)^(N)a_k(tj omega)^(k))
 $
 
-因此，对于线性常系数微分方程，其系统函数是有理分式。这样，对于任意具有有理分式形式傅里叶变换的输入 $x(t)$ ，就可以在计算 $Y(j omega)=H(j omega)X(j omega)$ 之后，利用部分分式展开，非常方便地逆变换为时域上的输出信号 $y(t)$ 。
+因此，对于线性常系数微分方程，其系统函数是有理分式。这样，对于任意具有有理分式形式傅里叶变换的输入 $x(t)$ ，就可以在计算 $Y(tj omega)=H(tj omega)X(tj omega)$ 之后，利用部分分式展开，非常方便地逆变换为时域上的输出信号 $y(t)$ 。
 
 #html.hr()
 
@@ -91,11 +95,11 @@ $
 
 == 2.单边拉普拉斯变换
 
-由于单边拉普拉斯变换的信号微分性质——即信号求导后、其拉普拉斯变换会携带初值信息，因此在不仅给出线性常系数微分方程、还给出各阶导数的初始值时，常会利用之求解。具体的使用例可见之前的文章。
-
-[简谐运动及振动的动力学解](https://zhuanlan.zhihu.com/p/529091434)
-
-[电磁感应中几种模型的定量分析](https://zhuanlan.zhihu.com/p/452332537)
+由于单边拉普拉斯变换的信号微分性质——即信号求导后、其拉普拉斯变换会携带初值信息，因此在不仅给出线性常系数微分方程、还给出各阶导数的初始值时，常会利用之求解。
+#footnote[具体的使用例可参照以下文章：
+// [简谐运动及振动的动力学解](https://zhuanlan.zhihu.com/p/529091434)
+// [电磁感应中几种模型的定量分析](https://zhuanlan.zhihu.com/p/452332537)
+]
 
 在使用积分变换之后，我们将微分方程转化为了代数方程来求解。值得补充的是，有时我们可以将输入信号 $x(t)$ 重写为 $ alpha x(t)$ 。在单边拉普拉斯变换之后得到输出的拉普拉斯变换为有理分式之和：
 
@@ -103,7 +107,7 @@ $
  cal(Y)(s)=  sum frac(Lambda_i, s+ lambda_i)
 $
 
-记各阶导数的初始值为 $[ psi]= psi_0, psi_1,...$ ，那么上式中系数分子 $ Lambda_i$ 必然是关于 $ alpha$ 与初始值 $[ psi]$ 的函数，即 $ Lambda_i= Lambda_i( alpha,[ psi])$ ，并且仅是*线性组合*的关系，也就是可以拆写为 $ Lambda_i= Lambda_(i_1)( alpha)+ Lambda_(i_2)([ psi])$ 。由此可以将 $ cal(Y)(s)$ 按照相关参数重新组合：
+记各阶导数的初始值为 $[ psi]= psi_0, psi_1,...$ ，那么上式中系数分子 $ Lambda_i$ 必然是关于 $ alpha$ 与初始值 $[ psi]$ 的函数，即 $ Lambda_i= Lambda_i ( alpha,[ psi])$ ，并且仅是*线性组合*的关系，也就是可以拆写为 $ Lambda_i= Lambda_(i_1)( alpha)+ Lambda_(i_2)([ psi])$ 。由此可以将 $ cal(Y)(s)$ 按照相关参数重新组合：
 
 $
  cal(Y)(s)=  sum frac(Lambda_(i_1)( alpha), s+ lambda_i)+ sum frac(Lambda_(i_2)([ psi]), s+ lambda_i)
@@ -117,7 +121,7 @@ $
 
 将这个输出称为系统的*零输入响应*。
 
-同样地，如果置 $[ psi]=0$ (意思是使所有的初始值 $ psi_i$ 都取 $0$ )，就相当于*初始松弛条件*，或称为令系统初始状态为 $0$ ，由此产生的输出：
+同样地，如果置 $[ psi]=0$ #footnote[意思是使所有的初始值 $ psi_i$ 都取 $0$ ]，就相当于*初始松弛条件*，或称为令系统初始状态为 $0$ ，由此产生的输出：
 
 $
  cal(Y)_1(s)=  sum frac(Lambda_(i_1)( alpha), s+ lambda_i)
@@ -146,16 +150,16 @@ $
 进一步利用*时间平移*：
 
 $
-  sum_(k=0)^(N)a_k e^(-j k omega)Y(e^(j omega))= sum_(k=0)^(M)b_k e^(-j k omega)X(e^(j omega))
+  sum_(k=0)^(N)a_k te^(-tj k omega)Y(te^(tj omega))= sum_(k=0)^(M)b_k te^(-tj k omega)X(te^(tj omega))
 $
 
- $X(e^(j omega)),Y(e^(j omega))$ 中不含 $k$ ，因此可以提取到求和号外。于是系统函数就非常显然了：
+ $X(te^(tj omega)),Y(te^(tj omega))$ 中不含 $k$ ，因此可以提取到求和号外。于是系统函数就非常显然了：
 
 $
-H(e^(j omega))= frac(Y(e^(j omega)), X(e^(j omega)))= frac(sum_(k=0)^(M)b_k e^(-j k omega), sum_(k=0)^(N)a_k e^(-j k omega))
+H(te^(tj omega))= frac(Y(te^(tj omega)), X(te^(tj omega)))= frac(sum_(k=0)^(M)b_k te^(-tj k omega), sum_(k=0)^(N)a_k te^(-tj k omega))
 $
 
-因此，对于线性常系数差分方程，其系统函数是(关于 $e^(-j k omega)$ 的)有理分式。这样，对于任意具有有理分式形式傅里叶变换的输入 $x(t)$ ，就可以在计算 $Y(e^(j omega))=H(e^(j omega))X(e^(j omega))$ 之后，利用部分分式展开，非常方便地逆变换为时域上的输出信号 $y(t)$ 。
+因此，对于线性常系数差分方程，其系统函数是(关于 $te^(-tj k omega)$ 的)有理分式。这样，对于任意具有有理分式形式傅里叶变换的输入 $x(t)$ ，就可以在计算 $Y(te^(tj omega))=H(te^(tj omega))X(te^(tj omega))$ 之后，利用部分分式展开，非常方便地逆变换为时域上的输出信号 $y(t)$ 。
 
 #html.hr()
 
