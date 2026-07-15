@@ -17,6 +17,8 @@
   #html.elem("input", attrs: (class: "docs-tab-input", type: "radio", name: "docs-tab", id: "docs-tab-quantum", checked: "checked"), "")
   #html.elem("input", attrs: (class: "docs-tab-input", type: "radio", name: "docs-tab", id: "docs-tab-math"), "")
   #html.elem("input", attrs: (class: "docs-tab-input", type: "radio", name: "docs-tab", id: "docs-tab-physics"), "")
+  #html.elem("input", attrs: (class: "docs-tab-input", type: "radio", name: "docs-tab", id: "docs-tab-computer"), "")
+  #html.elem("input", attrs: (class: "docs-tab-input", type: "radio", name: "docs-tab", id: "docs-tab-essay"), "")
 
   #html.elem(
     "div",
@@ -25,6 +27,8 @@
     #html.elem("label", attrs: (class: "docs-tab-button", "for": "docs-tab-quantum", role: "tab"))[量子计算]
     #html.elem("label", attrs: (class: "docs-tab-button", "for": "docs-tab-math", role: "tab"))[数学]
     #html.elem("label", attrs: (class: "docs-tab-button", "for": "docs-tab-physics", role: "tab"))[物理]
+    #html.elem("label", attrs: (class: "docs-tab-button", "for": "docs-tab-computer", role: "tab"))[计算机]
+    #html.elem("label", attrs: (class: "docs-tab-button", "for": "docs-tab-essay", role: "tab"))[杂文]
   ]
 
   #html.elem("section", attrs: (class: "docs-tab-panel docs-tab-panel-quantum"))[
@@ -48,6 +52,12 @@
     - 线性代数
 
     - 概率论与数理统计
+      + #link("数学/概率论/概率论(一)——一维随机变量的分布、期望与方差/")[一维随机变量的分布、期望与方差]
+      + #link("数学/概率论/概率论(二)——二维随机变量/")[二维随机变量]
+      + #link("数学/概率论/概率论(三)——大数定律与中心极限定理/")[大数定律与中心极限定理]
+      + #link("数学/概率论/概率论(四)——抽样分布/")[抽样分布]
+      + #link("数学/概率论/概率论(五)——参数估计/")[参数估计]
+      + #link("数学/概率论/概率论(六)——假设检验/")[假设检验]
 
     - 信号与系统
       + #link("数学/信号系统/简单信号与系统的性质")[简单信号与系统的性质]
@@ -64,6 +74,14 @@
 
   #html.elem("section", attrs: (class: "docs-tab-panel docs-tab-panel-physics"))[
     = 物理
+  ]
+
+  #html.elem("section", attrs: (class: "docs-tab-panel docs-tab-panel-computer"))[
+    = 计算机
+  ]
+
+  #html.elem("section", attrs: (class: "docs-tab-panel docs-tab-panel-essay"))[
+    = 杂文
   ]
 ]
 
@@ -93,4 +111,3 @@
   _--霜天夜雨落花残，墨色浮生总孑然。寒尽春来始流转，万千思缕剪不断。\
   她笑语盈盈：且莫叹。回首我处，为君灯火阑珊。--_
 ]
-
