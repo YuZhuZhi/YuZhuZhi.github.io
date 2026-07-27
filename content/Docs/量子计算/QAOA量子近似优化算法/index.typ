@@ -173,7 +173,7 @@ $ <eq-QuestionHamiltonian>
 接下来首先给出QAOA的整体结构与电路图，之后再分模块介绍。QAOA的算法过程可以用下式完整表示：
 $
   ket(bgabe) = underbrace(U(bHB, beta_(p))U(bHC, gamma_(p)), #text[第$p$层]) ... underbrace(U(bHB, beta_(2))U(bHC, gamma_(2)), "第2层") underbrace(U(bHB, beta_(1))U(bHC, gamma_(1)), "第1层") ket(s),
-$
+$ <eq-QAOAGlobal>
 其对应量子电路如@fig-QAOAGlobal 所示。其中， $bHC$ 即前文所述的问题哈密顿量， $bHB$ 是*混合哈密顿量*，定义为：
 $
   bHB = sum_(i = 1)^(n) bold(X)_(i),
@@ -290,7 +290,7 @@ $ <eq-QuestionUnitaryOperatorEffectWithCoeffientB>
   证明留给读者作为习题。提示：使用数学归纳法。
 ]
 
-由定理#ref(<theo-SingleCoupleFoldZGate-QuantumCircuit>)，任意QUBO问题都能轻易地转化为QAOA量子电路了；进一步地，由推论#ref(<coro-MultiFoldZGate-QuantumCircuit>)，任意PUBO问题也能转化为量子电路。但千万别忘了：QAOA的终态 $ket(bgabe)$ 是由 $bgabe $ 中共 $2 p $ 个角度参数决定的，这些参数直接影响了算法对量子绝热过程的近似模拟的好坏。因此QAOA的下一步，是寻找到一组足够好的参数、以尽可能地模拟真实的量子绝热过程，或者说输出足够好的结果。
+由#ref(<theo-SingleCoupleFoldZGate-QuantumCircuit>)，任意QUBO问题都能轻易地转化为QAOA量子电路了；进一步地，由#ref(<coro-MultiFoldZGate-QuantumCircuit>)，任意PUBO问题也能转化为量子电路。但千万别忘了：QAOA的终态 $ket(bgabe)$ 是由 $bgabe $ 中共 $2 p $ 个角度参数决定的，这些参数直接影响了算法对量子绝热过程的近似模拟的好坏。因此QAOA的下一步，是寻找到一组足够好的参数、以尽可能地模拟真实的量子绝热过程，或者说输出足够好的结果。
 
 #html.hr()
 
@@ -307,7 +307,7 @@ $
 
 这一更新公式虽然与常见的并无二致，但在应用之前还需要讨论一些问题。第一个问题：对于变分量子线路，它的梯度绝非似经典机器学习那般，可以借助计算图、应用链式法则、实现反向传播从而轻易算出，因为这要求记录每个输出节点的数据，而在量子线路中这却是引入了测量、破坏了中间量子态。一种理论上常用的的梯度计算方式是参数移位法（Parameter-Shift Rule），该法指出 #cite(<Mitarai2018-Quantum-circuit-learning>) #cite(<Wierichs2022-General-parameter-shift-rules-for-quantum-gradients>)：
 $
-  frac(partial lr(chevron.l bHC chevron.r)(bold(theta)), partial theta_(k)) = 1/2[ lr(chevron.l bHC chevron.r) - lr(chevron.l bHC chevron.r) ], quad k = 1,2,...,2 p .
+  frac(partial lr(chevron.l bHC chevron.r)(bold(theta)), partial theta_(k)) = 1/2[ lr(chevron.l bHC chevron.r)(theta_(k) + pi /2) - lr(chevron.l bHC chevron.r)(theta_(k) - pi /2) ], quad k = 1,2,...,2 p .
 $ <eq-QAOAParameterShiftRule>
 这里 $lr(chevron.l bHC chevron.r) (theta_(k) - pi /2)$ 是 $lr(chevron.l bHC chevron.r) (theta_(1), ..., theta_(k) - pi /2, ..., theta_(2 p))$ 的简写，表示在参数向量 $bold(theta) $ 只有第 $k $ 参数 $theta_(k)$ 被减去 $pi /2 $ 。但在实践上，使用该法计算梯度的QAOA算法每一次完整的参数更新迭代需要运行线路并测量 $4 p $ 次（因为 $2 p $ 个参数每一者均需采样两次），无疑降低了训练效率；同时，即便式@eq-QAOAParameterShiftRule 计算出的梯度理论上是精确的，真实量子硬件的噪声也使之变得不精确。因此_同时扰动随机逼近算法_（Simultaneous Perturbation Stochastic Approximation，SPSA）等更采样次数更少且不追求精确的算法反而更常用于真实硬件 @Kandala2017-Hardware-efficient-variational-quantum-eigensolver-for-small-molecules-and-quantum-magnets。
 
@@ -328,7 +328,7 @@ $ <eq-QAOAParameterShiftRule>
 #tufted.theorem(label: <theo-QAOA算法的能量景观中beta参数的周期性>)[QAOA算法的能量景观中 $bold(beta) $ 参数的周期性][
   在忽略产生的全局相位的情况下，QAOA算法的能量景观的参数 $bold(beta) $ 具有周期 $pi $ ，即：
   $
-    lr(chevron.l bHC chevron.r)bold(gamma), beta_(1), ..., beta_(i)+ pi, ..., beta_(p)) = lr(chevron.l bHC chevron.r)bgabe), quad i = 1,2,...,p
+    lr(chevron.l bHC chevron.r)(bold(gamma), beta_(1), ..., beta_(i)+ pi, ..., beta_(p)) = lr(chevron.l bHC chevron.r)(bgabe), quad i = 1,2,...,p
   $ <eq-QAOAEnergyLandscapeBetaPeriodicity>
 ]
 
@@ -358,10 +358,10 @@ $ <eq-QAOAParameterShiftRule>
 
 但应当注意到，在许多实际问题中，无理数系数是较难取到的。并且，即便确实有无理数系数，一方面也可以通过近似的手段化为有理数；另一方面使用计算机处理问题时也仅能存储为近似的浮点数，因此在实际应用时认为能量景观关于 $bold(gamma) $ 参数具有普适周期性并非不可接受的。
 
-第三个问题：该参数空间能否进一步缩小，即能否为能量景观函数找到更小的周期、或者寻到一些特殊的对称性？回答也是肯定的。首先，利用定理 @theo-伊辛哈密顿量的缩放，总能找到合适的缩放参数 $k $ ，使定理
-// @theo-QAOA算法的能量景观中gamma参数的周期性
+第三个问题：该参数空间能否进一步缩小，即能否为能量景观函数找到更小的周期、或者寻到一些特殊的对称性？回答也是肯定的。首先，利用 @theo-伊辛哈密顿量的缩放，总能找到合适的缩放参数 $k $ ，使定理
+@theo-QAOA算法的能量景观中gamma参数的周期性
 中的最小正周期约束化为 $pi $ ，从而使 $bold(gamma) $ 的取值范围限定在 $[- pi /2, pi /2 ]$ 中。接下来，定理
-// @theo-QAOA算法的能量景观的对称性
+@theo-QAOA算法的能量景观的对称性
 给出了一种普遍的对称性。
 
 #tufted.theorem(label: <theo-QAOA算法的能量景观的对称性>)[QAOA算法的能量景观的对称性 @giovagnoli-2025-An-Introduction-to-the-Quantum-Approximate-Optimization-Algorithm][
@@ -468,7 +468,7 @@ $ <eq-QAOAParameterShiftRule>
 假设总演化时间为T，选定的初始哈密顿量为H0，那么系统随时间演化到问题哈密顿量HC 的一种路径如下所示：
 $
   bH(t) = (1 - frac(t, T)) bH_0 + frac(t, T) bHC.
-$
+$ <eq-LinearEvolutionPath>
 若初始哈密顿量的基态是 $ket(s)$ ，定义时间演化算子 $bU(t)$ ，则系统绝热演化到某时间t 时哈密顿量的基态是 $psi(t) = bU(t) ket(s)$ 。解含时薛定谔方程：
 $
   tdiff psi(t) = - upright(i) bH(t) psi(t) arrow.r.l.double.long tdiff bU(t) = - upright(i) bH(t) bU(t),
@@ -477,10 +477,10 @@ $
 $
   bU(t) &= cal(T) exp{ -upright(i) integral_(0)^(T) bH(tau) upright(d) tau } \
   &= lim_(p -> infinity) negEI(bH(t_p) Delta t) dot negEI(bH(t_(p-1)) Delta t) dot ... dot negEI(bH(t_1) Delta t) negEI(bH(t_0) Delta t).
-$
-其中 $Delta t = T/p$ ， $t_k = k Delta t$ ； $cal(T)$ 是时序算子，作用在于保证式(9.133b)中严格按时间顺序相乘。该式的导出不在此处给出，可以参考文献[79]。
+$ <eq-IntegralEvolutionSolution>
+其中 $Delta t = T/p$ ， $t_k = k Delta t$ ； $cal(T)$ 是时序算子，作用在于保证式@eq-IntegralEvolutionSolution 中第二式中严格按时间顺序相乘。该式的导出不在此处给出，可以参考文献@giovagnoli-2025-An-Introduction-to-the-Quantum-Approximate-Optimization-Algorithm。
 
-那么，将式(9.133)离散化得到近似，并代入式(9.131)的线性演化路径，得到：
+那么，将式@eq-IntegralEvolutionSolution 离散化得到近似，并代入式@eq-LinearEvolutionPath 的线性演化路径，得到：
 $
   bU(t) approx cal(T) product_(k = 1)^(p) exp{ -upright(i) [(1 - frac(t_k, T)) bH_0 + frac(t_k, T) bHC] Delta t },
 $
@@ -489,9 +489,9 @@ $
   bU(t) approx cal(T) product_(k = 1)^(p) exp{ -upright(i) (1 - frac(t_k, T)) Delta t bH_0 } dot exp{ -upright(i) frac(t_k, T) Delta t bHC }.
 $
 
-到这里相信读者能够看出，上式形式上已经基本对应到 QAOA 的整体分层形式即式(9.115)了。不妨直接记 $L_k = exp{ -upright(i) (1 - frac(t_k, T)) Delta t bH_0 } dot exp{ -upright(i) frac(t_k, T) Delta t bHC }$ ，再同时令 $beta_k = (1 - frac(t_k, T)) Delta t$ 、 $gamma_k = frac(t_k, T) Delta t$ ，则 $bU(T) approx product_(k = 1)^(p) L_k(gamma_k, beta_k)$ ，便得到前述的QAOA 构造了。
+到这里相信读者能够看出，上式形式上已经基本对应到 QAOA 的整体分层形式即式@eq-QAOAGlobal 了。不妨直接记 $L_k = exp{ -upright(i) (1 - frac(t_k, T)) Delta t bH_0 } dot exp{ -upright(i) frac(t_k, T) Delta t bHC }$ ，再同时令 $beta_k = (1 - frac(t_k, T)) Delta t$ 、 $gamma_k = frac(t_k, T) Delta t$ ，则 $bU(T) approx product_(k = 1)^(p) L_k(gamma_k, beta_k)$ ，便得到前述的QAOA 构造了。
 
-读者大概会疑惑于：既然按照如上的推导，角度参数 $gabe$ 应当已经是唯一指定的了，又为何在 QAOA 中需要一个经典参数的训练步骤呢？首先，显然地，依据式(9.133)，当 QAOA 的层数 $p != 1$ 时，电路运行结果就是理想情况下量子退火得到的最优解。但是，当 $p$ 是有限值时，便可以视作后续所有层酉算子都是 $bold(I)$ ，对应能量景观函数值必然大于等于最优解对应的能量。这就会引入误差，影响收敛性，所以使用上述指定值时基本得不到足够好的结果，故而重新训练这些角度参数反而是更好的选择。
+读者大概会疑惑于：既然按照如上的推导，角度参数 $gabe$ 应当已经是唯一指定的了，又为何在 QAOA 中需要一个经典参数的训练步骤呢？首先，显然地，依据式@eq-IntegralEvolutionSolution，当 QAOA 的层数 $p != 1$ 时，电路运行结果就是理想情况下量子退火得到的最优解。但是，当 $p$ 是有限值时，便可以视作后续所有层酉算子都是 $bold(I)$ ，对应能量景观函数值必然大于等于最优解对应的能量。这就会引入误差，影响收敛性，所以使用上述指定值时基本得不到足够好的结果，故而重新训练这些角度参数反而是更好的选择。
 
 #html.hr()
 

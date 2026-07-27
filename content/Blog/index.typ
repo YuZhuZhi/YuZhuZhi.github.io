@@ -15,6 +15,12 @@
 == 2026
 
 #tufted.blog-entry(
+  date: datetime(year: 2026, month: 7, day: 25),
+  path: "2026-07-25-rust-snake/",
+  title: "使用 Rust 编写贪吃蛇游戏",
+)
+
+#tufted.blog-entry(
   date: datetime(year: 2026, month: 6, day: 20),
   path: "2026-06-20-graduation-thesis-ackownledgement/",
   title: "我的毕业论文致谢",

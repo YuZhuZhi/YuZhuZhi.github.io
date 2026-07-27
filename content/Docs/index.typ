@@ -32,7 +32,7 @@
   ]
 
   #html.elem("section", attrs: (class: "docs-tab-panel docs-tab-panel-quantum"))[
-    = 量子计算
+    = 量子算法
 
     + #link("量子计算/前置知识/")[前置知识]
     + #link("量子计算/量子态与量子门/")[量子态与量子门]
@@ -42,6 +42,7 @@
     + #link("量子计算/量子傅里叶变换与相位估计/")[量子傅里叶变换与相位估计]
     + #link("量子计算/振幅放大与振幅估计/")[振幅放大与振幅估计]
     + #link("量子计算/QAOA量子近似优化算法/")[QAOA量子近似优化算法]
+    + #link("量子计算/BB84协议/")[BB84协议]
   ]
 
   #html.elem("section", attrs: (class: "docs-tab-panel docs-tab-panel-math"))[
@@ -70,6 +71,14 @@
       + #link("数学/信号系统/滤波，采样与调制")[滤波，采样与调制]
 
     - 离散数学
+      + #link("数学/离散数学/命题，逻辑公式与推理论证")[命题，逻辑公式与推理论证]
+      + #link("数学/离散数学/一阶逻辑")[一阶逻辑]
+      + #link("数学/离散数学/集合与计数")[集合与计数]
+      + #link("数学/离散数学/关系")[关系]
+      + #link("数学/离散数学/函数")[函数]
+      + #link("数学/离散数学/排列组合与数列递推")[排列组合与数列递推]
+      + #link("数学/离散数学/代数系统")[代数系统]
+      + #link("数学/离散数学/图和树")[图和树]
   ]
 
   #html.elem("section", attrs: (class: "docs-tab-panel docs-tab-panel-physics"))[
