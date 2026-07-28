@@ -253,7 +253,7 @@ $
  frac(1, sqrt(2))( ket(0)+ te^(ti 2 pi dot 0.j_(N-k)...j_(N-1)j_N) ket(1))
 $
 
-在#link("量子计算/布洛赫球/")[量子计算（三）——布洛赫球]中介绍布洛赫球时还知道，单个量子的纯态可以表示为：
+在#link("../布洛赫球/")[量子计算（三）——布洛赫球]中介绍布洛赫球时还知道，单个量子的纯态可以表示为：
 
 $
  ket(psi)=cos frac(theta, 2) ket(0)+ te^(ti  phi)sin frac(theta, 2) ket(1)
@@ -287,7 +287,7 @@ $
 
 = 三、相位反冲(Phase Kick-back)
 
-在#link("量子计算/Deutsch-Jozsa算法与Simon算法/")[量子计算（五）——Deutsch-Jozsa算法与Simon算法]中介绍的算法都利用了相位反冲。但相位反冲的产生条件与原理究竟是什么？接下来我们讨论这个问题。
+在#link("../Deutsch-Jozsa算法与Simon算法/")[量子计算（五）——Deutsch-Jozsa算法与Simon算法]中介绍的算法都利用了相位反冲。但相位反冲的产生条件与原理究竟是什么？接下来我们讨论这个问题。
 
 == 1.量子门的相位
 
