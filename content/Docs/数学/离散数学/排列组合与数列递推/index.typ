@@ -15,6 +15,10 @@
 
 = 离散数学（六）——排列组合与数列递推
 
+#tufted.full-width[
+    #image("header.jpg")
+]
+
 = 一、排列与组合的基本公式
 
 #tufted.remark[记号约定][

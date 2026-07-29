@@ -1,0 +1,480 @@
+/*******************************************************************************
+SITE EXTENSIONS
+
+Styles for site-specific theorem environments and Docs category tabs.
+*******************************************************************************/
+
+/*******************************************************************************
+THEOREMS AND PROOFS
+*******************************************************************************/
+
+.tufted-theorem,
+.tufted-corollary,
+.tufted-remark,
+.tufted-definition,
+.tufted-lemma,
+.tufted-proposition,
+.tufted-proof {
+	--env-accent: var(--theme-table-border, #8c8c8c);
+	--env-bg: color-mix(in srgb, var(--env-accent) 6%, var(--theme-bg, #fffff8));
+	--env-border: color-mix(in srgb, var(--env-accent) 24%, var(--theme-bg, #fffff8));
+	width: 55%;
+	margin: 1.5em 0;
+	padding: 0.55em 1em 0.65em;
+	box-sizing: border-box;
+	clear: none;
+	border: 0;
+	border-inline-start: 0.25em solid var(--env-accent);
+	border-radius: 0;
+	background: var(--env-bg);
+	font-size: 1.5rem;
+	line-height: 2.2rem;
+	overflow-wrap: break-word;
+}
+
+figure:has(> .tufted-theorem),
+figure:has(> .tufted-corollary),
+figure:has(> .tufted-remark),
+figure:has(> .tufted-definition),
+figure:has(> .tufted-lemma),
+figure:has(> .tufted-proposition) {
+	width: 100%;
+	max-width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+.tufted-theorem {
+	--env-accent: #b91c1c;
+	--env-bg: color-mix(in srgb, var(--env-accent) 5%, var(--theme-bg, #fffff8));
+	font-family: KaiTi, STKaiti, "Kaiti SC", serif;
+}
+
+.tufted-corollary {
+	--env-accent: #a21caf;
+	--env-bg: color-mix(in srgb, var(--env-accent) 5%, var(--theme-bg, #fffff8));
+	font-family: KaiTi, STKaiti, "Kaiti SC", serif;
+}
+
+.tufted-definition {
+	--env-accent: #c2410c;
+	--env-bg: color-mix(in srgb, var(--env-accent) 5%, var(--theme-bg, #fffff8));
+	font-family: KaiTi, STKaiti, "Kaiti SC", serif;
+}
+
+.tufted-lemma {
+	--env-accent: #0f766e;
+	--env-bg: color-mix(in srgb, var(--env-accent) 5%, var(--theme-bg, #fffff8));
+	font-family: KaiTi, STKaiti, "Kaiti SC", serif;
+}
+
+.tufted-proposition {
+	--env-accent: #2563eb;
+	--env-bg: color-mix(in srgb, var(--env-accent) 5%, var(--theme-bg, #fffff8));
+	font-family: KaiTi, STKaiti, "Kaiti SC", serif;
+}
+
+.tufted-remark {
+	--env-accent: #118d8d;
+	--env-bg: color-mix(in srgb, var(--env-accent) 5%, var(--theme-bg, #fffff8));
+	font-family: inherit;
+}
+
+.tufted-proof {
+	--env-accent: #6b7280;
+	--env-bg: transparent;
+	border-inline-start-width: 0.2em;
+	padding-left: 1em;
+	font-family: inherit;
+}
+
+.tufted-theorem-heading,
+.tufted-corollary-heading,
+.tufted-remark-heading,
+.tufted-definition-heading,
+.tufted-lemma-heading,
+.tufted-proposition-heading,
+.tufted-proof-heading {
+	font-weight: bold;
+	font-style: normal;
+	color: var(--env-accent);
+	font-size: inherit;
+	line-height: inherit;
+}
+
+.tufted-theorem-body > p,
+.tufted-corollary-body > p,
+.tufted-remark-body > p,
+.tufted-definition-body > p,
+.tufted-lemma-body > p,
+.tufted-proposition-body > p,
+.tufted-proof-body > p {
+	width: 100%;
+	margin: 0.45em 0;
+	font-size: inherit;
+	line-height: inherit;
+	text-align: justify;
+}
+
+.tufted-theorem a,
+.tufted-corollary a,
+.tufted-remark a,
+.tufted-definition a,
+.tufted-lemma a,
+.tufted-proposition a,
+.tufted-proof a,
+.tufted-theorem-heading,
+.tufted-corollary-heading,
+.tufted-remark-heading,
+.tufted-definition-heading,
+.tufted-lemma-heading,
+.tufted-proposition-heading,
+.tufted-proof-heading {
+	overflow-wrap: anywhere;
+}
+
+.tufted-theorem-body > figure[role="math"],
+.tufted-corollary-body > figure[role="math"],
+.tufted-remark-body > figure[role="math"],
+.tufted-definition-body > figure[role="math"],
+.tufted-lemma-body > figure[role="math"],
+.tufted-proposition-body > figure[role="math"],
+.tufted-proof-body > figure[role="math"] {
+	width: 100%;
+	max-width: 100%;
+	margin: 0.75em 0;
+	padding: 0.35em 0;
+	font-size: inherit;
+	line-height: 1.2;
+	box-sizing: border-box;
+}
+
+.tufted-theorem-body > figure[role="math"] > *,
+.tufted-corollary-body > figure[role="math"] > *,
+.tufted-remark-body > figure[role="math"] > *,
+.tufted-definition-body > figure[role="math"] > *,
+.tufted-lemma-body > figure[role="math"] > *,
+.tufted-proposition-body > figure[role="math"] > *,
+.tufted-proof-body > figure[role="math"] > * {
+	min-width: 0;
+	max-width: 100%;
+}
+
+.tufted-theorem-body > ul,
+.tufted-theorem-body > ol,
+.tufted-theorem-body > dl,
+.tufted-corollary-body > ul,
+.tufted-corollary-body > ol,
+.tufted-corollary-body > dl,
+.tufted-remark-body > ul,
+.tufted-remark-body > ol,
+.tufted-remark-body > dl,
+.tufted-definition-body > ul,
+.tufted-definition-body > ol,
+.tufted-definition-body > dl,
+.tufted-lemma-body > ul,
+.tufted-lemma-body > ol,
+.tufted-lemma-body > dl,
+.tufted-proposition-body > ul,
+.tufted-proposition-body > ol,
+.tufted-proposition-body > dl,
+.tufted-proof-body > ul,
+.tufted-proof-body > ol,
+.tufted-proof-body > dl,
+.tufted-theorem-body > table,
+.tufted-corollary-body > table,
+.tufted-remark-body > table,
+.tufted-definition-body > table,
+.tufted-lemma-body > table,
+.tufted-proposition-body > table,
+.tufted-proof-body > table {
+	width: 100%;
+	max-width: 100%;
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.tufted-theorem-body > img,
+.tufted-theorem-body > svg,
+.tufted-corollary-body > img,
+.tufted-corollary-body > svg,
+.tufted-remark-body > img,
+.tufted-remark-body > svg,
+.tufted-definition-body > img,
+.tufted-definition-body > svg,
+.tufted-lemma-body > img,
+.tufted-lemma-body > svg,
+.tufted-proposition-body > img,
+.tufted-proposition-body > svg,
+.tufted-proof-body > img,
+.tufted-proof-body > svg {
+	max-width: 100%;
+	left: auto;
+	transform: none;
+}
+
+.tufted-theorem-body > :first-child,
+.tufted-corollary-body > :first-child,
+.tufted-remark-body > :first-child,
+.tufted-definition-body > :first-child,
+.tufted-lemma-body > :first-child,
+.tufted-proposition-body > :first-child,
+.tufted-proof-body > :first-child {
+	margin-top: 0;
+}
+
+.tufted-theorem-body > :last-child,
+.tufted-corollary-body > :last-child,
+.tufted-remark-body > :last-child,
+.tufted-definition-body > :last-child,
+.tufted-lemma-body > :last-child,
+.tufted-proposition-body > :last-child,
+.tufted-proof-body > :last-child {
+	margin-bottom: 0;
+}
+
+.tufted-proof-qed {
+	text-align: right;
+	line-height: 1;
+}
+
+/*******************************************************************************
+DOCS CATEGORY TABS
+*******************************************************************************/
+
+.docs-tabs {
+	width: 55%;
+	margin: 0.25em 0 1.2em;
+}
+
+body:has(.docs-tabs) > article {
+	padding-top: 0.35rem;
+}
+
+.docs-tab-input {
+	position: absolute;
+	inline-size: 1px;
+	block-size: 1px;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.docs-tabs > p:has(.docs-tab-input) {
+	display: none;
+}
+
+.docs-tab-buttons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1em;
+	margin: 0 0 0.45em;
+}
+
+.docs-tab-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	inline-size: 5.25em;
+	min-height: 0;
+	padding: 0.2em 0.4em;
+	border: 0;
+	border-radius: var(--radius-sm);
+	background: transparent;
+	color: var(--theme-text, #111);
+	font-size: 1.5rem;
+	line-height: 1.2;
+	cursor: pointer;
+	user-select: none;
+	transition: background-color 120ms ease;
+}
+
+.docs-tab-button:hover,
+.docs-tab-button:focus-visible {
+	background: var(--highlight-weak);
+	outline: none;
+}
+
+.docs-tab-panel {
+	display: none;
+}
+
+.docs-tabs:has(#docs-tab-quantum:checked) .docs-tab-panel-quantum,
+.docs-tabs:has(#docs-tab-math:checked) .docs-tab-panel-math,
+.docs-tabs:has(#docs-tab-physics:checked) .docs-tab-panel-physics,
+.docs-tabs:has(#docs-tab-computer:checked) .docs-tab-panel-computer,
+.docs-tabs:has(#docs-tab-essay:checked) .docs-tab-panel-essay {
+	display: block;
+}
+
+.docs-tabs:has(#docs-tab-quantum:checked) label[for="docs-tab-quantum"],
+.docs-tabs:has(#docs-tab-math:checked) label[for="docs-tab-math"],
+.docs-tabs:has(#docs-tab-physics:checked) label[for="docs-tab-physics"],
+.docs-tabs:has(#docs-tab-computer:checked) label[for="docs-tab-computer"],
+.docs-tabs:has(#docs-tab-essay:checked) label[for="docs-tab-essay"] {
+	background: var(--highlight-weak);
+	color: var(--theme-text, #111);
+	font-weight: bold;
+}
+
+.docs-tab-panel > h2 {
+	margin-top: 0.2em;
+}
+
+@media (max-width: 760px) {
+	.tufted-theorem,
+	.tufted-corollary,
+	.tufted-remark,
+	.tufted-definition,
+	.tufted-lemma,
+	.tufted-proposition,
+	.tufted-proof {
+		width: 100%;
+	}
+
+	.docs-tabs {
+		width: 100%;
+	}
+}
+
+/*******************************************************************************
+BB84 PROTOCOL STAGES
+*******************************************************************************/
+
+.bb84-stage {
+	display: grid;
+	grid-template-columns: minmax(10rem, 1fr) minmax(16rem, 1.35fr) minmax(10rem, 1fr);
+	align-items: center;
+	gap: 1.4rem;
+	width: 90vw;
+	min-width: 90vw;
+	box-sizing: border-box;
+	margin-left: calc(50% - 50vw);
+	margin-right: calc(50% - 50vw);
+	margin-top: 1.1rem;
+	margin-bottom: 1.5rem;
+	padding: 1rem 1.4rem;
+	border: 1px solid var(--theme-table-border, #c9d2cc);
+	border-radius: 1rem;
+	background:
+		linear-gradient(105deg, rgba(14, 171, 119, 0.08), transparent 38%),
+		linear-gradient(255deg, rgba(25, 95, 180, 0.08), transparent 38%),
+		var(--theme-bg, #fff);
+}
+
+.bb84-party {
+	display: flex;
+	min-width: 0;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+}
+
+.bb84-party-alice {
+	grid-column: 1;
+	grid-row: 1;
+}
+
+.bb84-party-bob {
+	grid-column: 3;
+	grid-row: 1;
+}
+
+.bb84-party img {
+	display: block;
+	width: 4rem;
+	height: 4rem;
+	margin: 0 auto 0.35rem;
+	object-fit: contain;
+}
+
+.bb84-party-name {
+	margin-bottom: 0.55rem;
+	font-size: 1.18rem;
+}
+
+.bb84-speech {
+	position: relative;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 0.75rem 0.8rem;
+	border: 2px solid;
+	border-radius: 0.75rem;
+	background: var(--theme-bg, #fff);
+	font-size: 1.25rem;
+	line-height: 1.55;
+}
+
+.bb84-party-alice .bb84-speech {
+	border-color: #0eab77;
+}
+
+.bb84-party-bob .bb84-speech {
+	border-color: #195fb4;
+}
+
+.bb84-stage-center {
+	display: flex;
+	grid-column: 2;
+	grid-row: 1;
+	min-width: 0;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+}
+
+.bb84-stage-name {
+	margin-bottom: 0.7rem;
+	padding: 0.3rem 0.75rem;
+	border-radius: 999px;
+	background: var(--theme-table-border, #e2e7e4);
+	font-size: 1.12rem;
+}
+
+.bb84-channel {
+	width: 100%;
+	box-sizing: border-box;
+	padding: 0.8rem 0.6rem;
+	border-top: 2px solid #718078;
+	border-bottom: 2px solid #718078;
+	font-size: 1.2rem;
+	line-height: 1.5;
+}
+
+@media (max-width: 700px) {
+	.bb84-stage {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+		gap: 1rem;
+		width: 96vw;
+		min-width: 96vw;
+		padding: 0.9rem;
+	}
+
+	.bb84-party-alice {
+		grid-column: 1;
+		grid-row: 1;
+	}
+
+	.bb84-party-bob {
+		grid-column: 2;
+		grid-row: 1;
+	}
+
+	.bb84-stage-center {
+		grid-column: 1 / -1;
+		grid-row: 2;
+	}
+
+	.bb84-party img {
+		width: 3.5rem;
+		height: 3.5rem;
+	}
+
+	.bb84-speech {
+		padding: 0.65rem;
+		font-size: 1.08rem;
+	}
+
+	.bb84-channel {
+		font-size: 1.08rem;
+	}
+}

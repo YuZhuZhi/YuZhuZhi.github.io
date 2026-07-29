@@ -34,6 +34,12 @@
 
 #html.hr()
 
+= 代表作
+
+- #link("https://www.bilibili.com/video/BV1b7411H7t7/?spm_id_from=333.1387.0.0&vd_source=9f0989cf46e495ed836dd439540db3ca")[当广东北江实验学校Minecraft化！]
+
+#html.hr()
+
 #html.br()
 #html.br()
 #html.br()

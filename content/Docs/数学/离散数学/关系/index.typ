@@ -15,6 +15,10 @@
 
 = 离散数学（四）——关系
 
+#tufted.full-width[
+  #image("header.jpg")
+]
+
 = 一、关系的基本概念
 
 == 1.有序对与笛卡尔积
@@ -182,15 +186,15 @@ $
 
 == 2.对称性
 
-现在讨论全体的 $ chevron.l a,b chevron.r in R$ 。如果 $ chevron.l b,a chevron.r$ 也属于 $R$ ，那么称 $R$ 是*对称的*；而在 $a != b$ 的情况下，如果 $ chevron.l b,a chevron.r$ 都属于 $R$ ，那么称 $R$ 是*反对称的*。
-
->更加公理化的定义是：
->$
+现在讨论全体的 $ chevron.l a,b chevron.r in R$ 。如果 $ chevron.l b,a chevron.r$ 也属于 $R$ ，那么称 $R$ 是*对称的*；而在 $a != b$ 的情况下，如果 $ chevron.l b,a chevron.r$ 都属于 $R$ ，那么称 $R$ 是*反对称的*。更加公理化的定义是：
+#tufted.definition[对称性与反对称性][
+$
 R "是对称的" quad "当且仅当" quad forall a in A forall b in A (chevron.l a,b chevron.r in R -> chevron.l b,a chevron.r in R)
 $
->$
+$
 R "是反对称的" quad "当且仅当" quad forall a in A forall b in A (chevron.l a,b chevron.r in R and chevron.l b,a chevron.r in R -> a=b)
 $
+]
 
 当然从关系矩阵的角度来看对称性和反对称性更加直观。对于对称性，上述定义要求*对称关系*的关系矩阵是一个*对称矩阵*，即关于对角线对称，即转置矩阵与原矩阵相等 $ bold(M)_R= bold(M)_R^T$ ；而对于*反对称性*，则是要求非对角线上两个对称的元素 $r_(i j)$ 和 $r_(j i)$ 都*不能同时为* $1$ 。注意到 $a != b$ ，这是让我们不用关心对角线元素，也就是说自反性不影响反对称性。
 
@@ -200,12 +204,12 @@ $
 
 == 3.传递性
 
-*传递性*比较类似于关系与其自身的*复合*。如果对于任意 $ chevron.l a,b chevron.r, chevron.l b,c chevron.r in R$ ，都有 $ chevron.l a,c chevron.r in R$ ，那么称关系 $R$ 是传递的。
-
->更加公理化的定义是：
->$
+*传递性*比较类似于关系与其自身的*复合*。如果对于任意 $ chevron.l a,b chevron.r, chevron.l b,c chevron.r in R$ ，都有 $ chevron.l a,c chevron.r in R$ ，那么称关系 $R$ 是传递的。更加公理化的定义是：
+#tufted.definition[传递性][
+$
 R "是传递的" quad "当且仅当" quad forall a in A forall b in A forall c in A (chevron.l a,b chevron.r in R and chevron.l b,c chevron.r in R -> chevron.l a,c chevron.r in R)
 $
+]
 
 关系矩阵不能直观反映关系是否具有传递性。为了更简单地判定关系的传递性，我们通常计算关系与其自身的复合 $R circle.small R$ 。如果 $R circle.small R subset.eq R$ ，那么关系就是*传递的*；否则不是传递的。
 
@@ -215,30 +219,28 @@ $
 
 上述中，从集合角度来考察关系性质的，就是*性质概括法*，可以利用之来验证关系性质。现总结罗列如下：
 
-(1) $R$ *具有自反性*： $ Delta_A subset.eq R$ 
-
-(1) $R$ *具有反自反性*： $ Delta_A inter R= diameter$ 
-
-(1) $R$ *具有对称性*： $R=R^(-1)$ 
-
-(1) $R$ *具有反对称性*： $R inter R^(-1) subset.eq Delta_A$ 
-
-(1) $R$ *具有传递性*： $R circle.small R subset.eq R$ 
+(1) $R$ *具有自反性*： $ Delta_A subset.eq R$ \
+(2) $R$ *具有反自反性*： $ Delta_A inter R= diameter$ \
+(3) $R$ *具有对称性*： $R=R^(-1)$ \
+(4) $R$ *具有反对称性*： $R inter R^(-1) subset.eq Delta_A$ \
+(5) $R$ *具有传递性*： $R circle.small R subset.eq R$ 
 
 == 5.关系运算与关系性质
 
 首先给出下表：
 
-$
- mat(
-    , "运算" , "自反性" , "反自反性" , "对称性" , "反对称性" , "传递性";
-    , R^(-1) , ;checkmark , ;checkmark , ;checkmark , ;checkmark , ;checkmark;
-    , R inter S , ;checkmark , ;checkmark , ;checkmark , ;checkmark , ;checkmark;
-    , R union S , ;checkmark , ;checkmark , ;checkmark ,  times ,  times;
-    , R-S ,  times , ;checkmark , ;checkmark , ;checkmark ,  times;
-    , R circle.small S , ;checkmark ,  times ,  times ,  times ,  times;
-)
-$
+#figure(caption: [关系运算与关系性质表])[
+    #table(
+        columns: 6,
+
+        [运算], [自反性], [反自反性], [对称性], [反对称性], [传递性],
+        [$R^(-1)$], [$checkmark$], [$checkmark$], [$checkmark$], [$checkmark$], [$checkmark$],
+        [$R inter S$], [$checkmark$], [$checkmark$], [$checkmark$], [$checkmark$], [$checkmark$],
+        [$R union S$], [$checkmark$], [$checkmark$], [$checkmark$], [$times$], [$times$],
+        [$R-S$], [$times$], [$checkmark$], [$checkmark$], [$checkmark$], [$times$],
+        [$R circle.small S$], [$checkmark$], [$times$], [$times$], [$times$], [$times$]
+    )
+]
 
 现在解释上表的含义。这张表描述的是，如果给出的两个(或一个)关系*都*具有某种性质的话，那么运算结果是否还有这种性质。比如，如果 $R,S$ 都对称，那么 $R union S$ 也对称；如果 $R,S$ 都自反，那么 $R-S$ 不一定自反。
 
@@ -252,10 +254,11 @@ $
 
 正如上述，*自反闭包*是在原关系的基础上，以最小的扩展生成*自反关系*。 $R$ 的自反闭包记为 $r(R)$ ，这是取 $"reflexive"$ 的首字母。由于只要恒等关系是关系的子集那么关系就是自反的，因此 $r(R)=R union Delta_A$ 。
 
->现在给出自反闭包 $r(R)$ 的定义：
->其一，自反闭包是原关系的扩展，即原关系是自反闭包的子集： $R subset.eq r(R)$ ；
->其二，自反闭包是自反关系： $ Delta_A subset.eq r(R)$ ；
->其三，对于任意包含原关系的自反关系 $S$ ，自反闭包亦是它的子集： $R subset.eq S -> r(R) subset.eq S$ 。
+#tufted.definition[自反闭包 $r(R)$][
++ 自反闭包是原关系的扩展，即原关系是自反闭包的子集： $R subset.eq r(R)$ ；
++ 自反闭包是自反关系： $ Delta_A subset.eq r(R)$ ；
++ 对于任意包含原关系的自反关系 $S$ ，自反闭包亦是它的子集： $R subset.eq S -> r(R) subset.eq S$ 。
+]
 
 自反闭包可以证明一个关系是自反的，只要一个关系的*自反闭包等于它自己*。也就是若 $r(R)=R$ 则 $R$ 自反，反之亦然。
 
@@ -275,10 +278,11 @@ $
 
  $R$ 的*对称闭包*记为 $s(R)$ ，这是取 $"symmetric"$ 的首字母。为了以最小的扩展生成对称关系，只需要将关系遍历一遍，添加原本没有的对称有序对即可，即 $s(R)=R union R^(-1)$ 。
 
->现在给出对称闭包 $s(R)$ 的定义：
->其一，对称闭包是原关系的扩展，即原关系是对称闭包的子集： $R subset.eq s(R)$ ；
->其二，对称闭包是对称关系： $s(R)=(s(R))^(-1)$ ；
->其三，对于任意包含原关系的对称关系 $S$ ，对称闭包亦是它的子集： $R subset.eq S -> s(R) subset.eq S$ 。
+#tufted.definition[对称闭包 $s(R)$][
++ 对称闭包是原关系的扩展，即原关系是对称闭包的子集： $R subset.eq s(R)$ ；
++ 对称闭包是对称关系： $s(R)=(s(R))^(-1)$ ；
++ 对于任意包含原关系的对称关系 $S$ ，对称闭包亦是它的子集： $R subset.eq S -> s(R) subset.eq S$ 。
+]
 
 对称闭包可以证明一个关系是对称的，只要一个关系的*对称闭包等于它自己*。也就是若 $s(R)=R$ 则 $R$ 对称，反之亦然。
 
@@ -298,10 +302,11 @@ $
 
  $R$ 的*传递闭包*记为 $t(R)$ ，这是取 $"transitive"$ 的首字母。
 
->现在给出传递闭包 $t(R)$ 的定义：
->其一，传递闭包是原关系的扩展，即原关系是传递闭包的子集： $R subset.eq t(R)$ ；
->其二，传递闭包是传递关系： $t(R) circle.small t(R) subset.eq t(R)$ ；
->其三，对于任意包含原关系的传递关系 $S$ ，传递闭包亦是它的子集： $R subset.eq S -> t(R) subset.eq S$ 。
+#tufted.definition[传递闭包 $t(R)$][
++ 传递闭包是原关系的扩展，即原关系是传递闭包的子集： $R subset.eq t(R)$ ；
++ 传递闭包是传递关系： $t(R) circle.small t(R) subset.eq t(R)$ ；
++ 对于任意包含原关系的传递关系 $S$ ，传递闭包亦是它的子集： $R subset.eq S -> t(R) subset.eq S$ 。
+]
 
 传递闭包可以证明一个关系是传递的，只要一个关系的*传递闭包等于它自己*。也就是若 $t(R)=R$ 则 $R$ 传递，反之亦然。
 
@@ -380,19 +385,18 @@ $
 == 3.商集
 
 *商集*是一个*集合族*，它是以等价类作为划分依据的等价关系的*划分*。
+#footnote[复习：将一个集合 $A$ 划分为几个互不相交的部分，每个部分自成一个集合，那么这些集合就可以形成一个集合族，称为 $A$ 的*划分*，记为 $ cal(F)$ 。划分中的每一个集合称为一个*划分块*。]
 
->复习：将一个集合 $A$ 划分为几个互不相交的部分，每个部分自成一个集合，那么这些集合就可以形成一个集合族，称为 $A$ 的*划分*，记为 $ cal(F)$ 。划分中的每一个集合称为一个*划分块*。
-
-也就是每一个*等价类*都是一个*划分块*。 $A$ 中所有元素的等价类构成的集合族，称为集合 $A$ 关于等价关系 $R$ 的*商集*，记为 $A/R$ ：
+也就是每一个*等价类*都是一个*划分块*。 $A$ 中所有元素的等价类构成的集合族，称为集合 $A$ 关于等价关系 $R$ 的*商集*，记为 $A\/R$ ：
 
 $
-A/R= {[a]_R | a in A }
+A\/R= {[a]_R | a in A }
 $
 
 商集作为集合 $A$ 的划分，显然其广义并就是集合 $A$ ：
 
 $
-  union.big_(a in A)[a]_R= union.big A/R=A
+  union.big_(a in A)[a]_R= union.big A\/R=A
 $
 
 #html.hr()
@@ -411,7 +415,9 @@ $
 
 *偏序集*需要包含偏序关系、以及偏序关系所处在的集合，记为 $(A, prec.eq)$ 。注意到*反对称性*只要求两个元素 $a,b$ 的有序对 $ chevron.l a,b chevron.r, chevron.l b,a chevron.r$ 不同时存在，也即允许两者*都不存在*，此时既不存在 $a prec.eq b$ 也不存在 $b prec.eq a$ ，则称 $a,b$ 间*不可比*。反之，称为*可比的*。当 $A$ 中任意两个元素*都*可比，那么称偏序集 $(A, prec.eq)$ 是*全序*的，或称为*线序*的。
 
->需要注意在偏序关系中， $a != b$ 不代表 $a prec.eq b$ 且 $a succ.eq b$ ，因为偏序关系是*反对称的*！ $a != b$ 仅仅是强调“ $a$ 和 $b$ 不是同一个元素”。
+#tufted.remark[偏序关系的反对称性][
+需要注意在偏序关系中， $a != b$ 不代表 $a prec.eq b$ 且 $a succ.eq b$ ，因为偏序关系是*反对称的*！ $a != b$ 仅仅是强调“ $a$ 和 $b$ 不是同一个元素”。
+]
 
 假如 $a,b$ 间有 $a prec b$ ，并且中间*不存在*一个元素 $c$ 使得 $a prec c$ 且 $c prec b$ ，则称 $b$ *覆盖* $a$ 。
 
@@ -432,8 +438,7 @@ $
 取 $A$ 中的某一个元素 $a$ 。如果在 $A$ 中没有比 $a$ 更大的元素，那么称 $a$ 为*极大元*；反之，如果在 $A$ 中没有比 $a$ 更小的元素，那么称 $a$ 为*极小元*。
 
 如果 $a$ 大于等于 $A$ 中*所有*的元素，那么称 $a$ 为*最大元*；反之，如果 $a$ 小于等于 $A$ 中*所有*的元素，那么称 $a$ 为*最小元*。
-
->上面这两段话乍一看没啥区别，但关键在于是否是对“*所有*”的元素！如果存在与 $a$ 不可比的元素，那么 $a$ 就不能是最大元或最小元。
+#footnote[这两段话乍一看没啥区别，但关键在于是否是对“*所有*”的元素！如果存在与 $a$ 不可比的元素，那么 $a$ 就不能是最大元或最小元。]
 
 因此，如果 $a$ 是*最大元*，那么它亦必是*极大元*；如果 $a$ 是*最小元*，那么它亦必是*极小元*。(只有)在偏序集是*全序*的情况下，如果 $a$ 是*极大元*，那么它亦是*最大元*；如果 $a$ 是*极小元*，那么它亦是*最小元*。
 

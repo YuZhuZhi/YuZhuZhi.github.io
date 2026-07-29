@@ -13,6 +13,9 @@
     "/Docs/": "文章",
     "/Blog/": "随笔",
   ),
+
+  /// 站点扩展样式，与上游模板样式分离。
+  css: ("/assets/site-extensions.css", "/assets/custom.css"),
   
   /// 网站的站点标题。会显示在浏览器标签页以及 SEO/社交分享卡片中。
   website-title: "不认识御伫之？很正常！",

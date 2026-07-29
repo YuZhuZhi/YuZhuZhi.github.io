@@ -15,6 +15,10 @@
 
 = 离散数学（二）——一阶逻辑
 
+#tufted.full-width[
+  #image("header.jpg")
+]
+
 离散数学的前半部分，大抵都是对“命题”的数学结构化描述。一阶逻辑在命题逻辑公式的基础上，通过引入一些其他的符号，完善了对具体-抽象类型命题的描述与判断。
 
 = 一、基本概念
@@ -41,17 +45,23 @@
 
 其二是*存在量词*，以 $ exists$ 表示。例如，要表示“部分的 $x$ 都有性质 $P$ ”，就符号化为 $ exists x P(x)$ 。这种命题称为*存在命题*。全称命题和存在命题统称为*量化命题*。
 
->一阶逻辑中，量词也只允许作用于个体变量上，不允许作用于谓词上。
+#tufted.remark[量词的作用范围][
+     一阶逻辑中，量词也只允许作用于个体变量上，不允许作用于谓词上。
+]
 
 == 3.论域与特征谓词
 
 就像上述所说，个体变量的“变量”意味、谓词的“函数”意味，是我们必须限定个体变量的“范围”，这类似于限定函数的定义域。对个体变量所限定的范围，就称为这个个体变量的*论域*。
 
->例如，命题“所有自然数都大于等于 $0$ ”，可以符号化为 $ forall x P(x)$ 。其中 $x$ 表示自然数， $P(x)$ 表示“ $x$ 大于等于 $0$ ”，那么 $x$ 的论域就是自然数集。
+#tufted.remark[][
+例如，命题“所有自然数都大于等于 $0$ ”，可以符号化为 $ forall x P(x)$ 。其中 $x$ 表示自然数， $P(x)$ 表示“ $x$ 大于等于 $0$ ”，那么 $x$ 的论域就是自然数集。
+]
 
 就像是函数的定义域，论域自然可以是其他论域的子集，但扩大论域显然极有可能使原来的命题失效。为此，必须要多引入一个谓词，以限定论域的范围，这个谓词称为*特征谓词*。
 
->还是以上面为例，命题“所有自然数都大于等于 $0$ ”，如果 $x$ 的论域是实数集， $P(x)$ 表示“ $x$ 大于等于 $0$ ”，那么必须引入额外的谓词 $Q(x)$ 表示“ $x$ 是自然数 $0$ ”以限定 $x$ 的范围，这个谓词就是特征谓词。此时公式符号化为 $ forall x(Q(x) -> P(x))$ 。
+#tufted.remark[][
+还是以上面为例，命题“所有自然数都大于等于 $0$ ”，如果 $x$ 的论域是实数集， $P(x)$ 表示“ $x$ 大于等于 $0$ ”，那么必须引入额外的谓词 $Q(x)$ 表示“ $x$ 是自然数 $0$ ”以限定 $x$ 的范围，这个谓词就是特征谓词。此时公式符号化为 $ forall x(Q(x) -> P(x))$ 。
+]
 
 #html.hr()
 
@@ -63,31 +73,32 @@
 
 *逻辑符号集*中包括：
 
-(1)逻辑运算符 $ not, and, or, ->, <->$ ，量词符号 $ forall, exists$ ，和辅助表明运算顺序的左右圆括号 $(,)$ ，以及多元谓词中分隔各变量的逗号 $,$ ；
-
+(1)逻辑运算符 $ not, and, or, ->, <->$ ，量词符号 $ forall, exists$ ，和辅助表明运算顺序的左右圆括号 $(,)$ ，以及多元谓词中分隔各变量的逗号 $,$ ；\
 (2)个体变量集，例如 $x,y,z...$ ，这个集合单独记为 $V$ 。
 
 *非逻辑符号集*，记为 $ cal(L)$ ，包括：
 
-(1)个体常量集，例如 $a,b,c...$ ；
-
-(2)谓词符号，例如 $P,Q,R...$ ；
-
+(1)个体常量集，例如 $a,b,c...$ ；\
+(2)谓词符号，例如 $P,Q,R...$ ；\
 (3)函数符号，例如 $f,g,h...$ ，出现时常以算术运算符 $+,-, times, div...$ 出现。
 
 == 2.项与公式
 
 与多项式中的项相似，公式中的*项*是变量与常量通过函数耦合构造的较复杂的个体。
 
->归纳定义如下：在给定非逻辑符号集 $ cal(L)$ 和个体变量集 $V$ 的情况下，公式的项是：
-(1)归纳基： $ cal(L)$ 中的个体常量和 $V$ 中的个体变量都是项；
-(2)归纳步：对 $ cal(L)$ 中的任意 $n$ 元函数 $f$ ，若 $t_1,t_2,...,t_n$ 是项，那么 $f(t_1,t_2,...,t_n)$ 也是项。
+#tufted.definition[项的额归纳定义][
+在给定非逻辑符号集 $ cal(L)$ 和个体变量集 $V$ 的情况下，公式的项是：\
++ 归纳基： $ cal(L)$ 中的个体常量和 $V$ 中的个体变量都是项；\
++ 归纳步：对 $ cal(L)$ 中的任意 $n$ 元函数 $f$ ，若 $t_1,t_2,...,t_n$ 是项，那么 $f(t_1,t_2,...,t_n)$ 也是项。
+]
 
-公式则是子公式通过逻辑运算符号和量词符号耦合构造的较复杂公式，而原子公式是仅由谓词生成的不可再分的简单公式。
+*公式*则是子公式通过逻辑运算符号和量词符号耦合构造的较复杂公式，而原子公式是仅由谓词生成的不可再分的简单公式。
 
->归纳定义如下：在给定非逻辑符号集 $ cal(L)$ 和个体变量集 $V$ 的情况下，公式是：
-(1)归纳基：对 $ cal(L)$ 中的任意 $n$ 元谓词 $F$ ，若 $t_1,t_2,...,t_n$ 是项，那么 $F(t_1,t_2,...,t_n)$ 是公式，并且是原子公式；
-(2)归纳步：若 $x$ 是个体变量， $A,B$ 是公式，那么： $( not A),(A and B),(A or B),(A -> B),(A <-> B), forall x A, exists x A$ 都是公式。
+#tufted.definition[公式的归纳定义][
+在给定非逻辑符号集 $ cal(L)$ 和个体变量集 $V$ 的情况下，公式是：\
++ 归纳基：对 $ cal(L)$ 中的任意 $n$ 元谓词 $F$ ，若 $t_1,t_2,...,t_n$ 是项，那么 $F(t_1,t_2,...,t_n)$ 是公式，并且是原子公式；\
++ 归纳步：若 $x$ 是个体变量， $A,B$ 是公式，那么： $( not A),(A and B),(A or B),(A -> B),(A <-> B), forall x A, exists x A$ 都是公式。
+]
 
 上述归纳步中的七个公式形式，分别称为否定式、合取式、析取式、蕴涵式、双蕴含式、全称量词公式、存在量词公式，其中后二者合称为量词公式。
 
@@ -105,7 +116,9 @@
 
 有时为了避免一个变量既约束出现又自由出现，我们会对公式做*约束变量改名*，或者*自由变量替换*，这两种方法的结果殊途同归，但约束变量改名更加保险。依然以 $A= forall x B$ 为例，约束变量改名是指：将指示变量 $x$ 、与 $B$ 中自由出现的 $x$ ，都替换为一个不在 $A$ 中自由出现的个体变量 $y$ 。
 
->需要注意的是，对于同一个位置的 $x$ ，在 $A$ 中约束出现的 $x$ 在 $B$ 中不一定是约束出现！例如， $A= forall x B= forall x (F(x) -> forall z G(z))$ ，其中 $B=F(x) -> forall z G(z)$ ， $x$ 在 $A$ 中约束出现，在 $B$ 中却是自由出现。
+#tufted.remark[][
+需要注意的是，对于同一个位置的 $x$ ，在 $A$ 中约束出现的 $x$ 在 $B$ 中不一定是约束出现！例如， $A= forall x B= forall x (F(x) -> forall z G(z))$ ，其中 $B=F(x) -> forall z G(z)$ ， $x$ 在 $A$ 中约束出现，在 $B$ 中却是自由出现。
+]
 
 在上述的例子中，将 $ forall$ 替换为 $ exists$ ，也是一样的。
 
@@ -117,72 +130,50 @@
 
 与命题逻辑公式相同，*基本逻辑等值式*也能完全用在一阶公式上。在这里复习一下基本逻辑等值式：
 
-(1)*同一律*： $A and 1 equiv A quad A or 0 equiv A$ 
+#figure(caption: [基本逻辑等值式模式])[
+  #table(
+    columns: 3,
+    align: center,
 
-(2)*零律*： $A and 0 equiv 0 quad A or 1 equiv 1$ 
-
-(3)*矛盾律*： $A and ( not A) equiv 0$ 
-
-(4)*排中律*： $A or ( not A) equiv 1$ 
-
-(5)*双重否定律*： $ not( not A) equiv A$ 
-
-(6)*幂等律*： $A and A equiv A quad  A or A equiv A$ 
-
-(7)*交换律*： $A and B equiv B and A quad A or B equiv B or A$ 
-
-(8)*结合律*： $A and (B and C) equiv (A and B) and C quad A or (B or C) equiv (A or B) or C$ 
-
-(9)*分配律*： $A and (B or C) equiv (A and B) or (A and C) quad A or (B and C) equiv (A or B) and (A or C)$ 
-
-(10)*吸收律*： $A and (A or B) equiv A quad A or (A and B) equiv A$ 
-
-(11)*德摩根律*： $ not (A and B) equiv ( not A) or( not B) quad  not (A or B) equiv ( not A) and( not B)$ 
-
-(12)*蕴涵等值式*： $A -> B equiv not A or B$ 
-
-(13)*蕴涵等值式*： $A <-> B equiv (A -> B) and (B -> A)$ 
+    [序号], [名称], [等值式], 
+    [1], [*同一律*], [$A and 1 equiv A \ A or 0 equiv A$],
+    [2], [*零律*], [$A and 0 equiv 0 \ A or 1 equiv 1$],
+    [3], [*矛盾律*], [$A and ( not A) equiv 0$],
+    [4], [*排中律*], [$A or ( not A) equiv 1$],
+    [5], [*双重否定律*], [$ not( not A) equiv A$],
+    [6], [*幂等律*], [$A and A equiv A \ A or A equiv A$],
+    [7], [*交换律*], [$A and B equiv B and A \ A or B equiv B or A$],
+    [8], [*结合律*], [$A and (B and C) equiv (A and B) and C \ A or (B or C) equiv (A or B) or C$],
+    [9], [*分配律*], [$A and (B or C) equiv (A and B) or (A and C) \ A or (B and C) equiv (A or B) and (A or C)$],
+    [10], [*吸收律*], [$A and (A or B) equiv A \ A or (A and B) equiv A$],
+    [11], [*德摩根律*], [$ not (A and B) equiv ( not A) or( not B) \ not (A or B) equiv ( not A) and( not B)$],
+    [12], [*蕴涵等值式*], [$A -> B equiv not A or B$],
+    [13], [*蕴涵等值式*], [$A <-> B equiv (A -> B) and (B -> A)$],
+  )
+]
 
 除此之外，量词的引入使得*一阶公式*还有其他的逻辑等值式。如下列：
 
-(14)*量词交换等值式*：
+#figure(caption: [一阶公式逻辑等值式模式])[
+  #table(
+    columns: 3,
+    align: center,
 
-$
- forall x forall y F(x,y) equiv forall y forall x F(x,y)    exists x exists y F(x,y) equiv exists y exists x F(x,y)
-$
-
-(15)*量词分配等值式*：
-
-$
- forall x (A(x) and B(x)) equiv forall x A(x) and forall x B(x)    exists x (A(x) or B(x)) equiv exists x A(x) or exists x B(x)
-$
-
-(16)*消除量词等值式*：
-
-$
- forall x A(x) equiv A(a_1) and A(a_2) and ... and A(a_n)    exists x A(x) equiv A(a_1) or A(a_2) or ... or A(a_n)
-$
-
-(17)*量词否定等值式*：
-
-$
- not forall x A(x) equiv exists x not A(x)    not exists x A(x) equiv forall x not A(x)
-$
-
-(18)*量词辖域扩张收缩*，这部分等值式非常重要，并且使用时要求符合成立条件，即“ $A(x)$ 是含自由变量 $x$ 的公式、并且 $x$ 不在 $B$ 中出现”：
-
-$
-
-     forall x (A(x) and B)& equiv forall x A(x) and B\
+    [序号], [名称], [等值式], 
+    [14], [*量词交换等值式*], [$forall x forall y F(x,y) equiv forall y forall x F(x,y)  \  exists x exists y F(x,y) equiv exists y exists x F(x,y)$],
+     [15], [*量词分配等值式*], [$forall x (A(x) and B(x)) equiv forall x A(x) and forall x B(x)  \  exists x (A(x) or B(x)) equiv exists x A(x) or exists x B(x)$],
+     [16], [*消除量词等值式*], [$forall x A(x) equiv A(a_1) and A(a_2) and ... and A(a_n)  \  exists x A(x) equiv A(a_1) or A(a_2) or ... or A(a_n)$],
+     [17], [*量词否定等值式*], [$not forall x A(x) equiv exists x not A(x)  \  not exists x A(x) equiv forall x not A(x)$],
+     [18], [*量词辖域扩张收缩*], [$forall x (A(x) and B)& equiv forall x A(x) and B\
      forall x (A(x) or B)& equiv forall x A(x) or B\
      forall x (A(x) -> B)& equiv exists x A(x) -> B\
      forall x (B -> A(x))& equiv B -> forall x A(x)\
      exists x (A(x) and B)& equiv exists x A(x) and B\
      exists x (A(x) or B)& equiv exists x A(x) or B\
      exists x (A(x) -> B)& equiv forall x A(x) -> B\
-     exists x (B -> A(x))& equiv B -> exists x A(x)\
-
-$
+     exists x (B -> A(x))& equiv B -> exists x A(x)$],
+  )
+]
 
 == 2.前束范式
 
@@ -194,10 +185,8 @@ $
 
 也就是，所有的量词都被束缚在公式的前面。前束范式对于之后的推理中的例化泛化非常重要。为了从任意公式化为前束范式的形式，可以遵从以下步骤：
 
-(1)使用*约束变量改名*，使所有个体变量要么*约束出现*、要么*自由出现*。并且，应使每个量词的指示变量均不相同；
-
-(2)使用*量词否定等值式*，将否定逻辑符放到量词之后；
-
+(1)使用*约束变量改名*，使所有个体变量要么*约束出现*、要么*自由出现*。并且，应使每个量词的指示变量均不相同；\
+(2)使用*量词否定等值式*，将否定逻辑符放到量词之后；\
 (3)使用*量词辖域扩张等值式*，将量词放到所有逻辑运算符之前。
 
 可以对变换之后的公式做检查。一种简单的检查方式是，除指示变量外，对于相同位置的个体变量，原先是约束出现的变换后还是约束出现，原先是自由出现的变换后还是自由出现。如非如此，必有错误。
@@ -212,24 +201,33 @@ $
 
 公式本身是一种*抽象语言*，在只给定“公式”这一字符串的时候，它只有数学上的意义。但是，我们显然可以将一些具体情况应用在给定的公式上，而且可以有多种不同的具体情况，这就是通俗意义上的公式的*解释*，并以 $ cal(M)$ 表示。也就是说，一个*抽象*的公式可以有多个*具体*的解释。
 
->正确的说法是，解释是对一阶公式的*非逻辑符号集*的解释，而不是对公式的解释。
->解释亦称为*模型*。非逻辑符号集的解释首先需要包含一个非空的*论域*，以及至少一个*谓词*。其次还可以包含*个体常量*和*函数*，但并非必须。
->上述的四个非逻辑符号也都有自己的解释，用 $ bracket.stroked... bracket.stroked$ 表示。比如，如果非逻辑符号集中有谓词 $F$ ，那么此谓词在这个论域上的解释就记为 $ bracket.stroked F bracket.stroked$ 。
+#tufted.remark[][
+正确的说法是，解释是对一阶公式的*非逻辑符号集*的解释，而不是对公式的解释。
+
+解释亦称为*模型*。非逻辑符号集的解释首先需要包含一个非空的*论域*，以及至少一个*谓词*。其次还可以包含*个体常量*和*函数*，但并非必须。
+
+上述的四个非逻辑符号也都有自己的解释，用 $ bracket.stroked... bracket.stroked.r$ 表示。比如，如果非逻辑符号集中有谓词 $F$ ，那么此谓词在这个论域上的解释就记为 $ bracket.stroked F bracket.stroked.r$ 。
+]
 
 正如之前所说，*论域*可以简单类比理解为公式的定义域。那么，解释中的个体常量，就相当于选取论域(定义域)中的一个具体的对象，将其赋值到公式中的某个个体变量中。这称为*个体变量指派函数*，记为 $ sigma$ 。例如，如果将公式中的 $x$ 指派为解释的论域中的一个元素 $a$ ，就记为 $ sigma(x)=a$ 。
 
-指派函数的*变换*的定义略显奇怪：设 $x$ 是个体变量集中的一个变量， $d$ 是解释的论域中的一个元素，那么对任意个体变量集中的一个变量 $y$ ，其指派函数记为 $ sigma[x mapsto d]$ ，定义为：
+指派函数的*变换*的定义略显奇怪：
 
+#tufted.definition[指派函数的变换][
+设 $x$ 是个体变量集中的一个变量， $d$ 是解释的论域中的一个元素，那么对任意个体变量集中的一个变量 $y$ ，其指派函数记为 $ sigma[x mapsto d]$ ，定义为：
 $
  sigma[x mapsto d](y)= cases(
-    d quad &y=x,
-     sigma(y)&y != x
+    d, quad & y=x,
+     sigma(y), quad & y != x
 )
 $
+]
 
 乍一看不知所云，但笔者的通俗理解是：这个变换函数是在将 $x$ 指派为 $d$ 的情况下(即中括号中的内容)，对 $y$ 的指派。
 
->例如，假设 $ sigma(x)=a, sigma(y)=b$ ，那么 $ sigma[x mapsto d](y)= sigma(y)=b$ 。这个函数似乎有些啰嗦！目前还不太清楚这个函数的意义，但请看之后的内容。
+#tufted.remark[][
+例如，假设 $ sigma(x)=a, sigma(y)=b$ ，那么 $ sigma[x mapsto d](y)= sigma(y)=b$ 。这个函数似乎有些啰嗦！目前还不太清楚这个函数的意义，但请看之后的内容。
+]
 
 == 2.公式的真值
 
@@ -237,27 +235,35 @@ $
 
 要判断公式的真值，就应当从其原子公式下手。一个原子公式的真值，取决于谓词的解释中是否含有被指派的变量(仅是一种浅显的说法！不一定完全正确！)。
 
->比如，假设 $ cal(M)$ 的论域 $D= { a,b,c  }$ ，而一个一元谓词的解释 $ bracket.stroked F bracket.stroked= { a,b  }$ ，一个二元谓词的解释 $ bracket.stroked G bracket.stroked= {  chevron.l a,b chevron.r, chevron.l a,c chevron.r  }$ 。那么：
-> $ sigma[x mapsto a](F(x))=bold(1), quad sigma[x mapsto b](F(x))=bold(1), quad sigma[x mapsto c](F(x))=bold(0)$ 
-> $ sigma[x mapsto a][y mapsto a](G(x,y))=bold(0), quad sigma[x mapsto a][y mapsto b](G(x,y))=bold(1), quad sigma[x mapsto a][y mapsto c](G(x,y))=bold(1)$ 
->这里可以结合上面“指派函数的变换”理解。
+#tufted.remark[][
+比如，假设 $ cal(M)$ 的论域 $D= { a,b,c  }$ ，而一个一元谓词的解释 $ bracket.stroked F bracket.stroked.r= { a,b  }$ ，一个二元谓词的解释 $ bracket.stroked G bracket.stroked.r = {  chevron.l a,b chevron.r, chevron.l a,c chevron.r  }$ 。那么：
+$
+     sigma[x mapsto a](F(x))=bold(1)\
+     sigma[x mapsto b](F(x))=bold(1)\
+     sigma[x mapsto c](F(x))=bold(0)\
+     sigma[x mapsto a][y mapsto a](G(x,y))=bold(0)\
+     sigma[x mapsto a][y mapsto b](G(x,y))=bold(1)\
+     sigma[x mapsto a][y mapsto c](G(x,y))=bold(1)
+$
+这里可以结合上面“指派函数的变换”理解。
+]
 
 当与量词结合后，就应当应用*消除量词等值式*进行展开。
 
->还是以上例为例。 $ sigma[x mapsto a](F(x))=bold(1)$ 这个形式略显麻烦，不妨记为 $F(a) equiv bold(1)$ (严格来说这样写是不符合等值式的形式的，但是不至于混淆的情况下如此简写也是可以的)。那么，假设公式 $A= forall x F(x)$ ，那么 $A$ 就应当展开为：
->$
+#tufted.remark[][
+还是以上例为例。 $ sigma[x mapsto a](F(x))=bold(1)$ 这个形式略显麻烦，不妨记为 $F(a) equiv bold(1)$ #footnote[严格来说这样写是不符合等值式的形式的，但是不至于混淆的情况下如此简写也是可以的]。那么，假设公式 $A= forall x F(x)$ ，那么 $A$ 就应当展开为：
+$
 F(a) and F(b) and F(c) equiv bold(1) and bold(1) and bold(0) equiv bold(0)
 $
->即 $ sigma(A)=bold(0)$ 。
+即 $ sigma(A)=bold(0)$ 。
+]
 
 == 3.公式的分类
 
 假设有一个公式 $A$ ，其非逻辑符号集为 $ cal(L)$ ，那么：
 
-(1)如果 $A$ 在 $ cal(L)$ 中的任意解释、在任意个体变量指派函数下，其真值都为真，那么称为*永真式*，也称为*普遍有效式*；
-
-(2)如果 $A$ 在 $ cal(L)$ 中的任意解释、在任意个体变量指派函数下，其真值都为假，那么称为*矛盾式*；
-
+(1)如果 $A$ 在 $ cal(L)$ 中的任意解释、在任意个体变量指派函数下，其真值都为真，那么称为*永真式*，也称为*普遍有效式*；\
+(2)如果 $A$ 在 $ cal(L)$ 中的任意解释、在任意个体变量指派函数下，其真值都为假，那么称为*矛盾式*；\
 (3)如果 $A$ 不是矛盾式，那么称 $A$ 是*可满足的*。
 
 有时候利用命题逻辑中的永真式或矛盾式可以快速判断公式是一个永真式或矛盾式。比如， $p ->(q -> p)$ 是一个命题逻辑永真式，那么 $ forall x F(x) -> (exists x G(x) -> forall x F(x))$ 也必是永真式。但这不是充分必要的，命题逻辑形式不是永真式的，一阶逻辑形式的也可能是永真的。
@@ -268,22 +274,14 @@ $
 
 一阶逻辑的推理、论证的定义与命题逻辑是相似的，不再赘述。命题逻辑的推理规则也完全适用于一阶逻辑。我们复习一下九个基本推理规则：
 
-(1)*假言推理*： $A -> B,A ==> B$ 
-
-(2)*假言易位*： $A -> B, not B ==>  not A$ 
-
-(3)*合取*规则： $A,B ==> A and B$ 
-
-(4)*化简*规则： $A and B ==> A$ 
-
-(5)*附加*规则： $A ==> A or B$ 
-
-(6)*析取三段论*规则： $ not A,A or B ==> B$ 
-
-(7)*假言三段论*规则： $A -> B，B -> C ==> A -> C$ 
-
-(8)*双蕴涵推理*规则： $A <-> B ==> A -> B  quad, quad A <-> B ==> B -> A$ 
-
+(1)*假言推理*： $A -> B,A ==> B$ \
+(2)*假言易位*： $A -> B, not B ==>  not A$ \
+(3)*合取*规则： $A,B ==> A and B$ \
+(4)*化简*规则： $A and B ==> A$ \
+(5)*附加*规则： $A ==> A or B$ \
+(6)*析取三段论*规则： $ not A,A or B ==> B$ \
+(7)*假言三段论*规则： $A -> B，B -> C ==> A -> C$ \
+(8)*双蕴涵推理*规则： $A <-> B ==> A -> B  quad, quad A <-> B ==> B -> A$ \
 (9)*等值置换*规则：对所有一阶逻辑等值式模式 $A equiv B$ ，都存在 $A ==> B$ 和 $B ==> A$ 。
 
 由于量词的引入，一阶逻辑的推理还有四个额外的推理规则：

@@ -15,6 +15,10 @@
 
 = 离散数学（三）——集合与计数
 
+#tufted.full-width[
+  #image("header.jpg")
+]
+
 = 一、集合的基本计算
 
 #tufted.definition[集合族][
@@ -32,11 +36,11 @@ $
 也即元素需要同时属于这两个集合。
 
 一个*集合族*具有*广义交*，记为 $ inter.big cal(A)$ ，定义如下：
-
+#tufted.definition[广义交][
 $
  inter.big cal(A)= {x| forall S(S in cal(A) -> x in S) }
 $
-
+]
 在常见的情况下，集合族表示为 $ cal(A)= {A_1,A_2,...,A_n }$ ，此时可以写为：
 
 $
@@ -78,10 +82,11 @@ $
 也即元素只需属于这两个集合中的某一个即可。
 
 一个*集合族*具有*广义并*，记为 $ union.big cal(A)$ ，定义如下：
-
+#tufted.definition[广义并][
 $
  union.big cal(A)= {x| exists S(S in cal(A) and x in S) }
 $
+]
 
 在常见的情况下，集合族表示为 $ cal(A)= {A_1,A_2,...,A_n }$ ，此时可以写为：
 
@@ -158,11 +163,11 @@ $
 == 5.幂集
 
 一个集合 $A$ 的*幂集*是一个*集合族*，记为 $ \u{2118}(A)$ 或 $2^A$ 。集合 $A$ 的*幂集*中的元素是集合 $A$ 的所有子集，即：
-
+#tufted.definition[幂集][
 $
  \u{2118}(A)= {S|S subset.eq A }
 $
-
+]
 这意味着对于任何集合来说，*空集及其本身都是其幂集的元素*(注意是*元素*不是子集)，空集 $ diameter$ 这个*元素*需要*显式*地写出来。比如集合 $A= {1,2,3 }$ ，其幂集是：
 
 $
@@ -174,19 +179,15 @@ $
 $
  \u{2118}( diameter)= { diameter } quad, quad  \u{2118}( \u{2118}( diameter))= { diameter, { diameter } }
 $
-
 $
  diameter subset.eq \u{2118}( diameter) quad, quad diameter in \u{2118}( diameter)
 $
-
 $
  { diameter } subset.eq \u{2118}( diameter) quad, quad { diameter } in.not \u{2118}( diameter)
 $
-
 $
  { diameter } subset.eq \u{2118}( \u{2118}( diameter)) quad, quad { diameter } in \u{2118}( \u{2118}( diameter))
 $
-
 $
  { { diameter } } subset.eq \u{2118}( \u{2118}( diameter)) quad, quad { { diameter } } in.not \u{2118}( \u{2118}( diameter))
 $
@@ -224,119 +225,27 @@ $
 
 集合运算与逻辑运算间极其相似。集合与可以看做逻辑与，集合并可以看做逻辑或，集合补可以看做逻辑非，全集可以看做真，空集可以看做假。在此基础上，我们可以给出关于集合的基本等式：
 
-(1)*同一律*
+#figure(caption: [集合等式])[
+  #table(
+    columns: 3,
+    align: center,
 
-$
-A inter U=A
-$
-
-$
-A union  diameter=A
-$
-
-(2)*零律*
-
-$
-A union U=U
-$
-
-$
-A inter  diameter= diameter
-$
-
-(3)*矛盾律*
-
-$
-A inter overline(A)= diameter
-$
-
-(4)*排中律*
-
-$
-A union overline(A)=U
-$
-
-(5)*双重否定律*
-
-$
- overline( overline(A))=A
-$
-
-(6)*幂等律*
-
-$
-A inter A=A
-$
-
-$
-A union A=A
-$
-
-(7)*交换律*
-
-$
-A inter B=B inter A
-$
-
-$
-A union B=B union A
-$
-
-(8)*结合律*
-
-$
-(A inter B) inter C=A inter (B inter C)
-$
-
-$
-(A union B) union C=A union (B union C)
-$
-
-(9)*分配律*
-
-$
-A inter(B union C)=(A inter B) union(A inter C)
-$
-
-$
-A union(B inter C)=(A union B) inter(A union C)
-$
-
-(10)*吸收律*
-
-$
-A inter(A union B)=A
-$
-
-$
-A union(A inter B)=A
-$
-
-(11)*德摩根律*
-
-$
- overline(A inter B)= overline(A) union overline(B)
-$
-
-$
- overline(A union B)= overline(A) inter overline(B)
-$
-
-(12)*集合差等式*
-
-$
-A-B=A inter overline(B)
-$
-
-(13)*相对德摩根律*
-
-$
-A-(B inter C)=(A-B) union(A-C)
-$
-
-$
-A-(B union C)=(A-B) inter(A-C)
-$
+    [序号], [名称], [集合等式], 
+    [1], [*同一律*], [$A inter U=A \ A union  diameter=A$],
+    [2], [*零律*], [$A union U=U \ A inter  diameter= diameter$],
+    [3], [*矛盾律*], [$A inter overline(A)= diameter$],
+    [4], [*排中律*], [$A union overline(A)=U$],
+    [5], [*双重否定律*], [$ overline( overline(A))=A$],
+    [6], [*幂等律*], [$A inter A=A \ A union A=A$],
+    [7], [*交换律*], [$A inter B=B inter A \ A union B=B union A$],
+    [8], [*结合律*], [$ (A inter B) inter C=A inter (B inter C) \ (A union B) union C=A union (B union C)$],
+    [9], [*分配律*], [$A inter(B union C)=(A inter B) union(A inter C) \ A union(B inter C)=(A union B) inter(A union C)$],
+    [10], [*吸收律*], [$A inter(A union B)=A \ A union(A inter B)=A$],
+    [11], [*德摩根律*], [$ overline(A inter B)= overline(A) union overline(B) \ overline(A union B)= overline(A) inter overline(B)$],
+    [12], [*集合差等式*], [$A-B=A inter overline(B)$],
+    [13], [*相对德摩根律*], [$A-(B inter C)=(A-B) union(A-C) \ A-(B union C)=(A-B) inter(A-C)$]
+  )
+]
 
 其中，相对德摩根律有一点分配律的样子，但需要注意相对德摩根律会使交和并互换。
 
