@@ -40,16 +40,17 @@ CSS CUSTOM PROPERTIES (Theme Variables)
 	--theme-text: #2c2c2c;         
 	--theme-heading: #1a1a1a;
 	
-	--theme-code-bg: #f1efe9;       /* 奶咖色代码背景 */
+	/* ===== 代码块：冷灰 + 蓝边框 ===== */
+	--theme-code-bg: #f0f2f5;          /* 冷灰底 */
 	--theme-code-text: #2c2c2c;
-	--theme-code-border: #e3dfd6;
+	--theme-code-border: #d0d8e0;      /* 蓝灰边框 */
 	
-	--theme-pre-bg: #f1efe9;
-	--theme-pre-border: #e3dfd6;
+	--theme-pre-bg: #f0f2f5;
+	--theme-pre-border: #d0d8e0;
 	
-	--theme-line-numbers-border: #e3dfd6;
-	--theme-line-numbers-text: #b0aba0;
-	
+	--theme-line-numbers-border: #d0d8e0;
+	--theme-line-numbers-text: #b0bcc8;
+		
 	--theme-copy-btn-bg: #ffffff;
 	--theme-copy-btn-text: #6b665a;
 	--theme-copy-btn-border: #e3dfd6;
