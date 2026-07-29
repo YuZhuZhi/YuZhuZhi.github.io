@@ -25,8 +25,11 @@ THEOREMS AND PROOFS
 	clear: none;
 	border: 0;
 	border-inline-start: 0.25em solid var(--env-accent);
-	border-radius: 0;
+	/* border-radius: 0; */
+	border-radius: 8px;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 	background: var(--env-bg);
+	background-blend-mode: soft-light;
 	font-size: 1.5rem;
 	line-height: 2.2rem;
 	overflow-wrap: break-word;
@@ -426,7 +429,7 @@ BB84 PROTOCOL STAGES
 	margin-bottom: 0.7rem;
 	padding: 0.3rem 0.75rem;
 	border-radius: 999px;
-	background: var(--theme-table-border, #e2e7e4);
+	background: var(--theme-pre-bg, #e2e7e4);
 	font-size: 1.12rem;
 }
 

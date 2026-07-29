@@ -11,7 +11,7 @@ CSS CUSTOM PROPERTIES (Theme Variables)
 
 :root {
 	/* Light mode colors (default) */
-	--theme-bg: #f8ffff;
+	/* --theme-bg: #F5F5F5;
 	--theme-text: #111;
 	--theme-heading: #111;
 	--theme-code-bg: #f7f7f7;
@@ -35,13 +35,45 @@ CSS CUSTOM PROPERTIES (Theme Variables)
 	--theme-table-row-hover: #f0f0f0;
 	--theme-math-filter: none;
 	--theme-back-to-top: #555;
-	--theme-back-to-top-hover: #111;
+	--theme-back-to-top-hover: #111; */
+	--theme-bg: #F8F8F8;           /* 暖白（米白） */
+	--theme-text: #2c2c2c;         
+	--theme-heading: #1a1a1a;
+	
+	--theme-code-bg: #f1efe9;       /* 奶咖色代码背景 */
+	--theme-code-text: #2c2c2c;
+	--theme-code-border: #e3dfd6;
+	
+	--theme-pre-bg: #f1efe9;
+	--theme-pre-border: #e3dfd6;
+	
+	--theme-line-numbers-border: #e3dfd6;
+	--theme-line-numbers-text: #b0aba0;
+	
+	--theme-copy-btn-bg: #ffffff;
+	--theme-copy-btn-text: #6b665a;
+	--theme-copy-btn-border: #e3dfd6;
+	--theme-copy-btn-hover-bg: #f1efe9;
+	--theme-copy-btn-hover-text: #1a1a1a;
+	--theme-copy-btn-copied-bg: #e8f5e9;
+	--theme-copy-btn-copied-text: #2e7d32;
+	--theme-copy-btn-copied-border: #2e7d32;
+	
+	--theme-table-border: #d6cfc4;        /* 边框加深，从 #e3dfd6 改为更明显的暖灰 */
+	--theme-table-header-bg: #ede8e0;     /* 表头明显深于主背景，形成层次 */
+	--theme-table-row-even: #f3f0ea;      /* 偶数行略深于主背景，产生斑马纹 */
+	--theme-table-row-hover: #e8e2d8;     /* 悬停再深一点，交互反馈清晰 */
+
+	--theme-math-filter: none;
+	
+	--theme-back-to-top: #7a7569;
+	--theme-back-to-top-hover: #2c2c2c;
 }
 
 /* Dark mode variables */
 html[data-theme="dark"],
 html:not([data-theme]) {
-	--theme-bg: #151515;
+	/* --theme-bg: #151515;
 	--theme-text: #ddd;
 	--theme-heading: #eee;
 	--theme-code-bg: #2d2d2d;
@@ -65,13 +97,47 @@ html:not([data-theme]) {
 	--theme-table-row-hover: #383838;
 	--theme-math-filter: invert(1) hue-rotate(180deg);
 	--theme-back-to-top: #bbb;
-	--theme-back-to-top-hover: #fff;
+	--theme-back-to-top-hover: #fff; */
+/* === 主背景：保持 One Dark Pro 经典 === */
+	--theme-bg: #282c34;
+	--theme-text: #abb2bf;
+	--theme-heading: #e5e6e8;
+	
+	--theme-code-bg: #21252b;
+	--theme-code-text: #abb2bf;
+	--theme-code-border: #3e4452;
+	
+	--theme-pre-bg: #21252b;
+	--theme-pre-border: #3e4452;
+	
+	--theme-line-numbers-border: #3e4452;
+	--theme-line-numbers-text: #636d83;
+	
+	--theme-copy-btn-bg: rgba(60, 68, 82, 0.6);
+	--theme-copy-btn-text: #848b9b;
+	--theme-copy-btn-border: #3e4452;
+	--theme-copy-btn-hover-bg: #3e4452;
+	--theme-copy-btn-hover-text: #e5e6e8;
+	--theme-copy-btn-copied-bg: #2c4a3e;
+	--theme-copy-btn-copied-text: #98c379;
+	--theme-copy-btn-copied-border: #98c379;
+	
+	/* === 表格：在保持 #282c34 背景下，大幅拉开对比 === */
+	--theme-table-border: #4a5368;        /* 亮边框，现在清晰可见 */
+	--theme-table-header-bg: #323842;     /* 明显比主背景亮/不同 */
+	--theme-table-row-even: #20242b;      /* 偶数行比主背景深，形成反转斑马纹 */
+	--theme-table-row-hover: #353c48;     /* 悬停亮色 */
+	
+	--theme-math-filter: invert(1) hue-rotate(180deg);
+	
+	--theme-back-to-top: #636d83;
+	--theme-back-to-top-hover: #abb2bf;
 }
 
 /* System preference: only apply dark variables when no explicit theme is set */
 @media (prefers-color-scheme: light) {
 	html:not([data-theme]) {
-		--theme-bg: #fffff8;
+		/* --theme-bg: #fffff8;
 		--theme-text: #111;
 		--theme-heading: #111;
 		--theme-code-bg: #f7f7f7;
@@ -95,7 +161,45 @@ html:not([data-theme]) {
 		--theme-table-row-hover: #f0f0f0;
 		--theme-math-filter: none;
 		--theme-back-to-top: #555;
-		--theme-back-to-top-hover: #111;
+		--theme-back-to-top-hover: #111; */
+		/* === 主背景与文字：提高对比度 === */
+		--theme-bg: #fcf9f2;           /* 比桌面版 #faf8f6 更亮一点 */
+		--theme-text: #1a1a1a;          /* 从 #2c2c2c 加深到 #1a1a1a */
+		--theme-heading: #0d0d0d;       /* 标题接近纯黑，确保小字清晰 */
+		
+		/* === 代码块：更明显的层次 === */
+		--theme-code-bg: #f0ece4;       /* 比桌面版 #f1efe9 略深，与背景区分更大 */
+		--theme-code-text: #1a1a1a;
+		--theme-code-border: #d5cec0;   /* 边框加深，小屏幕网格更清晰 */
+		
+		--theme-pre-bg: #f0ece4;
+		--theme-pre-border: #d5cec0;
+		
+		/* === 行号：移动端可读性优先 === */
+		--theme-line-numbers-border: #d5cec0;
+		--theme-line-numbers-text: #8a8478;  /* 从 #b0aba0 加深 */
+		
+		/* === 复制按钮：触控优化 === */
+		--theme-copy-btn-bg: #ffffff;
+		--theme-copy-btn-text: #5a554a;      /* 从 #6b665a 加深 */
+		--theme-copy-btn-border: #c9c0b2;    /* 边框更明显 */
+		--theme-copy-btn-hover-bg: #f0ece4;   /* 移动端用 active 替代 hover */
+		--theme-copy-btn-hover-text: #0d0d0d;
+		--theme-copy-btn-copied-bg: #e8f5e9;
+		--theme-copy-btn-copied-text: #1b5e20; /* 从 #2e7d32 加深 */
+		--theme-copy-btn-copied-border: #1b5e20;
+		
+		/* === 表格：移动端必须清晰 === */
+		--theme-table-border: #c9c0b2;       /* 从 #e3dfd6 大幅加深 */
+		--theme-table-header-bg: #e8e2d6;    /* 从 #ede8e0 再深一点 */
+		--theme-table-row-even: #f5f1ea;     /* 从 #f3f0ea 更明显 */
+		--theme-table-row-hover: #e8e2d6;    /* 移动端用 active 替代 hover */
+		
+		--theme-math-filter: none;
+		
+		/* === 回到顶部：更大的触控目标 === */
+		--theme-back-to-top: #6b655a;        /* 从 #7a7569 加深 */
+		--theme-back-to-top-hover: #1a1a1a;
 	}
 }
 
