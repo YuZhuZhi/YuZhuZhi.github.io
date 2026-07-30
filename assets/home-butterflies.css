@@ -1,0 +1,133 @@
+/*******************************************************************************
+SITE BUTTERFLIES
+
+Pale blue butterflies drifting from lower left to upper right.
+*******************************************************************************/
+
+.home-butterflies {
+	position: fixed;
+	inset: 0;
+	z-index: 20;
+	overflow: hidden;
+	pointer-events: none;
+}
+
+.home-butterfly {
+	--butterfly-size: 3rem;
+	--butterfly-opacity: 0.5;
+	--flight-y-1: -5vh;
+	--flight-y-2: -12vh;
+	--flight-y-3: -20vh;
+	--flight-y-4: -28vh;
+	--flight-rotate-1: 3deg;
+	--flight-rotate-2: -4deg;
+	--flight-rotate-3: 4deg;
+	position: absolute;
+	left: -8vw;
+	bottom: -5vh;
+	width: var(--butterfly-size);
+	aspect-ratio: 1;
+	opacity: 0;
+	filter: drop-shadow(0 0.08rem 0.22rem rgba(125, 211, 252, 0.2));
+	transform-style: preserve-3d;
+	will-change: transform, opacity;
+	animation: home-butterfly-flight var(--butterfly-duration) linear var(--butterfly-delay) forwards;
+}
+
+.home-butterfly--far {
+	filter: blur(0.35px) saturate(0.78) brightness(1.02)
+		drop-shadow(0 0.06rem 0.16rem rgba(125, 211, 252, 0.14));
+}
+
+.home-butterfly--near {
+	filter: saturate(0.94) drop-shadow(0 0.1rem 0.26rem rgba(125, 211, 252, 0.24));
+}
+
+.home-butterfly__sprite {
+	display: block;
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	transform-origin: 62% 68%;
+	will-change: transform;
+}
+
+.home-butterfly__sprite--far {
+	z-index: 0;
+	opacity: 0.48;
+	clip-path: polygon(0 0, 67% 0, 67% 84%, 0 96%);
+	filter: saturate(0.78) brightness(0.94);
+	animation: home-butterfly-far-wing var(--butterfly-flutter) ease-in-out infinite alternate-reverse;
+	animation-delay: calc(var(--butterfly-flutter) * -0.32);
+}
+
+.home-butterfly__sprite--near {
+	z-index: 1;
+	animation: home-butterfly-near-wing var(--butterfly-flutter) ease-in-out infinite alternate;
+}
+
+@keyframes home-butterfly-flight {
+	0% {
+		opacity: 0;
+		transform: translate3d(0, 0, 0) rotate(-8deg);
+	}
+
+	8% {
+		opacity: var(--butterfly-opacity);
+	}
+
+	30% {
+		transform: translate3d(31vw, var(--flight-y-1), 0) rotate(var(--flight-rotate-1));
+	}
+
+	53% {
+		transform: translate3d(61vw, var(--flight-y-2), 0) rotate(var(--flight-rotate-2));
+	}
+
+	76% {
+		transform: translate3d(89vw, var(--flight-y-3), 0) rotate(var(--flight-rotate-3));
+	}
+
+	88% {
+		opacity: var(--butterfly-opacity);
+	}
+
+	100% {
+		opacity: 0;
+		transform: translate3d(116vw, var(--flight-y-4), 0) rotate(-5deg);
+	}
+}
+
+@keyframes home-butterfly-near-wing {
+	from {
+		transform: perspective(3rem) scaleY(0.74);
+	}
+
+	to {
+		transform: perspective(3rem) scaleY(1);
+	}
+}
+
+@keyframes home-butterfly-far-wing {
+	from {
+		transform: translate(-8%, 4%) rotate(-8deg) scale(0.82) scaleY(0.58);
+	}
+
+	to {
+		transform: translate(-11%, -1%) rotate(-12deg) scale(0.88) scaleY(0.9);
+	}
+}
+
+@media (max-width: 760px) {
+	.home-butterfly {
+		max-width: 2.7rem;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.home-butterflies {
+		display: none;
+	}
+}

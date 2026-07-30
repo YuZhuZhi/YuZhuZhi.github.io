@@ -1,5 +1,17 @@
 #import "tufted-lib/tufted.typ" as tufted
 
+#let site-css = (
+  "/assets/site-extensions.css",
+  "/assets/custom.css",
+  "/assets/live2d-widget.css?v=20260730-13",
+  "/assets/cursor-glow.css?v=20260730-13",
+)
+
+#let site-js = (
+  "/assets/live2d-widget.js?v=20260730-13",
+  "/assets/cursor-glow.js?v=20260730-13",
+)
+
 /// 在 `config.typ` 中配置全局模板配置 template
 /// 之后的每个页面都会从上个页面导入这个模板函数
 /// 在每个具体页面中，都可以通过 `#show: template` 来应用模板
@@ -15,7 +27,8 @@
   ),
 
   /// 站点扩展样式，与上游模板样式分离。
-  css: ("/assets/site-extensions.css", "/assets/custom.css"),
+  css: site-css,
+  js-scripts: site-js,
   
   /// 网站的站点标题。会显示在浏览器标签页以及 SEO/社交分享卡片中。
   website-title: "不认识御伫之？很正常！",
@@ -41,6 +54,12 @@
     "© 2026 YuZhuZhi",
     [梦里寻她千百度],
   ),
+)
+
+/// 仅供首页、文章列表和随笔列表使用的蝴蝶特效模板。
+#let butterfly-template = template.with(
+  css: site-css + ("/assets/home-butterflies.css?v=20260730-2",),
+  js-scripts: site-js + ("/assets/home-butterflies.js?v=20260730-2",),
 )
 
 // 更多参数可参考网站配置文档。

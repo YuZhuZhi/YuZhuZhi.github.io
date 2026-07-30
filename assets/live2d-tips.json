@@ -1,0 +1,94 @@
+{
+  "mouseover": [
+    {
+      "selector": "#waifu-tool-hitokoto",
+      "text": ["想听一句话吗？", "这里也许藏着一句恰好的话。"]
+    },
+    {
+      "selector": "#waifu-tool-photo",
+      "text": ["要给我拍张照片吗？", "准备好了吗？看镜头。"]
+    },
+    {
+      "selector": "#waifu-tool-info",
+      "text": ["想了解看板娘组件吗？"]
+    },
+    {
+      "selector": "#waifu-tool-quit",
+      "text": ["要暂时告别了吗？", "之后还可以再叫我出来。"]
+    }
+  ],
+  "click": [
+    {
+      "selector": "#waifu-tool-photo",
+      "text": ["照片已经准备好啦。"]
+    }
+  ],
+  "seasons": [
+    {
+      "date": "01/01",
+      "text": "新年快乐！愿 {year} 年有许多值得期待的事。"
+    },
+    {
+      "date": "05/01",
+      "text": "劳动节快乐，今天也要记得休息。"
+    },
+    {
+      "date": "10/01-10/07",
+      "text": "国庆假期快乐！愿你有一段轻松的时间。"
+    },
+    {
+      "date": "12/24-12/25",
+      "text": "愿这个冬日的节日温暖而明亮。"
+    }
+  ],
+  "time": [
+    {
+      "hour": "0-5",
+      "text": "这么晚还没有休息吗？"
+    },
+    {
+      "hour": "6-10",
+      "text": "早上好，今天也要元气满满。"
+    },
+    {
+      "hour": "11-13",
+      "text": "中午好，记得按时吃饭。"
+    },
+    {
+      "hour": "14-17",
+      "text": "下午好，要找篇文章看看吗？"
+    },
+    {
+      "hour": "18-23",
+      "text": "晚上好，欢迎回来。"
+    }
+  ],
+  "message": {
+    "default": [
+      "这里有许多文章，慢慢看就好。",
+      "需要我的时候，我会待在这里。",
+      "读到有趣的地方了吗？"
+    ],
+    "console": "你打开了控制台，是在研究这里的代码吗？",
+    "copy": "复制好了，引用时记得核对原文。",
+    "visibilitychange": "欢迎回来，刚才看到哪里了？",
+    "welcome": "欢迎来到「$1」。",
+    "referrer": "来自「$1」的朋友，欢迎你。",
+    "hoverBody": ["不要一直盯着看啦。", "有什么想对我说的吗？"],
+    "tapBody": ["呀！", "请轻一点。", "我在听。"],
+    "hitokoto": "这句话来自「$1」，由 $2 提供。",
+    "photo": "照、照片要拍得好看一点哦。",
+    "info": "这里是 Live2D 看板娘的相关信息。",
+    "goodbye": "那么，下次再见。",
+    "changeSuccess": "已经换好啦。",
+    "changeFail": "现在没有其他装扮哦。"
+  },
+  "models": [
+    {
+      "message": "Vert 来陪你读一会儿。",
+      "paths": [
+        "https://fastly.jsdelivr.net/gh/WhenCoding/live2d_models@main/model/HyperdimensionNeptunia/vert_classic/index.json"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+/*******************************************************************************
+LIVE2D WIDGET OVERRIDES
+
+Site-specific placement for stevenjoezhang/live2d-widget.
+*******************************************************************************/
+
+#waifu {
+	right: 1rem !important;
+	left: auto !important;
+	z-index: 30;
+}
+
+#waifu-toggle {
+	right: 0 !important;
+	left: auto !important;
+}
+
+#waifu-tips {
+	max-width: min(22rem, calc(100vw - 2rem));
+	box-sizing: border-box;
+}
+
+#waifu-tips.waifu-tips-active {
+	pointer-events: auto;
+}
+
+#waifu-tips .waifu-message-link:any-link {
+	color: #2563eb;
+	font-weight: 600;
+	text-decoration: none;
+	border-bottom: 1px solid currentColor;
+	pointer-events: auto;
+}
+
+#waifu-tips .waifu-message-link:hover,
+#waifu-tips .waifu-message-link:focus-visible {
+	color: #1d4ed8;
+	outline: none;
+}
+
+@media (max-width: 760px) {
+	#waifu,
+	#waifu-toggle {
+		display: none !important;
+	}
+}

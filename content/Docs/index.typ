@@ -1,5 +1,5 @@
-#import "../index.typ": template, tufted
-#show: template.with(
+#import "../index.typ": template, butterfly-template, tufted
+#show: butterfly-template.with(
   title: "文章列表",
   description: "一些科普文章、一些教程、一些笔记",
 )

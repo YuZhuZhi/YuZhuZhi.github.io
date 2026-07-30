@@ -1,5 +1,5 @@
-#import "../config.typ": template, tufted
-#show: template
+#import "../config.typ": template, butterfly-template, tufted
+#show: butterfly-template
 
 // tufted.margin-note 可以让你在边栏中放置内容
 // 宽大的边栏是 tufte 样式的特点，将注释放于其中并与正文并排，便于对照
@@ -31,6 +31,11 @@
 
 一些科普文章、一些教程、一些笔记、一些代码小玩具、一些其他的东西。
 #footnote[此人经常犯一些低级错误，所以有些内容可能不太靠谱，读者请自行甄别。]
+
+#tufted.remark[看板娘小提示][
+    - 阅读中遇见不明觉厉的词？轻轻*拖选*一下呐 \~ 链接什么的，人家早就准备好啦！\ 请查收喔！
+    - 那个……小声说一句喔 \~ 现在 Typst 的 HTML 导出还不太完美，尤其数学公式\ 容易抽风#footnote[例如，当前 $overline(x)$ 、 $x$、$underline(x)$ 看着相同，实际上分别添加了上划线、普通文本和下划线。]，可能会让您看得有点费劲…… 真的很抱歉啦，求轻拍！(＞＜)
+]
 
 #html.hr()
 
