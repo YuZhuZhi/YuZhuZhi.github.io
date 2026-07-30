@@ -87,7 +87,7 @@
     {
       "message": "Vert 来陪你读一会儿。",
       "paths": [
-        "https://fastly.jsdelivr.net/gh/WhenCoding/live2d_models@main/model/HyperdimensionNeptunia/vert_classic/index.json"
+        "/assets/live2d-models/HyperdimensionNeptunia/vert_classic/index.json"
       ]
     }
   ]

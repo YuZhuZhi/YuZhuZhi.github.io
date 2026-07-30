@@ -1,40 +1,15 @@
 /**
- * Loads stevenjoezhang/live2d-widget with the non-commercial vert_swimwear
- * model from WhenCoding/live2d_models.
+ * Loads a locally hosted stevenjoezhang/live2d-widget and vert_classic model.
  */
 (() => {
-	const WIDGET_BASE = "https://fastly.jsdelivr.net/npm/live2d-widgets@1.0.1/dist/";
+	const WIDGET_BASE = "/assets/vendor/live2d-widget/";
 	const LINK_MESSAGE_DELAY = 120;
+	const MAX_WIDGET_ATTEMPTS = 2;
+	const MODEL_FRAME_TIMEOUT = 14000;
 	let messageTimer = null;
 	let lastLink = null;
-
-	function enableCrossOriginImages() {
-		if (window.Image.__live2dCrossOriginEnabled) return;
-
-		const OriginalImage = window.Image;
-		const CrossOriginImage = function(...args) {
-			const image = new OriginalImage(...args);
-			image.crossOrigin = "anonymous";
-			return image;
-		};
-
-		CrossOriginImage.prototype = OriginalImage.prototype;
-		CrossOriginImage.__live2dCrossOriginEnabled = true;
-		window.Image = CrossOriginImage;
-	}
-
-	function loadStylesheet(href) {
-		if (document.querySelector(`link[href="${href}"]`)) return Promise.resolve();
-
-		return new Promise((resolve, reject) => {
-			const link = document.createElement("link");
-			link.rel = "stylesheet";
-			link.href = href;
-			link.addEventListener("load", resolve, { once: true });
-			link.addEventListener("error", reject, { once: true });
-			document.head.append(link);
-		});
-	}
+	let recoveryInProgress = false;
+	let dateMessageScheduled = false;
 
 	function loadModule(src) {
 		if (document.querySelector(`script[src="${src}"]`)) return Promise.resolve();
@@ -70,6 +45,39 @@
 				resolve(null);
 			}, timeout);
 		});
+	}
+
+	function delay(duration) {
+		return new Promise((resolve) => window.setTimeout(resolve, duration));
+	}
+
+	function removeWidgetElements() {
+		document.getElementById("waifu")?.remove();
+		document.getElementById("waifu-toggle")?.remove();
+	}
+
+	function canvasHasRenderedFrame(canvas) {
+		return new Promise((resolve) => {
+			try {
+				canvas.toBlob(
+					(blob) => resolve(Boolean(blob && blob.size > 8000)),
+					"image/png",
+				);
+			} catch {
+				resolve(false);
+			}
+		});
+	}
+
+	async function waitForRenderedFrame(canvas, timeout = MODEL_FRAME_TIMEOUT) {
+		const startedAt = performance.now();
+
+		while (canvas.isConnected && performance.now() - startedAt < timeout) {
+			if (await canvasHasRenderedFrame(canvas)) return true;
+			await delay(700);
+		}
+
+		return false;
 	}
 
 	function showMessage(text, duration = 4200) {
@@ -202,37 +210,78 @@
 		return "晚上好。愿今晚有一段安静的阅读时间。";
 	}
 
+	const widgetConfig = {
+		waifuPath: "/assets/live2d-tips.json?v=1",
+		cubism2Path: `${WIDGET_BASE}live2d.min.js`,
+		cubism5Path: "https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js",
+		tools: ["hitokoto", "photo", "info", "quit"],
+		drag: true,
+		showToggleAfterQuit: true,
+		logLevel: "warn",
+	};
+
+	function recoverWidget(attempt) {
+		const waifu = document.getElementById("waifu");
+		waifu?.classList.remove("live2d-widget-ready");
+		if (recoveryInProgress) return;
+
+		recoveryInProgress = true;
+		window.setTimeout(() => {
+			removeWidgetElements();
+			recoveryInProgress = false;
+
+			if (attempt + 1 < MAX_WIDGET_ATTEMPTS) {
+				startWidget(attempt + 1);
+			} else {
+				console.warn("Live2D widget stopped after repeated rendering failures.");
+			}
+		}, 700);
+	}
+
+	async function startWidget(attempt = 0) {
+		try {
+			window.initWidget(widgetConfig);
+			const canvas = await waitForElement("live2d", MODEL_FRAME_TIMEOUT);
+			if (!canvas) {
+				recoverWidget(attempt);
+				return;
+			}
+
+			canvas.addEventListener("webglcontextlost", (event) => {
+				event.preventDefault();
+				recoverWidget(attempt);
+			}, { once: true });
+
+			if (!await waitForRenderedFrame(canvas)) {
+				recoverWidget(attempt);
+				return;
+			}
+
+			const waifu = canvas.closest("#waifu");
+			if (!waifu) return;
+			waifu.classList.add("live2d-widget-ready");
+
+			if (!dateMessageScheduled) {
+				dateMessageScheduled = true;
+				window.setTimeout(() => showMessage(dateMessage(), 6000), 7600);
+			}
+		} catch (error) {
+			console.warn("Live2D widget failed to initialize.", error);
+			recoverWidget(attempt);
+		}
+	}
+
 	async function init() {
 		if (window.matchMedia("(max-width: 760px)").matches) return;
 
 		bindLinkMessages();
 		bindSelectionSearch();
-		enableCrossOriginImages();
 
 		try {
-			await Promise.all([
-				loadStylesheet(`${WIDGET_BASE}waifu.css`),
-				loadModule(`${WIDGET_BASE}waifu-tips.js`),
-			]);
-
-			if (typeof window.initWidget !== "function") return;
-
-			window.initWidget({
-				waifuPath: "/assets/live2d-tips.json?v=20260730-2",
-				cubism2Path: `${WIDGET_BASE}live2d.min.js`,
-				cubism5Path: "https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js",
-				tools: ["hitokoto", "photo", "info", "quit"],
-				drag: true,
-				showToggleAfterQuit: true,
-				logLevel: "warn",
-			});
-
-			const tips = await waitForElement("waifu-tips");
-			if (tips) {
-				window.setTimeout(() => showMessage(dateMessage(), 6000), 7600);
-			}
+			await loadModule(`${WIDGET_BASE}waifu-tips.js`);
+			if (typeof window.initWidget === "function") startWidget();
 		} catch (error) {
-			console.warn("Live2D widget failed to load.", error);
+			console.warn("Live2D widget loader failed.", error);
 		}
 	}
 

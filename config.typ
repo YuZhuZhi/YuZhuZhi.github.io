@@ -1,14 +1,16 @@
 #import "tufted-lib/tufted.typ" as tufted
 
+// 各扩展使用独立缓存键；只在对应资源发生变化时递增。
 #let site-css = (
   "/assets/site-extensions.css",
   "/assets/custom.css",
-  "/assets/live2d-widget.css?v=20260730-13",
+  "/assets/vendor/live2d-widget/waifu.css",
+  "/assets/live2d-widget.css?v=2",
   "/assets/cursor-glow.css?v=20260730-13",
 )
 
 #let site-js = (
-  "/assets/live2d-widget.js?v=20260730-13",
+  "/assets/live2d-widget.js?v=2",
   "/assets/cursor-glow.js?v=20260730-13",
 )
 

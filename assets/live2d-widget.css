@@ -8,6 +8,17 @@ Site-specific placement for stevenjoezhang/live2d-widget.
 	right: 1rem !important;
 	left: auto !important;
 	z-index: 30;
+	visibility: hidden;
+	opacity: 0;
+	transition:
+		transform 0.3s ease-in-out,
+		bottom 3s ease-in-out,
+		opacity 180ms ease;
+}
+
+#waifu.live2d-widget-ready {
+	visibility: visible;
+	opacity: 1;
 }
 
 #waifu-toggle {
