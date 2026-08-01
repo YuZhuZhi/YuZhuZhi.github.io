@@ -1,0 +1,79 @@
+/*******************************************************************************
+ONE DARK PRO CODE THEME
+
+Typst emits syntax colors as inline styles, so dark-mode token colors are
+remapped by their generated source color.
+*******************************************************************************/
+
+html[data-theme="dark"] pre,
+html[data-theme="dark"] pre[style*="position: relative;"] {
+	color: #abb2bf !important;
+	background-color: #21252b !important;
+	border-color: #3e4452 !important;
+	border-left-color: #61afef !important;
+	box-shadow: 0 0.35rem 1rem rgba(0, 0, 0, 0.16);
+	scrollbar-color: #4b5263 #21252b;
+}
+
+html[data-theme="dark"] pre > code {
+	color: #abb2bf !important;
+	background-color: transparent !important;
+}
+
+html[data-theme="dark"] :not(pre) > code {
+	color: #abb2bf;
+	background-color: #21252b;
+	border-color: #3e4452;
+}
+
+html[data-theme="dark"] pre .line-numbers-rows {
+	color: #636d83;
+	border-right-color: #3e4452;
+}
+
+html[data-theme="dark"] pre .copy-button {
+	color: #9da5b4;
+	background-color: #282c34;
+	border-color: #3e4452;
+}
+
+html[data-theme="dark"] pre .copy-button:hover {
+	color: #e5e6e8;
+	background-color: #3e4452;
+}
+
+/* Keywords, storage modifiers, self, and operators. */
+html[data-theme="dark"] pre code span[style*="color: #d73948"] {
+	color: #c678dd !important;
+}
+
+/* Types, functions, methods, and identifiers. */
+html[data-theme="dark"] pre code span[style*="color: #4b69c6"] {
+	color: #61afef !important;
+}
+
+/* Numeric literals. */
+html[data-theme="dark"] pre code span[style*="color: #b60157"] {
+	color: #d19a66 !important;
+}
+
+/* Attributes and annotations. */
+html[data-theme="dark"] pre code span[style*="color: #301414"] {
+	color: #e5c07b !important;
+}
+
+/* Comments. */
+html[data-theme="dark"] pre code span[style*="color: #74747c"] {
+	color: #5c6370 !important;
+	font-style: italic;
+}
+
+/* String literals. */
+html[data-theme="dark"] pre code span[style*="color: #198810"] {
+	color: #98c379 !important;
+}
+
+/* Macros and special built-ins. */
+html[data-theme="dark"] pre code span[style*="color: #16718d"] {
+	color: #56b6c2 !important;
+}

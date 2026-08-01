@@ -9,6 +9,64 @@
 
 = 使用 Rust 编写贪吃蛇游戏
 
+#figure(
+    html.elem(
+        "div",
+        attrs: (
+        style: "
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+            align-items: start;
+            width: 100%;
+        ",
+        ),
+    )[
+        #html.elem(
+        "div",
+        attrs: (style: "min-width: 0; text-align: center;"),
+        )[
+        #image("images/title.png", width: 100%)
+        ]
+
+        #html.elem(
+        "div",
+        attrs: (style: "min-width: 0; text-align: center;"),
+        )[
+        #image("images/running.png", width: 100%)
+        ]
+    ],
+)
+
+#figure(
+    html.elem(
+        "div",
+        attrs: (
+        style: "
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+            align-items: start;
+            width: 100%;
+        ",
+        ),
+    )[
+        #html.elem(
+        "div",
+        attrs: (style: "min-width: 0; text-align: center;"),
+        )[
+        #image("images/pause.png", width: 100%)
+        ]
+
+        #html.elem(
+        "div",
+        attrs: (style: "min-width: 0; text-align: center;"),
+        )[
+        #image("images/gameover.png", width: 100%)
+        ]
+    ],
+)
+
 最近我用 Rust 和 Piston 写了一个贪吃蛇。这个项目表面上很小：棋盘、蛇、食物、方向键，再加一个窗口，似乎很快就能完成。但真正动手以后，我发现它正好包含了一组非常适合练习游戏程序设计的问题：
 
 - 应该怎样表示一个格点、一个方向和一条不断增长的蛇？

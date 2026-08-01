@@ -14,11 +14,29 @@
 
 == 2026
 
+=== 8 月 August
+
+#tufted.blog-entry(
+  date: datetime(year: 2026, month: 8, day: 1),
+  path: "2026-08-01-albion-divide/",
+  title: "替换网站看板娘计划",
+)
+
+=== 7 月 July
+
+#tufted.blog-entry(
+  date: datetime(year: 2026, month: 7, day: 30),
+  path: "2026-07-30-enhance-visual-appearance/",
+  title: "大幅提升网页视觉效果",
+)
+
 #tufted.blog-entry(
   date: datetime(year: 2026, month: 7, day: 25),
   path: "2026-07-25-rust-snake/",
   title: "使用 Rust 编写贪吃蛇游戏",
 )
+
+=== 6 月 June
 
 #tufted.blog-entry(
   date: datetime(year: 2026, month: 6, day: 20),

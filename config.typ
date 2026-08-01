@@ -4,6 +4,7 @@
 #let site-css = (
   "/assets/site-extensions.css",
   "/assets/custom.css",
+  "/assets/code-theme-one-dark-pro.css?v=1",
   "/assets/vendor/live2d-widget/waifu.css",
   "/assets/live2d-widget.css?v=2",
   "/assets/cursor-glow.css?v=20260730-13",
