@@ -407,7 +407,7 @@
 		bindSelectionSearch();
 
 		try {
-			await loadModule(`${WIDGET_BASE}waifu-tips.js?v=5`);
+			await loadModule(`${WIDGET_BASE}waifu-tips.js?v=6`);
 			if (typeof window.initWidget === "function") startWidget();
 		} catch (error) {
 			console.warn("Live2D widget loader failed.", error);
