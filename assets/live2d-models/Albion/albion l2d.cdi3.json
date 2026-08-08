@@ -1,0 +1,379 @@
+{
+	"Version": 3,
+	"Parameters": [
+		{
+			"Id": "ParamAngleX",
+			"GroupId": "ParamGroup",
+			"Name": "角度 X"
+		},
+		{
+			"Id": "ParamAngleY",
+			"GroupId": "ParamGroup",
+			"Name": "角度 Y"
+		},
+		{
+			"Id": "ParamAngleZ",
+			"GroupId": "ParamGroup",
+			"Name": "角度 Z"
+		},
+		{
+			"Id": "ParamEyeLOpen",
+			"GroupId": "ParamGroup2",
+			"Name": "左眼　开闭"
+		},
+		{
+			"Id": "ParamEyeLSmile",
+			"GroupId": "ParamGroup2",
+			"Name": "左眼　微笑"
+		},
+		{
+			"Id": "ParamEyeROpen",
+			"GroupId": "ParamGroup2",
+			"Name": "右眼"
+		},
+		{
+			"Id": "ParamEyeRSmile",
+			"GroupId": "ParamGroup2",
+			"Name": "右眼　微笑"
+		},
+		{
+			"Id": "ParamEyeBallX",
+			"GroupId": "ParamGroup2",
+			"Name": "眼珠 X"
+		},
+		{
+			"Id": "ParamEyeBallY",
+			"GroupId": "ParamGroup2",
+			"Name": "眼珠 Y"
+		},
+		{
+			"Id": "ParamBrowLY",
+			"GroupId": "ParamGroup3",
+			"Name": "左眉上下"
+		},
+		{
+			"Id": "ParamBrowLAngle",
+			"GroupId": "ParamGroup3",
+			"Name": "左眉　角度"
+		},
+		{
+			"Id": "ParamBrowLX",
+			"GroupId": "ParamGroup3",
+			"Name": "左眉　左右"
+		},
+		{
+			"Id": "ParamBrowLForm",
+			"GroupId": "ParamGroup3",
+			"Name": "左眉　変形"
+		},
+		{
+			"Id": "ParamBrowRY",
+			"GroupId": "ParamGroup3",
+			"Name": "右眉　上下"
+		},
+		{
+			"Id": "ParamBrowRAngle",
+			"GroupId": "ParamGroup3",
+			"Name": "右眉　角度"
+		},
+		{
+			"Id": "ParamBrowRX",
+			"GroupId": "ParamGroup3",
+			"Name": "右眉　左右"
+		},
+		{
+			"Id": "ParamBrowRForm",
+			"GroupId": "ParamGroup3",
+			"Name": "右眉　変形"
+		},
+		{
+			"Id": "ParamMouthForm",
+			"GroupId": "ParamGroup4",
+			"Name": "嘴　变形"
+		},
+		{
+			"Id": "ParamMouthOpenY",
+			"GroupId": "ParamGroup4",
+			"Name": "嘴　张开和闭合"
+		},
+		{
+			"Id": "ParamBodyAngleX",
+			"GroupId": "ParamGroup5",
+			"Name": "身体旋转　X"
+		},
+		{
+			"Id": "ParamBodyAngleY",
+			"GroupId": "ParamGroup5",
+			"Name": "身体旋转　Y"
+		},
+		{
+			"Id": "ParamBodyAngleZ",
+			"GroupId": "ParamGroup5",
+			"Name": "身体旋转　Z"
+		},
+		{
+			"Id": "necklace_1",
+			"GroupId": "ParamGroup5",
+			"Name": "项链 1"
+		},
+		{
+			"Id": "necklace_2",
+			"GroupId": "ParamGroup5",
+			"Name": "项链 2"
+		},
+		{
+			"Id": "cape_1",
+			"GroupId": "ParamGroup5",
+			"Name": "披风 1"
+		},
+		{
+			"Id": "cape_2",
+			"GroupId": "ParamGroup5",
+			"Name": "披风 2"
+		},
+		{
+			"Id": "breast_X",
+			"GroupId": "ParamGroup5",
+			"Name": "胸 X"
+		},
+		{
+			"Id": "breast_Y",
+			"GroupId": "ParamGroup5",
+			"Name": "胸 Y"
+		},
+		{
+			"Id": "breast_Y_plus",
+			"GroupId": "ParamGroup5",
+			"Name": "胸 Y+"
+		},
+		{
+			"Id": "hairline_M_1",
+			"GroupId": "ParamGroup6",
+			"Name": "中刘海 1"
+		},
+		{
+			"Id": "hairline_M_2",
+			"GroupId": "ParamGroup6",
+			"Name": "中刘海 2"
+		},
+		{
+			"Id": "hairline_M_Y_1",
+			"GroupId": "ParamGroup6",
+			"Name": "中刘海Y 1"
+		},
+		{
+			"Id": "hairline_M_Y_2",
+			"GroupId": "ParamGroup6",
+			"Name": "中刘海Y 2"
+		},
+		{
+			"Id": "hairline_R1",
+			"GroupId": "ParamGroup6",
+			"Name": "右刘海 1"
+		},
+		{
+			"Id": "hairline_R2",
+			"GroupId": "ParamGroup6",
+			"Name": "右刘海 2"
+		},
+		{
+			"Id": "hairline_R_Y1",
+			"GroupId": "ParamGroup6",
+			"Name": "右刘海Y 1"
+		},
+		{
+			"Id": "hairline_R_Y2",
+			"GroupId": "ParamGroup6",
+			"Name": "右刘海Y 2"
+		},
+		{
+			"Id": "hairline_L1",
+			"GroupId": "ParamGroup6",
+			"Name": "左刘海 1"
+		},
+		{
+			"Id": "hairline_L2",
+			"GroupId": "ParamGroup6",
+			"Name": "左刘海 2"
+		},
+		{
+			"Id": "hairline_L_Y1",
+			"GroupId": "ParamGroup6",
+			"Name": "左刘海Y 1"
+		},
+		{
+			"Id": "hairline_L_Y2",
+			"GroupId": "ParamGroup6",
+			"Name": "左刘海Y 2"
+		},
+		{
+			"Id": "headwear_1",
+			"GroupId": "ParamGroup6",
+			"Name": "头饰 1"
+		},
+		{
+			"Id": "headwear_2",
+			"GroupId": "ParamGroup6",
+			"Name": "头饰 2"
+		},
+		{
+			"Id": "hair_back_1",
+			"GroupId": "ParamGroup6",
+			"Name": "后发 1"
+		},
+		{
+			"Id": "hair_back_2",
+			"GroupId": "ParamGroup6",
+			"Name": "后发 2"
+		},
+		{
+			"Id": "hair_back_Y_1",
+			"GroupId": "ParamGroup6",
+			"Name": "后发Y 1"
+		},
+		{
+			"Id": "hair_back_Y_2",
+			"GroupId": "ParamGroup6",
+			"Name": "后发Y 2"
+		},
+		{
+			"Id": "ParamCheek",
+			"GroupId": "",
+			"Name": "脸颊泛红"
+		},
+		{
+			"Id": "ParamBreath",
+			"GroupId": "",
+			"Name": "呼吸"
+		},
+		{
+			"Id": "head_shake",
+			"GroupId": "",
+			"Name": "头晃动"
+		}
+	],
+	"ParameterGroups": [
+		{
+			"Id": "ParamGroup",
+			"GroupId": "",
+			"Name": "头部运动"
+		},
+		{
+			"Id": "ParamGroup2",
+			"GroupId": "",
+			"Name": "眼睛"
+		},
+		{
+			"Id": "ParamGroup3",
+			"GroupId": "",
+			"Name": "眉毛"
+		},
+		{
+			"Id": "ParamGroup4",
+			"GroupId": "",
+			"Name": "嘴"
+		},
+		{
+			"Id": "ParamGroup5",
+			"GroupId": "",
+			"Name": "身体"
+		},
+		{
+			"Id": "ParamGroup6",
+			"GroupId": "",
+			"Name": "头发"
+		}
+	],
+	"Parts": [
+		{
+			"Id": "head",
+			"Name": "head"
+		},
+		{
+			"Id": "cloth",
+			"Name": "cloth"
+		},
+		{
+			"Id": "eyes",
+			"Name": "eyes"
+		},
+		{
+			"Id": "facial",
+			"Name": "facial"
+		},
+		{
+			"Id": "Part3",
+			"Name": "hair up"
+		},
+		{
+			"Id": "ears",
+			"Name": "ears"
+		},
+		{
+			"Id": "arms",
+			"Name": "arms"
+		},
+		{
+			"Id": "back",
+			"Name": "back"
+		},
+		{
+			"Id": "eyelids",
+			"Name": "eyelids"
+		},
+		{
+			"Id": "lashes",
+			"Name": "lashes"
+		},
+		{
+			"Id": "irises",
+			"Name": "irises"
+		},
+		{
+			"Id": "eyewhites",
+			"Name": "eyewhites"
+		},
+		{
+			"Id": "eyebrows",
+			"Name": "eyebrows"
+		},
+		{
+			"Id": "iris_L",
+			"Name": "iris_L"
+		},
+		{
+			"Id": "iris_R",
+			"Name": "iris_R"
+		}
+	],
+	"CombinedParameters": [
+		[
+			"ParamEyeBallX",
+			"ParamEyeBallY"
+		],
+		[
+			"ParamBodyAngleX",
+			"ParamBodyAngleY"
+		],
+		[
+			"breast_Y",
+			"breast_Y_plus"
+		],
+		[
+			"hairline_M_Y_1",
+			"hairline_M_Y_2"
+		],
+		[
+			"hairline_R_Y1",
+			"hairline_R_Y2"
+		],
+		[
+			"hairline_L_Y1",
+			"hairline_L_Y2"
+		],
+		[
+			"hair_back_Y_1",
+			"hair_back_Y_2"
+		]
+	]
+}

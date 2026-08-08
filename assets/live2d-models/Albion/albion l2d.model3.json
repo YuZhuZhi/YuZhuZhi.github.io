@@ -1,0 +1,47 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "albion l2d.moc3",
+		"Textures": [
+			"albion l2d.1024/texture_00.png"
+		],
+		"Physics": "albion l2d.physics3.json",
+		"DisplayInfo": "albion l2d.cdi3.json",
+		"Motions": {
+			"Idle": [
+				{
+					"File": "Motion/body shake.motion3.json",
+					"FadeInTime": 1,
+					"FadeOutTime": 1
+				},
+				{
+					"File": "Motion/body shake wider.motion3.json",
+					"FadeInTime": 1,
+					"FadeOutTime": 1
+				}
+			],
+			"Smile": [
+				{
+					"File": "Motion/smile.motion3.json",
+					"FadeInTime": 0.35,
+					"FadeOutTime": 0.8
+				}
+			]
+		}
+	},
+	"Groups": [
+		{
+			"Target": "Parameter",
+			"Name": "LipSync",
+			"Ids": []
+		},
+		{
+			"Target": "Parameter",
+			"Name": "EyeBlink",
+			"Ids": [
+				"ParamEyeLOpen",
+				"ParamEyeROpen"
+			]
+		}
+	]
+}

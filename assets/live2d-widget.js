@@ -3,13 +3,24 @@
  */
 (() => {
 	const WIDGET_BASE = "/assets/vendor/live2d-widget/";
+	const TIPS_PATH = "/assets/live2d-tips.json?v=6";
 	const LINK_MESSAGE_DELAY = 120;
+	const MOTION_INTERVAL = 30000;
+	const MOTION_CHOICES = [
+		{ group: "Idle", index: 0 },
+		{ group: "Idle", index: 1 },
+		{ group: "Smile", index: 0 },
+		null,
+	];
 	const MAX_WIDGET_ATTEMPTS = 2;
 	const MODEL_FRAME_TIMEOUT = 14000;
 	let messageTimer = null;
 	let lastLink = null;
+	let motionTimer = null;
+	let motionScheduleId = 0;
 	let recoveryInProgress = false;
 	let dateMessageScheduled = false;
+	let preparedTipsUrl = null;
 
 	function loadModule(src) {
 		if (document.querySelector(`script[src="${src}"]`)) return Promise.resolve();
@@ -49,6 +60,84 @@
 
 	function delay(duration) {
 		return new Promise((resolve) => window.setTimeout(resolve, duration));
+	}
+
+	function chineseLunarDate(date) {
+		try {
+			const numericParts = new Intl.DateTimeFormat("zh-CN-u-ca-chinese", {
+				month: "numeric",
+				day: "numeric",
+			}).formatToParts(date);
+			const longParts = new Intl.DateTimeFormat("zh-CN-u-ca-chinese", {
+				month: "long",
+				day: "numeric",
+			}).formatToParts(date);
+			const monthValue = numericParts.find((part) => part.type === "month")?.value || "";
+			const month = Number.parseInt(monthValue.replace(/\D/g, ""), 10);
+			const dayValue = numericParts.find((part) => part.type === "day")?.value || "";
+			const day = Number.parseInt(dayValue.replace(/\D/g, ""), 10);
+			const monthName = longParts.find((part) => part.type === "month")?.value || "";
+
+			if (!Number.isInteger(month) || !Number.isInteger(day)) return null;
+			return { month, day, isLeap: monthName.includes("闰") };
+		} catch {
+			return null;
+		}
+	}
+
+	function matchesDateSpec(date, spec) {
+		const parse = (value) => {
+			const [month, day] = value.split("/").map(Number);
+			return month * 100 + day;
+		};
+		const [start, end = start] = spec.split("-").map(parse);
+		const current = date.month * 100 + date.day;
+
+		return start <= end
+			? current >= start && current <= end
+			: current >= start || current <= end;
+	}
+
+	function isLunarNewYearsEve(now) {
+		const tomorrow = new Date(now);
+		tomorrow.setDate(tomorrow.getDate() + 1);
+		const nextLunarDate = chineseLunarDate(tomorrow);
+		return nextLunarDate?.month === 1 && nextLunarDate.day === 1 && !nextLunarDate.isLeap;
+	}
+
+	function applyLunarSeasons(config, now = new Date()) {
+		const lunarDate = chineseLunarDate(now);
+		const solarDate = `${String(now.getMonth() + 1).padStart(2, "0")}/${String(now.getDate()).padStart(2, "0")}`;
+
+		config.seasons = (config.seasons || []).flatMap((season) => {
+			if (!season.lunar) return [season];
+			if (!lunarDate) return [];
+
+			const matches = season.lunar === "eve"
+				? isLunarNewYearsEve(now)
+				: !lunarDate.isLeap && matchesDateSpec(lunarDate, season.lunar);
+
+			return matches ? [{ ...season, date: solarDate }] : [];
+		});
+
+		return config;
+	}
+
+	async function prepareTipsUrl() {
+		if (preparedTipsUrl) return preparedTipsUrl;
+
+		try {
+			const response = await fetch(TIPS_PATH);
+			if (!response.ok) throw new Error(`HTTP ${response.status}`);
+			const config = applyLunarSeasons(await response.json());
+			preparedTipsUrl = URL.createObjectURL(new Blob([JSON.stringify(config)], {
+				type: "application/json",
+			}));
+			return preparedTipsUrl;
+		} catch (error) {
+			console.warn("Lunar holiday configuration could not be prepared.", error);
+			return TIPS_PATH;
+		}
 	}
 
 	function removeWidgetElements() {
@@ -113,6 +202,41 @@
 		return content;
 	}
 
+	function stopMotionScheduler() {
+		window.clearTimeout(motionTimer);
+		motionTimer = null;
+		motionScheduleId += 1;
+	}
+
+	function scheduleNextMotion(delay = MOTION_INTERVAL) {
+		stopMotionScheduler();
+		const scheduleId = motionScheduleId;
+
+		motionTimer = window.setTimeout(() => {
+			if (scheduleId !== motionScheduleId) return;
+			motionTimer = null;
+
+			const choice = MOTION_CHOICES[Math.floor(Math.random() * MOTION_CHOICES.length)];
+			if (!choice) {
+				scheduleNextMotion();
+				return;
+			}
+
+			const controller = window.__live2dMotionController;
+			const started = controller?.play(choice.group, choice.index, scheduleNextMotion);
+			if (!started) scheduleNextMotion(1000);
+		}, delay);
+	}
+
+	function playSmile() {
+		const controller = window.__live2dMotionController;
+		if (!controller || controller.isActive()) return;
+
+		if (controller.play("Smile", 0, scheduleNextMotion)) {
+			stopMotionScheduler();
+		}
+	}
+
 	function linkLabel(link) {
 		const explicitLabel = link.getAttribute("aria-label") || link.getAttribute("title");
 		const visibleLabel = link.textContent.replace(/\s+/g, " ").trim();
@@ -140,6 +264,7 @@
 				if (lastLink !== link || !link.matches(":hover")) return;
 				const destination = new URL(link.href, location.href);
 				const openInNewTab = link.target === "_blank" || destination.origin !== location.origin;
+				playSmile();
 				showMessage(
 					linkedMessage("要去「", linkLabel(link), destination.href, "」看看吗？", openInNewTab),
 				);
@@ -170,6 +295,7 @@
 				searchUrl.searchParams.set("setlang", "en-US");
 				searchUrl.searchParams.set("cc", "US");
 
+				playSmile();
 				showMessage(
 					linkedMessage("要搜索「", label, searchUrl.href, "」吗？", true),
 					6000,
@@ -211,7 +337,7 @@
 	}
 
 	const widgetConfig = {
-		waifuPath: "/assets/live2d-tips.json?v=1",
+		waifuPath: TIPS_PATH,
 		cubism2Path: `${WIDGET_BASE}live2d.min.js`,
 		cubism5Path: "https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js",
 		tools: ["hitokoto", "photo", "info", "quit"],
@@ -221,6 +347,7 @@
 	};
 
 	function recoverWidget(attempt) {
+		stopMotionScheduler();
 		const waifu = document.getElementById("waifu");
 		waifu?.classList.remove("live2d-widget-ready");
 		if (recoveryInProgress) return;
@@ -240,6 +367,7 @@
 
 	async function startWidget(attempt = 0) {
 		try {
+			widgetConfig.waifuPath = await prepareTipsUrl();
 			window.initWidget(widgetConfig);
 			const canvas = await waitForElement("live2d", MODEL_FRAME_TIMEOUT);
 			if (!canvas) {
@@ -260,6 +388,7 @@
 			const waifu = canvas.closest("#waifu");
 			if (!waifu) return;
 			waifu.classList.add("live2d-widget-ready");
+			if (!window.__live2dMotionController?.isActive()) scheduleNextMotion();
 
 			if (!dateMessageScheduled) {
 				dateMessageScheduled = true;
@@ -278,7 +407,7 @@
 		bindSelectionSearch();
 
 		try {
-			await loadModule(`${WIDGET_BASE}waifu-tips.js`);
+			await loadModule(`${WIDGET_BASE}waifu-tips.js?v=5`);
 			if (typeof window.initWidget === "function") startWidget();
 		} catch (error) {
 			console.warn("Live2D widget loader failed.", error);

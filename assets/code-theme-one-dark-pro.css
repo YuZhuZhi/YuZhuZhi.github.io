@@ -10,7 +10,7 @@ html[data-theme="dark"] pre[style*="position: relative;"] {
 	color: #abb2bf !important;
 	background-color: #21252b !important;
 	border-color: #3e4452 !important;
-	border-left-color: #61afef !important;
+	border-left-color: #a21caf !important;
 	box-shadow: 0 0.35rem 1rem rgba(0, 0, 0, 0.16);
 	scrollbar-color: #4b5263 #21252b;
 }
