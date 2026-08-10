@@ -65,4 +65,18 @@
   js-scripts: site-js + ("/assets/home-butterflies.js?v=20260730-2",),
 )
 
+/// 首页额外显示累计浏览次数。Komarev 提供的是图片徽章，适合静态站点直接使用。
+#let home-template = butterfly-template.with(
+  footer-elements: (
+    [© 2026 YuZhuZhi · #html.img(
+      src: "https://komarev.com/ghpvc/?username=YuZhuZhi-site&label=Views&color=3884ff&style=flat",
+      alt: "Website views",
+      class: "site-view-counter",
+      loading: "lazy",
+      decoding: "async",
+    )],
+    [梦里寻她千百度],
+  ),
+)
+
 // 更多参数可参考网站配置文档。
