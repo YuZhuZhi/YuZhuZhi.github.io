@@ -6,12 +6,12 @@
   "/assets/custom.css",
   "/assets/code-theme-one-dark-pro.css?v=1",
   "/assets/vendor/live2d-widget/waifu.css",
-  "/assets/live2d-widget.css?v=2",
+  "/assets/live2d-widget.css?v=3",
   "/assets/cursor-glow.css?v=20260730-13",
 )
 
 #let site-js = (
-  "/assets/live2d-widget.js?v=11",
+  "/assets/live2d-widget.js?v=12",
   "/assets/cursor-glow.js?v=20260730-13",
 )
 

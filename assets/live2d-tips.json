@@ -5,6 +5,10 @@
       "text": ["想听一句话吗？", "这里也许藏着一句恰好的话。"]
     },
     {
+      "selector": "#waifu-tool-switch-model",
+      "text": ["想换一位看板娘吗？", "要切换模型吗？"]
+    },
+    {
       "selector": "#waifu-tool-photo",
       "text": ["要给我拍张照片吗？", "准备好了吗？看镜头。"]
     },
@@ -409,9 +413,15 @@
   },
   "models": [
     {
-      "message": " ",
+      "message": "已经切换为 Albion。",
       "paths": [
         "/assets/live2d-models/Albion/albion%20l2d.model3.json?v=3"
+      ]
+    },
+    {
+      "message": "已经切换为 Vert Classic。",
+      "paths": [
+        "/assets/live2d-models/HyperdimensionNeptunia/vert_classic/index.json?v=1"
       ]
     }
   ]

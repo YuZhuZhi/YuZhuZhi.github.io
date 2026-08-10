@@ -3,7 +3,7 @@
  */
 (() => {
 	const WIDGET_BASE = "/assets/vendor/live2d-widget/";
-	const TIPS_PATH = "/assets/live2d-tips.json?v=6";
+	const TIPS_PATH = "/assets/live2d-tips.json?v=7";
 	const LINK_MESSAGE_DELAY = 120;
 	const MOTION_INTERVAL = 30000;
 	const MOTION_CHOICES = [
@@ -21,6 +21,7 @@
 	let recoveryInProgress = false;
 	let dateMessageScheduled = false;
 	let preparedTipsUrl = null;
+	let activeModelVersion = null;
 
 	function loadModule(src) {
 		if (document.querySelector(`script[src="${src}"]`)) return Promise.resolve();
@@ -229,6 +230,7 @@
 	}
 
 	function playSmile() {
+		if (activeModelVersion !== 3) return;
 		const controller = window.__live2dMotionController;
 		if (!controller || controller.isActive()) return;
 
@@ -311,6 +313,15 @@
 		});
 	}
 
+	function bindModelChanges() {
+		window.addEventListener("live2d:modelchanged", (event) => {
+			stopMotionScheduler();
+			activeModelVersion = event.detail?.version || null;
+
+			if (activeModelVersion === 3) scheduleNextMotion();
+		});
+	}
+
 	function dateMessage(now = new Date()) {
 		const monthDay = `${now.getMonth() + 1}/${now.getDate()}`;
 		const holidays = {
@@ -340,7 +351,7 @@
 		waifuPath: TIPS_PATH,
 		cubism2Path: `${WIDGET_BASE}live2d.min.js`,
 		cubism5Path: "https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js",
-		tools: ["hitokoto", "photo", "info", "quit"],
+		tools: ["hitokoto", "switch-model", "photo", "info", "quit"],
 		drag: true,
 		showToggleAfterQuit: true,
 		logLevel: "warn",
@@ -348,6 +359,7 @@
 
 	function recoverWidget(attempt) {
 		stopMotionScheduler();
+		activeModelVersion = null;
 		const waifu = document.getElementById("waifu");
 		waifu?.classList.remove("live2d-widget-ready");
 		if (recoveryInProgress) return;
@@ -388,7 +400,11 @@
 			const waifu = canvas.closest("#waifu");
 			if (!waifu) return;
 			waifu.classList.add("live2d-widget-ready");
-			if (!window.__live2dMotionController?.isActive()) scheduleNextMotion();
+			activeModelVersion = Number(window.__live2dCurrentModelVersion)
+				|| (window.__live2dMotionController ? 3 : 2);
+			if (activeModelVersion === 3 && !window.__live2dMotionController.isActive()) {
+				scheduleNextMotion();
+			}
 
 			if (!dateMessageScheduled) {
 				dateMessageScheduled = true;
@@ -405,9 +421,10 @@
 
 		bindLinkMessages();
 		bindSelectionSearch();
+		bindModelChanges();
 
 		try {
-			await loadModule(`${WIDGET_BASE}waifu-tips.js?v=6`);
+			await loadModule(`${WIDGET_BASE}waifu-tips.js?v=7`);
 			if (typeof window.initWidget === "function") startWidget();
 		} catch (error) {
 			console.warn("Live2D widget loader failed.", error);

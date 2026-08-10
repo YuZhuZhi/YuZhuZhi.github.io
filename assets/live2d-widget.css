@@ -35,6 +35,10 @@ Site-specific placement for stevenjoezhang/live2d-widget.
 	pointer-events: auto;
 }
 
+html[data-theme="dark"] #waifu-tips {
+	color: #d8dbe2;
+}
+
 #waifu-tips .waifu-message-link:any-link {
 	color: #2563eb;
 	font-weight: 600;
