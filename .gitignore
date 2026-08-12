@@ -29,6 +29,7 @@ target/
 *.bak
 .DS_Store
 Thumbs.db
+tmp
 
 # Logs
 *.log
