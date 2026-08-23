@@ -77,6 +77,10 @@
       + #link("数学/离散数学/排列组合与数列递推")[排列组合与数列递推]
       + #link("数学/离散数学/代数系统")[代数系统]
       + #link("数学/离散数学/图和树")[图和树]
+
+    = *代数结构*
+      + #link("数学/代数结构/群")[群]
+      + #link("数学/代数结构/环")[环]
   ]
 
   #html.elem("section", attrs: (class: "docs-tab-panel docs-tab-panel-physics"))[
