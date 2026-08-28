@@ -9,7 +9,8 @@
 = 光线追踪（四）——运动模糊与纹理映射
 
 #tufted.full-width[
-    #image("images/header.jpg")
+  #image("../header.jpg") 
+  _Illustrated by #link("https://www.pixiv.net/users/13772078")[夜蓝星炫]（Pixiv），#link("https://www.pixiv.net/artworks/97420493")[Source]_
 ]
 
 前三篇中的射线只携带空间信息，材质也只有一个固定反照率。本篇沿着 #link("https://raytracing.github.io/books/RayTracingTheNextWeek.html")[《Ray Tracing: The Next Week》] 的路线扩展这两个限制：首先把射线提升到时空查询，使不同样本观察到运动物体在快门期间的不同位置；然后把“颜色”抽象为一个可查询函数，让材质随空间位置或表面坐标变化。

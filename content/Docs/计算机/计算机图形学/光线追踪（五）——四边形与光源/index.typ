@@ -9,7 +9,8 @@
 = 光线追踪（五）——四边形与光源
 
 #tufted.full-width[
-    #image("images/header.jpg")
+  #image("../header.jpg") 
+  _Illustrated by #link("https://www.pixiv.net/users/13772078")[夜蓝星炫]（Pixiv），#link("https://www.pixiv.net/artworks/97420493")[Source]_
 ]
 
 只有球体的渲染器可以展示反射、折射和纹理，却很难构造墙壁、地板、灯板与盒子。本篇继续参考 #link("https://raytracing.github.io/books/RayTracingTheNextWeek.html")[《Ray Tracing: The Next Week》]：先加入平行四边形图元，再让普通几何通过自发光材质变成具有实际面积的光源。二者结合之后，就能搭建用于研究间接光照的经典 Cornell Box。

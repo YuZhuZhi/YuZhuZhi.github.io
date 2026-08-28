@@ -2,7 +2,7 @@
  * Builds a small floating table of contents for pages with enough subsections.
  */
 (() => {
-	const MIN_H3_HEADINGS = 3;
+	const MIN_TOC_HEADINGS = 3;
 
 	function collectHeadings(section) {
 		return Array.from(section.querySelectorAll("h2, h3")).filter(
@@ -116,10 +116,7 @@
 		}
 
 		const headings = collectHeadings(section);
-		const h3Count = headings.filter(
-			(heading) => heading.tagName === "H3",
-		).length;
-		if (h3Count < MIN_H3_HEADINGS) {
+		if (headings.length < MIN_TOC_HEADINGS) {
 			return;
 		}
 

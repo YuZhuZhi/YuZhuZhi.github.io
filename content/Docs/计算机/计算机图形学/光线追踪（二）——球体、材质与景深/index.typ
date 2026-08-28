@@ -9,7 +9,8 @@
 = 光线追踪（二）——球体、材质与景深
 
 #tufted.full-width[
-    #image("images/header.jpg")
+  #image("../header.jpg") 
+  _Illustrated by #link("https://www.pixiv.net/users/13772078")[夜蓝星炫]（Pixiv），#link("https://www.pixiv.net/artworks/97420493")[Source]_
 ]
 
 第一篇建立了射线与摄像机。本篇让射线真正与场景交互：先求出球面的最近交点，再把几何与材质分离，用递归的散射过程近似渲染方程。最后把针孔改成有限孔径，得到聚焦清晰、前后景模糊的景深效果。

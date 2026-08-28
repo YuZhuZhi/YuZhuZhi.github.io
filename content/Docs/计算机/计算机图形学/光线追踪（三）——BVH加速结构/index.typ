@@ -9,7 +9,8 @@
 = 光线追踪（三）——BVH 加速结构
 
 #tufted.full-width[
-    #image("images/header.jpg")
+  #image("../header.jpg") 
+  _Illustrated by #link("https://www.pixiv.net/users/13772078")[夜蓝星炫]（Pixiv），#link("https://www.pixiv.net/artworks/97420493")[Source]_
 ]
 
 前两篇的线性场景列表会让每条射线测试全部 $N$ 个物体。若一张图有 $P$ 个像素、每像素 $S$ 个样本、平均每条路径 $D$ 段射线，粗略求交次数是 $O(P S D N)$。路径追踪会把任何低效放大数十亿次，因此加速结构不是锦上添花，而是渲染器的核心组件。

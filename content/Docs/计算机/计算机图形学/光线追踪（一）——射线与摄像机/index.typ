@@ -10,7 +10,8 @@
 = 光线追踪（一）——射线与摄像机
 
 #tufted.full-width[
-    #image("images/header.jpg")
+  #image("../header.jpg") 
+  _Illustrated by #link("https://www.pixiv.net/users/13772078")[夜蓝星炫]（Pixiv），#link("https://www.pixiv.net/artworks/97420493")[Source]_
 ]
 
 光线追踪的核心问题可以说得很朴素：屏幕上的一个像素，应该呈现什么颜色？光栅化从三角形出发，把几何投影到屏幕；光线追踪则从像素出发，向场景发射查询射线，寻找最先遇到的表面，再沿反射、折射或阴影方向继续查询。后者很自然地表达了遮挡、镜面与透明介质，也为基于物理的渲染提供了统一框架。
