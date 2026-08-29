@@ -116,6 +116,10 @@
       + #link("计算机/计算机图形学/光线追踪（三）——BVH加速结构/")[BVH 加速结构]
       + #link("计算机/计算机图形学/光线追踪（四）——运动模糊与纹理映射/")[运动模糊与纹理映射]
       + #link("计算机/计算机图形学/光线追踪（五）——四边形与光源/")[四边形与光源]
+
+    // = *计算机组成原理 · MIPS*
+    //   + #link("计算机/计算机组成原理·MIPS/单周期 MIPS CPU/")[单周期 MIPS CPU]
+    //   + #link("计算机/计算机组成原理·MIPS/多周期 MIPS CPU/")[多周期 MIPS CPU]
   ]
 
   #html.elem("section", attrs: (class: "docs-tab-panel docs-tab-panel-essay"))[

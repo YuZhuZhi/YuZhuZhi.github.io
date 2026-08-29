@@ -180,18 +180,18 @@ $]
 
 == 2. 二维离散傅里叶变换（DFT 与 IDFT）
 
-#tufted.definition[二维 DFT 与 IDFT][对 $M times N$ 图像 $f[x,y]$，令 $u=0,dots,M-1$、$v=0,dots,N-1$，二维 DFT 为
+#tufted.definition[二维 DFT 与 IDFT][沿用基础篇的坐标约定：图像高为 $M$、宽为 $N$，$x=0,dots,N-1$ 是水平坐标，$y=0,dots,M-1$ 是垂直坐标；$u$、$v$ 分别是对应方向的频率索引。二维 DFT 为
 $
-  F[u,v]=sum_(x=0)^(M-1) sum_(y=0)^(N-1)
-  f[x,y] exp(-ii 2 pi(u x/M+v y/N)),
+  F[u,v]=sum_(y=0)^(M-1) sum_(x=0)^(N-1)
+  f(x,y) exp(-ii 2 pi(u x/N+v y/M)),
 $
 逆变换为
 $
-  f[x,y]=1/(M N) sum_(u=0)^(M-1) sum_(v=0)^(N-1)
-  F[u,v] exp(ii 2 pi(u x/M+v y/N)).
+  f(x,y)=1/(M N) sum_(v=0)^(M-1) sum_(u=0)^(N-1)
+  F[u,v] exp(ii 2 pi(u x/N+v y/M)).
 $]
 
-这里 $x$ 与 $u$ 对应数组行方向，$y$ 与 $v$ 对应数组列方向。NumPy 的 `fft2` 默认在最后两个轴上做变换；OpenCV 的 `dft` 通常接收 `float32` 或 `float64`，可用双通道数组保存实部与虚部。#cite(<opencv-dft>)
+数学坐标写作 $(x,y)$，NumPy 数组却按 `[row, column]` 排列，所以空间样本 `image[y, x]` 对应 $f(x,y)$，频谱元素 `spectrum[v, u]` 对应 $F[u,v]$。NumPy 的 `fft2` 默认在最后两个轴上做变换；OpenCV 的 `dft` 通常接收 `float32` 或 `float64`，可用双通道数组保存实部与虚部。#cite(<opencv-dft>)
 
 ```python
 import cv2
@@ -230,11 +230,11 @@ restored = cv2.idft(
 
 平移只改变相位。若图像循环平移 $(x_(0),y_(0))$：
 $
-  g[x,y]=f[(x-x_(0)) mod M,(y-y_(0)) mod N],
+  g(x,y)=f((x-x_(0)) mod N,(y-y_(0)) mod M),
 $
 则
 $
-  G[u,v]=F[u,v] exp(-ii 2 pi(u x_(0)/M+v y_(0)/N)).
+  G[u,v]=F[u,v] exp(-ii 2 pi(u x_(0)/N+v y_(0)/M)).
 $
 乘上的复指数模为 1，所以幅度谱不变。物体移动后幅度谱看似相同，不代表图像内容的位置没有改变；位置信息进入了相位。
 
@@ -242,11 +242,11 @@ $
 
 二维 DFT 在两个方向都周期延拓：
 $
-  F[u+a M,v+b N]=F[u,v], quad a,b in ZZ.
+  F[u+a N,v+b M]=F[u,v], quad a,b in ZZ.
 $
 实值图像还具有共轭对称性
 $
-  F[(-u) mod M,(-v) mod N]=F[u,v]^ast.
+  F[(-u) mod N,(-v) mod M]=F[u,v]^ast.
 $
 因此其幅度谱中心对称，相位则反对称。这个性质可以检查实现是否正确，也能在实数 FFT 中减少冗余存储。
 
@@ -254,8 +254,8 @@ $
 
 #tufted.theorem[二维离散卷积定理][同为 $M times N$ 的周期数组 $f$、$h$ 的二维循环卷积
 $
-  (f *_(c) h)[x,y]=sum_(a=0)^(M-1)sum_(b=0)^(N-1)
-  f[a,b]h[(x-a) mod M,(y-b) mod N]
+  (f *_(c) h)(x,y)=sum_(b=0)^(M-1)sum_(a=0)^(N-1)
+  f(a,b)h((x-a) mod N,(y-b) mod M)
 $
 满足
 $
@@ -307,10 +307,10 @@ FFT 不是另一种变换，而是一族精确计算 DFT 的快速算法。朴�
 
 二维指数可以分解：
 $
-  exp(-ii 2 pi(u x/M+v y/N))
-  =exp(-ii 2 pi u x/M)exp(-ii 2 pi v y/N).
+  exp(-ii 2 pi(u x/N+v y/M))
+  =exp(-ii 2 pi u x/N)exp(-ii 2 pi v y/M).
 $
-所以先固定 $x$，对每一行做长度 $N$ 的一维 DFT，再固定 $v$，对每一列做长度 $M$ 的一维 DFT，结果就是二维 DFT。运算次序也可以交换。
+所以先固定 $y$，沿水平方向对每一行做长度 $N$ 的一维 DFT；再固定 $u$，沿垂直方向对每一列做长度 $M$ 的一维 DFT，结果就是二维 DFT。运算次序也可以交换。
 
 #figure(
   image("images/dft-separability.png", width: 85%, alt: "二维 DFT 先逐行再逐列的可分离计算"),
