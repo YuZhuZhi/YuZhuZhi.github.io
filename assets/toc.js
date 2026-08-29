@@ -3,6 +3,23 @@
  */
 (() => {
 	const MIN_TOC_HEADINGS = 3;
+	const TOC_DISABLED_PATHS = new Set(["/", "/Docs/", "/Blog/"]);
+
+	function normalizePagePath(pathname) {
+		let path = pathname || "/";
+
+		if (path.endsWith("/index.html")) {
+			path = path.slice(0, -"index.html".length);
+		} else if (path === "/index.html") {
+			path = "/";
+		}
+
+		if (!path.endsWith("/")) {
+			path += "/";
+		}
+
+		return path;
+	}
 
 	function collectHeadings(section) {
 		return Array.from(section.querySelectorAll("h2, h3")).filter(
@@ -110,6 +127,10 @@
 	}
 
 	function init() {
+		if (TOC_DISABLED_PATHS.has(normalizePagePath(window.location.pathname))) {
+			return;
+		}
+
 		const section = document.querySelector("article > section");
 		if (!section) {
 			return;

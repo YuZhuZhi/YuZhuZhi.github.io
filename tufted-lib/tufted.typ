@@ -86,7 +86,7 @@
           "/assets/format-headings.js",
           "/assets/theme-toggle.js",
           "/assets/marginnote-toggle.js",
-          "/assets/toc.js?v=20260825-1",
+          "/assets/toc.js?v=20260829-1",
           "/assets/back-to-top.js",
           "/assets/math-copy.js",
         )

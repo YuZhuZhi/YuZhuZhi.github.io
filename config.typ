@@ -11,7 +11,7 @@
 )
 
 #let site-js = (
-  "/assets/live2d-widget.js?v=12",
+  "/assets/live2d-widget.js?v=14",
   "/assets/cursor-glow.js?v=20260730-13",
 )
 

@@ -223,16 +223,24 @@
 				return;
 			}
 
-			const controller = window.__live2dMotionController;
-			const started = controller?.play(choice.group, choice.index, scheduleNextMotion);
-			if (!started) scheduleNextMotion(1000);
+			startSelectedMotion(choice, scheduleId);
 		}, delay);
 	}
 
-	function playSmile() {
-		if (activeModelVersion !== 3) return;
+	function startSelectedMotion(choice, scheduleId) {
+		if (scheduleId !== motionScheduleId || activeModelVersion === 2) return;
+
 		const controller = window.__live2dMotionController;
-		if (!controller || controller.isActive()) return;
+		if (controller?.play(choice.group, choice.index, scheduleNextMotion)) return;
+
+		motionTimer = window.setTimeout(() => {
+			startSelectedMotion(choice, scheduleId);
+		}, 500);
+	}
+
+	function playSmile() {
+		const controller = window.__live2dMotionController;
+		if (!controller?.isReady() || controller.isActive()) return;
 
 		if (controller.play("Smile", 0, scheduleNextMotion)) {
 			stopMotionScheduler();
@@ -424,7 +432,7 @@
 		bindModelChanges();
 
 		try {
-			await loadModule(`${WIDGET_BASE}waifu-tips.js?v=7`);
+			await loadModule(`${WIDGET_BASE}waifu-tips.js?v=8`);
 			if (typeof window.initWidget === "function") startWidget();
 		} catch (error) {
 			console.warn("Live2D widget loader failed.", error);
