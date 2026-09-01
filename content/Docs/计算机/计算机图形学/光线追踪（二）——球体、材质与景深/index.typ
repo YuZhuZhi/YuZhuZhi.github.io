@@ -37,7 +37,7 @@ $ <eq-sphere-quadratic>
 $
   Delta=h^2-a c, quad t=(-h plus.minus sqrt(Delta))/a.
 $
-$Delta<0$ 表示错过球体，$Delta=0$ 表示相切，$Delta>0$ 表示穿过球面。渲染时不应仅问“是否命中”，而应在允许区间 $[t_(min),t_(max)]$ 内选择最小根，因为它对应沿射线最先看到的表面。
+这里的 $h$ 取 $bold(o) dot bold(d)$ 而不是 $2 bold(o) dot bold(d)$：它是把求根公式中因子 $2$ 折进系数后得到的量，使判别式与求根各少一次乘除，这是通用写法。$Delta<0$ 表示错过球体，$Delta=0$ 表示相切，$Delta>0$ 表示穿过球面。渲染时不应仅问“是否命中”，而应在允许区间 $[t_(min),t_(max)]$ 内选择最小根，因为它对应沿射线最先看到的表面。
 
 ```rust
 let oc = ray.origin - self.center;
@@ -138,7 +138,7 @@ return sky(ray.direction);
 $
   f_r=bold(rho)/pi,
 $
-其中 $bold(rho)$ 是反照率。若按余弦加权半球分布采样，概率密度 $p(omega)=cos theta/pi$ 会与渲染方程中的余弦项抵消，得到低方差估计。教程实现可先用一个近似而直观的构造：在法向量上叠加随机单位向量，所得方向自然偏向法线附近。
+其中 $bold(rho)$ 是反照率。若按余弦加权半球分布采样，概率密度 $p(omega)=cos theta/pi$ 会与渲染方程中的余弦项抵消，得到低方差估计。教程实现先采用一个直观的构造：在法向量上叠加一个随机单位向量 $bold(xi)$，即 $bold(d)=bold(n)+bold(xi)$。这是生成余弦加权方向的常用技巧，其分布与直接按 $p(omega)=cos theta/pi$ 采样等价；而更早的“球内随机方向”模型并不满足这一权重关系，因此结果偏暗、收敛也较慢，下面几幅图正体现了这一区别。
 
 ```rust
 let mut direction = hit.normal + rng.unit_vector();
@@ -230,7 +230,7 @@ $
   bold(r) &= bold(r)_(perp)+bold(r)_(parallel).
 $ <eq-refract>
 
-当 $eta sin theta_1>1$ 时，$theta_2$ 没有实数解，发生全反射。即使可以折射，介质界面也会同时反射一部分能量。Schlick 近似以很低成本估计反射概率：
+当 $eta sin theta_1>1$ 时，$theta_2$ 没有实数解，发生全反射。即使可以折射，介质界面也会同时反射一部分能量，其比例由菲涅耳（Fresnel）反射性质决定。Schlick 近似以很低成本估计反射概率：
 $
   R(theta)=R_0+(1-R_0)(1-cos theta)^5,
   quad R_0=((eta_1-eta_2)/(eta_1+eta_2))^2.

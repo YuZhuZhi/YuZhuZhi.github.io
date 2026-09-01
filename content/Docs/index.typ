@@ -123,7 +123,8 @@
   ]
 
   #html.elem("section", attrs: (class: "docs-tab-panel docs-tab-panel-essay"))[
-    = 杂文
+    = 诗语词云
+      #link("杂文/临江仙/")[临江仙 · 乱心听江潮]
   ]
 ]
 

@@ -33,7 +33,7 @@ $
     abs(n dot omega_i) upright(d) omega_i .
 $ <eq-rendering>
 
-其中 $L_e$ 是自发光，$f_r$ 是双向反射分布函数，$L_i$ 是来自半球 $Omega$ 的入射辐亮度，$n$ 是表面法向量。积分很少有闭式解，于是我们随机选择方向 $omega_k$，用样本均值近似：
+其中 $L_e$ 是自发光，$f_r$ 是双向反射分布函数，$L_i$ 是来自半球 $Omega$ 的入射辐亮度，$n$ 是表面法向量。积分很少有闭式解，于是我们用蒙特卡洛（Monte Carlo）方法：随机选择方向 $omega_k$，用样本均值近似：
 $
   integral_(Omega) g(omega) upright(d)omega
   approx 1/N sum_(k=1)^N g(omega_k)/p(omega_k),
@@ -54,7 +54,7 @@ $
 $
 点积给出夹角关系 $bold(a) dot bold(b)=norm(bold(a))norm(bold(b))cos theta$；叉积得到同时垂直于两向量的方向。归一化 $hat(bold(a))=bold(a)/norm(bold(a))$ 只改变长度，不改变方向。
 
-颜色也可复用三分量向量，令 $bold(c)=(r,g,b)$。线性空间中的 $0.5$ 并不等于显示器编码值的 $0.5$。简单教程常用 gamma 2 近似，在输出前计算
+颜色也可复用三分量向量，令 $bold(c)=(r,g,b)$，颜色分量约定在 $[0,1]$。线性空间中的 $0.5$ 并不等于显示器编码值的 $0.5$。本系列所有的中间计算都在线性空间完成，只有写出文件前才做一次编码；否则材质的乘性衰减、路径能量与像素平均都会在错误尺度上进行。简单教程常用 gamma 2 近似，在输出前计算
 $
   c_("display") = sqrt(max(c_("linear"),0)).
 $
