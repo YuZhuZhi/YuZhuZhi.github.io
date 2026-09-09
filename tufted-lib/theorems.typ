@@ -4,6 +4,7 @@
 #let definition-counter = counter("tufted-definition")
 #let lemma-counter = counter("tufted-lemma")
 #let proposition-counter = counter("tufted-proposition")
+#let problem-counter = counter("tufted-problem")
 
 #let reset-theorems() = {
   theorem-counter.update(0)
@@ -12,6 +13,7 @@
   definition-counter.update(0)
   lemma-counter.update(0)
   proposition-counter.update(0)
+  problem-counter.update(0)
 }
 
 #let theorem(title, body, name: [定理], label: none) = context {
@@ -219,6 +221,43 @@
     block[
       #set text(font: "KaiTi")
       *#name #number.#if title != [] { [（#title）] }*
+      #body
+    ]
+  }
+}
+
+// 题目（习题）环境：正文优先，便于直接书写 `#tufted.problem[题目内容]`；
+// 如需在编号后附加小标题，使用命名参数 `title: [标题]`。
+#let problem(body, title: none, name: [题目], label: none) = context {
+  let number = problem-counter.get().first() + 1
+  problem-counter.step()
+
+  let html-body = html.div(
+    class: "tufted-problem",
+    {
+      html.div(
+        class: "tufted-problem-heading",
+        {
+          [#name #number.]
+          if title != none {
+            [（#title）]
+          }
+        },
+      )
+      html.div(class: "tufted-problem-body", body)
+    },
+  )
+
+  if target() == "html" {
+    if label != none {
+      [#figure(kind: "tufted-problem", supplement: name, caption: none)[#html-body] #label]
+    } else {
+      figure(kind: "tufted-problem", supplement: name, caption: none)[#html-body]
+    }
+  } else {
+    block[
+      #set text(font: "KaiTi")
+      *#name #number.#if title != none { [（#title）] }*
       #body
     ]
   }
