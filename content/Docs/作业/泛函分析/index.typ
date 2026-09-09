@@ -30,11 +30,14 @@ $
   &= d(x,y)
 $
 
-#tufted.theorem[][
-  $ sup x + sup y >= sup(x + y) $
+#tufted.theorem[上确界的一个性质][
+  若 $f(x), g(x)$ 是定义在集合 $X$ 上的有界函数，则有
+  $ sup_(x in X) f(x) + sup_(x in X) g(x) >= sup_(x in X) {f(x) + g(x)} $
 ]
 
-=== 
+=== (2) 指出 $D$ 中点列按距离收敛的意义
+
+若点列 ${x_n}$ 收敛到 $x$，则 $d(x_n, x) = sup_(0 <= t <= 1) abs(x_n(t) - x(t)) + sup_(0 <= t <= 1) abs(x_n'(t) - x'(t)) rightarrow 0$。
 
 === (3) 证明 $D$ 是完备的
 
