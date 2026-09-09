@@ -19,6 +19,7 @@
   #html.elem("input", attrs: (class: "docs-tab-input", type: "radio", name: "docs-tab", id: "docs-tab-physics"), "")
   #html.elem("input", attrs: (class: "docs-tab-input", type: "radio", name: "docs-tab", id: "docs-tab-computer"), "")
   #html.elem("input", attrs: (class: "docs-tab-input", type: "radio", name: "docs-tab", id: "docs-tab-essay"), "")
+  #html.elem("input", attrs: (class: "docs-tab-input", type: "radio", name: "docs-tab", id: "docs-tab-homework"), "")
 
   #html.elem(
     "div",
@@ -29,6 +30,7 @@
     #html.elem("label", attrs: (class: "docs-tab-button", "for": "docs-tab-physics", role: "tab"))[物理]
     #html.elem("label", attrs: (class: "docs-tab-button", "for": "docs-tab-computer", role: "tab"))[计算机]
     #html.elem("label", attrs: (class: "docs-tab-button", "for": "docs-tab-essay", role: "tab"))[杂文]
+    #html.elem("label", attrs: (class: "docs-tab-button", "for": "docs-tab-homework", role: "tab"))[作业]
   ]
 
   #html.elem("section", attrs: (class: "docs-tab-panel docs-tab-panel-quantum"))[
@@ -125,6 +127,10 @@
   #html.elem("section", attrs: (class: "docs-tab-panel docs-tab-panel-essay"))[
     = 诗语词云
       #link("杂文/临江仙/")[临江仙 · 乱心听江潮]
+  ]
+
+  #html.elem("section", attrs: (class: "docs-tab-panel docs-tab-panel-essay"))[
+    - #link("作业/泛函分析/")[泛函分析]
   ]
 ]
 
