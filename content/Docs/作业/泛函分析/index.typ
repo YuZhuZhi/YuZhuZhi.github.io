@@ -38,7 +38,7 @@ $
 
 === (3) 证明 $D$ 是完备的
 
-设 ${x_n}$ 是柯西列。那么 $forall epsilon > 0$, $exists N$, 有 $n, m > N rightarrow d(x_n, x_m) = sup_(0 <= t <= 1) abs(x_(n)(t) - x_(m)(t)) + sup_(0 <= t <= 1) abs(x_(n)'(t) - x_(m)'(t)) < epsilon$。
+设 ${x_n}$ 是柯西列。那么 $forall epsilon > 0$, $exists N$, 有 $n, m > N => d(x_n, x_m) = sup_(0 <= t <= 1) abs(x_(n)(t) - x_(m)(t)) + sup_(0 <= t <= 1) abs(x_(n)'(t) - x_(m)'(t)) < epsilon$。
 
 因此，$sup_(0 <= t <= 1) abs(x_(n)(t) - x_(m)(t)) < epsilon$，故 ${x_n}(t)$ 一致收敛。
 
