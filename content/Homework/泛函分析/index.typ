@@ -1,4 +1,4 @@
-#import "../../../index.typ": template, tufted
+#import "../index.typ": template, tufted
 #show: template.with(
     title: "泛函分析作业",
     description: "",
@@ -37,25 +37,29 @@ $
 
 === (2) 指出 $D$ 中点列按距离收敛的意义
 
-若点列 ${x_n}$ 收敛到 $x$，则 $d(x_n, x) = sup_(0 <= t <= 1) abs(x_n(t) - x(t)) + sup_(0 <= t <= 1) abs(x_n'(t) - x'(t)) -> 0$。
+若点列 ${x_n}$ 收敛到 $x$，则：
+$ d(x_n, x) = sup_(0 <= t <= 1) abs(x_n(t) - x(t)) + sup_(0 <= t <= 1) abs(x_n'(t) - x'(t)) -> 0. $
 
-因此显然也有 $sup_(0 <= t <= 1) abs(x_n(t) - x(t)) -> 0, sup_(0 <= t <= 1) abs(x_n'(t) - x'(t)) -> 0$，即 ${x_n}(t), {x_n}'(t)$ 一致收敛到 $x(t), x'(t)$。
+因此显然也有 
+$sup_(0 <= t <= 1) abs(x_n(t) - x(t)) -> 0, sup_(0 <= t <= 1) abs(x_n'(t) - x'(t)) -> 0, $
+即 ${x_n}(t), {x_n}'(t)$ 一致收敛到 $x(t), x'(t)$。
 
 故 $D$ 中点列按距离收敛，等价于函数和导数一致收敛。
 
 === (3) 证明 $D$ 是完备的
 
-设 ${x_n}$ 是柯西列。那么 $forall epsilon > 0$, $exists N$, 有 $n, m > N => d(x_n, x_m) = sup_(0 <= t <= 1) abs(x_(n)(t) - x_(m)(t)) + sup_(0 <= t <= 1) abs(x_(n)'(t) - x_(m)'(t)) < epsilon$。
+设 ${x_n}$ 是柯西列。那么 $forall epsilon > 0$, $exists N$, 有 
+$ n, m > N => d(x_n, x_m) = sup_(0 <= t <= 1) abs(x_(n)(t) - x_(m)(t)) + sup_(0 <= t <= 1) abs(x_(n)'(t) - x_(m)'(t)) < epsilon. $
 
 因此，$sup_(0 <= t <= 1) abs(x_(n)(t) - x_(m)(t)) < epsilon$，故 ${x_n}(t)$ 一致收敛于 $x(t)$。同理 ${x'_n}(t)$ 也一致收敛于 $y(t)$。
 
 接下来证明 $y(t)$ 是 $x(t)$ 的导数 $x'(t)$。对任意 $t,t_(0) in [0,1]$，显然有：
-$ x_(n)(t) - x_(n)(t_(0)) = int_(t_(0))^(t) x'_(n)(s) d s, $
+$ x_(n)(t) - x_(n)(t_(0)) = integral_(t_(0))^(t) x'_(n)(s) d s, $
 当 $n -> infinity$ 时：
 $ "左边" = x_(n)(t) - x_(n)(t_(0)) -> x(t) - x(t_(0)) $
-$ "右边" = int_(t_(0))^(t) x'(s) d s -> int_(t_(0))^(t) y(s) d s $
+$ "右边" = integral_(t_(0))^(t) x'(s) d s -> integral_(t_(0))^(t) y(s) d s $
 右边的过程是因为在一致收敛时，积分与极限可以交换。因此：
-$ x(t) - x(t_(0)) = int_(t_(0))^(t) y(s) d s $
+$ x(t) - x(t_(0)) = integral_(t_(0))^(t) y(s) d s $
 故 $y(t)$ 是 $x(t)$ 的导数，即 $y(t) = x'(t)$。
 
 因此，$x$ 在 $[0, 1]$ 区间上具有连续导数，故 $x in D$。另一方面，显然有
@@ -107,10 +111,11 @@ $
 要证明 $d(x,z) + d(z,y) >= d(x,y)$，即证 ${d(x,z) + d(z,y)}^2 = d^(2)(x,z) + d^(2)(z,y) + 2d(x,z)d(z,y) >= d^(2)(x,y)$。
 
 $
-  d^(2)(x,z) + d^(2)(z,y) + 2d(x,z)d(z,y) &= sum d_(i)^(2)(x,z) + sum d_(i)^(2)(z,y) + 2 sum d_(i)^(2)(x,z) d_(i)^(2)(z,y) \
-  &= sum { d_(i)^(2)(x,z) + d_(i)^(2)(z,y) + 2 d_(i)(x,z) d_(i)(z,y) } + 2 sum_(i != j) d_(i)(x,z) d_(j)(z,y) \
-  &= sum { d_(i)(x,z) + d_(i)(z,y) }^2 + 2 sum_(i != j) d_(i)(x,z) d_(j)(z,y) \
-  &>= sum { d_(i)(x,z) + d_(i)(z,y) }^2  \
-  &>= sum d_(i)^(2)(x,y) \
-  &= d^(2)(x,y)
+  &d^(2)(x,z) + d^(2)(z,y) + 2d(x,z)d(z,y) \
+  =& sum d_(i)^(2)(x,z) + sum d_(i)^(2)(z,y) + 2 sum d_(i)^(2)(x,z) d_(i)^(2)(z,y) \
+  =& sum { d_(i)^(2)(x,z) + d_(i)^(2)(z,y) + 2 d_(i)(x,z) d_(i)(z,y) } + 2 sum_(i != j) d_(i)(x,z) d_(j)(z,y) \
+  =& sum { d_(i)(x,z) + d_(i)(z,y) }^2 + 2 sum_(i != j) d_(i)(x,z) d_(j)(z,y) \
+  >=& sum { d_(i)(x,z) + d_(i)(z,y) }^2  \
+  >=& sum d_(i)^(2)(x,y) \
+  =& d^(2)(x,y)
 $

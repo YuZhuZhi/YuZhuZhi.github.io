@@ -2,7 +2,7 @@
 
 // 各扩展使用独立缓存键；只在对应资源发生变化时递增。
 #let site-css = (
-  "/assets/site-extensions.css",
+  "/assets/site-extensions.css?v=20260910-1",
   "/assets/custom.css",
   "/assets/code-theme-one-dark-pro.css?v=1",
   "/assets/vendor/live2d-widget/waifu.css",
@@ -27,6 +27,7 @@
     "/": "首页",
     "/Docs/": "文章",
     "/Blog/": "随笔",
+    "/Homework/": "作业",
   ),
 
   /// 站点扩展样式，与上游模板样式分离。

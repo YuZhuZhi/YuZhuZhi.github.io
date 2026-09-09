@@ -47,6 +47,15 @@ from html.parser import HTMLParser
 from pathlib import Path
 from typing import Literal
 
+# Windows 控制台默认可能是 GBK/cp936，打印 ✅/⚠️ 等 emoji 会直接抛
+# UnicodeEncodeError，使脚本在编译完成后、复制资源前崩溃，留下过期的 _site 资源。
+# 这里只替换无法编码的字符，不改变控制台编码，避免中文显示变成乱码。
+try:
+    sys.stdout.reconfigure(errors="replace")
+    sys.stderr.reconfigure(errors="replace")
+except Exception:
+    pass
+
 # ============================================================================
 # 配置
 # ============================================================================
