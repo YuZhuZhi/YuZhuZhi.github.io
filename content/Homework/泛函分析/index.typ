@@ -37,21 +37,21 @@ $
 
 === (2) 指出 $D$ 中点列按距离收敛的意义
 
-若点列 ${x_n}$ 收敛到 $x$，则：
-$ d(x_n, x) = sup_(0 <= t <= 1) abs(x_n(t) - x(t)) + sup_(0 <= t <= 1) abs(x_n'(t) - x'(t)) -> 0. $
+若点列 ${x_(n)}$ 收敛到 $x$，则：
+$ d(x_(n), x) = sup_(0 <= t <= 1) abs(x_(n)(t) - x(t)) + sup_(0 <= t <= 1) abs(x'_(n)(t) - x'(t)) -> 0. $
 
 因此显然也有 
-$sup_(0 <= t <= 1) abs(x_n(t) - x(t)) -> 0, sup_(0 <= t <= 1) abs(x_n'(t) - x'(t)) -> 0, $
-即 ${x_n}(t), {x_n}'(t)$ 一致收敛到 $x(t), x'(t)$。
+$sup_(0 <= t <= 1) abs(x_(n)(t) - x(t)) -> 0, sup_(0 <= t <= 1) abs(x'_(n)(t) - x'(t)) -> 0, $
+即 ${x_(n)}(t), {x'_(n)}(t)$ 一致收敛到 $x(t), x'(t)$。
 
 故 $D$ 中点列按距离收敛，等价于函数和导数一致收敛。
 
 === (3) 证明 $D$ 是完备的
 
-设 ${x_n}$ 是柯西列。那么 $forall epsilon > 0$, $exists N$, 有 
-$ n, m > N => d(x_n, x_m) = sup_(0 <= t <= 1) abs(x_(n)(t) - x_(m)(t)) + sup_(0 <= t <= 1) abs(x_(n)'(t) - x_(m)'(t)) < epsilon. $
+设 ${x_(n)}$ 是柯西列。那么 $forall epsilon > 0$, $exists N$, 有 
+$ n, m > N => d(x_(n), x_(m)) = sup_(0 <= t <= 1) abs(x_(n)(t) - x_(m)(t)) + sup_(0 <= t <= 1) abs(x'_(n)(t) - x'_(m)(t)) < epsilon. $
 
-因此，$sup_(0 <= t <= 1) abs(x_(n)(t) - x_(m)(t)) < epsilon$，故 ${x_n}(t)$ 一致收敛于 $x(t)$。同理 ${x'_n}(t)$ 也一致收敛于 $y(t)$。
+因此，$sup_(0 <= t <= 1) abs(x_(n)(t) - x_(m)(t)) < epsilon$，故 ${x_(n)}(t)$ 一致收敛于 $x(t)$。同理 ${x'_n}(t)$ 也一致收敛于 $y(t)$。
 
 接下来证明 $y(t)$ 是 $x(t)$ 的导数 $x'(t)$。对任意 $t,t_(0) in [0,1]$，显然有：
 $ x_(n)(t) - x_(n)(t_(0)) = integral_(t_(0))^(t) x'_(n)(s) d s, $
@@ -63,10 +63,10 @@ $ x(t) - x(t_(0)) = integral_(t_(0))^(t) y(s) d s $
 故 $y(t)$ 是 $x(t)$ 的导数，即 $y(t) = x'(t)$。
 
 因此，$x$ 在 $[0, 1]$ 区间上具有连续导数，故 $x in D$。另一方面，显然有
-$ d(x_n, x) = sup_(0 <= t <= 1) abs(x_n(t) - x(t)) + sup_(0 <= t <= 1) abs(x_n'(t) - x'(t)) -> 0, $
-这说明 ${x_n}$ 收敛。因此 $D$ 是完备的。
+$ d(x_(n), x) = sup_(0 <= t <= 1) abs(x_(n)(t) - x(t)) + sup_(0 <= t <= 1) abs(x'_(n)(t) - x'(t)) -> 0, $
+这说明 ${x_(n)}$ 收敛。因此 $D$ 是完备的。
 
-== 习题一之 2
+== 习题一之 2 <Homework1-2>
 
 #tufted.problem[
   证明如果 $d$ 是集 $X$ 上的距离，则 $d_1 = frac(d, 1 + d)$ 也是 $X$ 上的距离。
@@ -91,7 +91,7 @@ $
   设 $d_1, d_2, dots, d_m, dots$ 是集 $X$ 上的距离，证明
   + $d = sup_(1 <= i <= m) d_(i)$；
   + $d = sqrt(d_1^2 + d_2^2 + dots + d_m^2)$；
-  + $d = sum_(k=1)^(infinity) frac(1, 2^k) dot frac(d_k, 1 + d_k)$
+  + $d = sum_(k=1)^(infinity) frac(1, 2^k) dot frac(d_(k), 1 + d_(k))$
   中的每一个也是 $X$ 上的距离。
 ]
 
@@ -112,10 +112,23 @@ $
 
 $
   &d^(2)(x,z) + d^(2)(z,y) + 2d(x,z)d(z,y) \
-  =& sum d_(i)^(2)(x,z) + sum d_(i)^(2)(z,y) + 2 sum d_(i)^(2)(x,z) d_(i)^(2)(z,y) \
-  =& sum { d_(i)^(2)(x,z) + d_(i)^(2)(z,y) + 2 d_(i)(x,z) d_(i)(z,y) } + 2 sum_(i != j) d_(i)(x,z) d_(j)(z,y) \
-  =& sum { d_(i)(x,z) + d_(i)(z,y) }^2 + 2 sum_(i != j) d_(i)(x,z) d_(j)(z,y) \
-  >=& sum { d_(i)(x,z) + d_(i)(z,y) }^2  \
+  =& sum d_(i)^(2)(x,z) + sum d_(i)^(2)(z,y) + 2 sqrt(sum d_(i)^(2)(x,z)) dot sqrt(sum d_(i)^(2)(z,y)) \
+  >=& sum d_(i)^(2)(x,z) + sum d_(i)^(2)(z,y) + 2 sum d_(i)(x,z) d_(i)(z,y) \
+  =& sum { d_(i)(x,z) + d_(i)(z,y) }^2  \
   >=& sum d_(i)^(2)(x,y) \
   =& d^(2)(x,y)
+$
+
+=== (3) 证明 $d = sum_(k=1)^(infinity) frac(1, 2^k) dot frac(d_(k), 1 + d_(k))$ 是距离
+
+$
+  & d(x,z) + d(z,y) \
+  =& sum frac(1, 2^k) dot frac(d_(k)(x,z), 1 + d_(k)(x,z)) + sum frac(1, 2^k) dot frac(d_(k)(z,y), 1 + d_(k)(z,y)) \
+  =& sum frac(1, 2^k) dot { frac(d_(k)(x,z), 1 + d_(k)(x,z)) + frac(d_(k)(z,y), 1 + d_(k)(z,y)) } \
+$
+由 @Homework1-2 可知：
+$
+  & d(x,z) + d(z,y) \
+  >=& sum frac(1, 2^k) dot frac(d_(k)(x,y), 1 + d_(k)(x,y)) \
+  =& d(x,y)
 $

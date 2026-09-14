@@ -18,9 +18,41 @@
 - 🎨 基于 Tufte CSS 设计，极简主义、内容至上，提供清晰、沉浸的阅读体验
 - 📦 内置基于 Python 的跨平台构建脚本，支持增量编译
 - 📝 支持生成 HTML 网页和 PDF 文档，支持链接到 PDF
+- 🖼️ 支持把 [Touying](https://github.com/touying-typ/touying) 幻灯片导出为网页演示文稿
 - 🌐 内置 GitHub Actions 工作流，一键部署网站
 - 🌙 支持浅色/深色模式自动选择和一键切换
 - 📄 丰富的示例和文档，无需任何前置知识，[简单学习 Typst](https://github.com/Yousa-Mirage/Tufted-Blog-Template/wiki/Typst-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E8%B5%84%E6%96%99) 后即可开始编写
+
+## 🖼️ 幻灯片（Touying）
+
+`content/` 下使用 Touying 编写的 `.typ` 文件不会被编译成普通网页，而是导出为
+自包含的 HTML 演示文稿（impress.js 幻灯片），放在与普通页面相同的路径上。例如
+`content/Slides/第一讲/index.typ` 构建后访问 `/Slides/第一讲/` 就是一份可以翻页、
+支持演讲者备注的演示文稿。
+
+```typst
+#import "@preview/touying:0.6.1": *
+#import themes.simple: *
+
+#show: simple-theme.with(aspect-ratio: "16-9")
+
+= 第一节
+
+== 第一页
+
+正文。
+```
+
+判定方式是源文件导入了名字含 `touying` 的 Typst 包；也可以在源文件中用
+`// build: slides`（强制导出演示文稿）或 `// build: page`（强制作为普通网页）
+手动覆盖。导出流程、与上游 touying-exporter 的差异以及模板更新方法见
+[touying-exporter/README.md](touying-exporter/README.md)。
+
+单独构建演示文稿：
+
+```sh
+uv run build.py slides
+```
 
 ## 📂 项目结构
 
@@ -40,6 +72,7 @@ Tufted-Blog-Template/
 │   ├── CV/                     # 简历页
 │   ├── Docs/                   # 编写文档页
 │   └── .../                    # 可自行修改或添加其他页面
+├── touying-exporter/      # Touying 幻灯片的 HTML 模板 (内置于本仓库)
 ├── tufted-lib/            # Typst 样式库和功能模块
 │   ├── tufted.typ             # 主模板和配置
 │   ├── layout.typ             # 页面布局定义

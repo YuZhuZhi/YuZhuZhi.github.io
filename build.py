@@ -14,12 +14,16 @@ Tufted Blog Template 构建脚本
 用法:
     uv run build.py build       # 完整构建 (HTML + PDF + 资源)
     uv run build.py html        # 仅构建 HTML 文件
+    uv run build.py slides      # 仅构建 Touying 幻灯片 (HTML 演示文稿)
     uv run build.py pdf         # 仅构建 PDF 文件
     uv run build.py assets      # 仅复制静态资源
     uv run build.py clean       # 清理生成的文件
     uv run build.py preview     # 启动本地预览服务器（默认端口 8000）
     uv run build.py preview -p 3000  # 使用自定义端口
     uv run build.py --help      # 显示帮助信息
+
+包含 Touying 包导入的 .typ 文件会被导出为自包含的 HTML 演示文稿（impress.js
+幻灯片），而不是普通网页，详见 touying-exporter/README.md。
 
 增量编译选项:
     --force, -f                 # 强制完整重建，忽略增量检查
@@ -34,11 +38,14 @@ Tufted Blog Template 构建脚本
 """
 
 import argparse
+import html
+import json
 import os
 import re
 import shutil
 import subprocess
 import sys
+import tempfile
 import threading
 import time
 from dataclasses import dataclass
@@ -65,6 +72,9 @@ SITE_DIR = Path("_site")  # 输出目录
 ASSETS_DIR = Path("assets")  # 静态资源目录
 CONFIG_FILE = Path("config.typ")  # 全局配置文件
 MATHML_MIN_TYPST_VERSION = (0, 15, 0)
+
+# 内置的 touying-exporter 幻灯片模板（MIT，来源与版本见同目录 README.md）
+SLIDE_TEMPLATE_FILE = Path("touying-exporter/template.html.j2")
 
 
 @dataclass
@@ -435,6 +445,35 @@ def get_file_output_path(typ_file: Path, type: Literal["pdf", "html"]) -> Path:
     return SITE_DIR / relative_path.with_suffix(f".{type}")
 
 
+def get_page_path(typ_file: Path) -> str:
+    """
+    获取 .typ 文件对应的页面路径，作为 typst 的 `page-path` 输入。
+
+    该值决定页面的规范链接（canonical URL），网页与演示文稿必须一致地使用它。
+
+    参数:
+        typ_file: .typ 文件路径
+
+    返回:
+        str: 站点内的页面路径，如 "Blog/hello"；首页返回空字符串
+    """
+    try:
+        rel_path = typ_file.relative_to(CONTENT_DIR)
+    except ValueError:
+        return ""
+
+    if rel_path.name == "index.typ":
+        # index.typ 使用所在目录名作为路径
+        # content/Blog/index.typ -> "Blog"
+        # content/index.typ -> "" (Homepage)
+        page_path = rel_path.parent.as_posix()
+        return "" if page_path == "." else page_path
+
+    # 普通页面使用文件名作为路径
+    # content/about.typ -> "about"
+    return rel_path.with_suffix("").as_posix()
+
+
 def run_typst_command(args: list[str]) -> bool:
     """
     运行 typst 命令。
@@ -461,6 +500,407 @@ def run_typst_command(args: list[str]) -> bool:
 
 
 # ============================================================================
+# 幻灯片（Touying）导出
+#
+# 上游 touying-exporter 是一个 Python 包：它调用 typst 把演示文稿逐页导出为
+# SVG，再用 impress.js 模板打包成单个 HTML 文件。本脚本不引入该依赖，而是
+# 直接用命令行 typst 完成同样的事情：
+#   1. `typst compile --format svg` 配合 `{p}` 输出模式得到每一页；
+#   2. `typst eval`（旧版本回退到 `typst query`）读取 <pdfpc-file> 演讲者备注；
+#   3. 用内置的 touying-exporter/template.html.j2 渲染 HTML。
+# 好处是只用项目本来就需要的 typst 二进制，不会出现 typst-py 与本机 typst
+# 版本不一致的问题。
+# ============================================================================
+
+# 源文件中的构建指令：`// build: slides` 强制导出演示文稿，`// build: page`
+# 强制按普通网页编译，用于覆盖基于包导入的自动判定。
+BUILD_DIRECTIVE_PATTERN = re.compile(r"^[ \t]*//[ \t]*build[ \t]*:[ \t]*(\w+)[ \t]*$", re.MULTILINE)
+
+# 匹配 `#import "@preview/touying:0.6.1": *` 这类包导入；包名含 touying 即视为
+# Touying 系主题（例如 modern-sysu-touying）。
+TOUYING_IMPORT_PATTERN = re.compile(r"""#import[ \t]+["']@[^"'\s]*touying[^"'\s]*["']""")
+
+# 上游模板中唯一的两处动态内容：幻灯片列表循环。
+SLIDE_LOOP_PATTERN = re.compile(
+    r"[ \t]*\{%[ \t]*for page_no in page_iter[ \t]*%\}.*?\{%[ \t]*endfor[ \t]*%\}",
+    re.DOTALL,
+)
+
+# Typst 导出的 SVG 顶层尺寸，改为跟随容器，由 impress.js 负责缩放。
+SLIDE_SVG_SIZE_PATTERN = re.compile(r'width="[0-9.]+pt" height="[0-9.]+pt"')
+
+
+def read_typ_source(typ_file: Path) -> str:
+    """
+    读取 .typ 源文件内容，读取失败时返回空字符串。
+    """
+    try:
+        return typ_file.read_text(encoding="utf-8")
+    except OSError:
+        return ""
+
+
+def strip_raw_blocks(source: str) -> str:
+    """
+    移除 ```` ``` ```` 围栏代码块的内容（含围栏行本身）。
+
+    幻灯片判定只应看到真实的包导入语句：讲解 Touying 的文章在示例代码里出现
+    `#import "@preview/touying:..."` 时，该页面仍然是普通网页。
+    """
+    kept_lines = []
+    in_fence = False
+    for line in source.splitlines():
+        if line.lstrip().startswith("```"):
+            in_fence = not in_fence
+            continue
+        if not in_fence:
+            kept_lines.append(line)
+    return "\n".join(kept_lines)
+
+
+def get_build_directive(source: str) -> str | None:
+    """
+    读取源文件中的 `// build: <目标>` 指令，未声明时返回 None。
+    """
+    match = BUILD_DIRECTIVE_PATTERN.search(strip_raw_blocks(source))
+    return None if match is None else match.group(1).lower()
+
+
+def is_slide_source(typ_file: Path) -> bool:
+    """
+    判断 .typ 文件是否应导出为 HTML 演示文稿而不是普通网页。
+
+    判定顺序:
+        1. `// build: slides` 强制导出，`// build: page` 强制不导出；
+        2. 源文件导入了名字含 `touying` 的 Typst 包。
+
+    参数:
+        typ_file: .typ 文件路径
+
+    返回:
+        bool: 是否应作为幻灯片导出
+    """
+    source = read_typ_source(typ_file)
+
+    directive = get_build_directive(source)
+    if directive == "slides":
+        return True
+    if directive == "page":
+        return False
+
+    return TOUYING_IMPORT_PATTERN.search(strip_raw_blocks(source)) is not None
+
+
+def get_slide_files() -> list[Path]:
+    """
+    查找 content/ 下需要导出为 HTML 演示文稿的 .typ 文件。
+
+    与网页构建保持一致：文件名中包含 "pdf" 的文件只编译为 PDF。
+
+    返回:
+        list[Path]: 演示文稿源文件路径列表
+    """
+    return [
+        typ_file
+        for typ_file in find_typ_files()
+        if "pdf" not in typ_file.stem.lower() and is_slide_source(typ_file)
+    ]
+
+
+def get_slide_title(typ_file: Path) -> str:
+    """
+    由页面路径推出演示文稿的 <title>。
+
+    上游模板把标题硬编码为 "Touying"，这里改用页面名，使其与网站目录结构
+    （以及 RSS/Sitemap 中显示的名称）一致：
+    `content/Slides/第一讲/index.typ` -> "第一讲"。
+
+    参数:
+        typ_file: .typ 文件路径
+
+    返回:
+        str: 演示文稿标题
+    """
+    try:
+        rel_path = typ_file.relative_to(CONTENT_DIR)
+    except ValueError:
+        return typ_file.stem
+
+    if rel_path.name == "index.typ" and rel_path.parent.name not in {"", "."}:
+        return rel_path.parent.name
+    return rel_path.stem
+
+
+def resize_svg_page(svg: str) -> tuple[str, int]:
+    """
+    把 Typst 导出的 SVG 尺寸改为跟随容器，便于 impress.js 缩放。
+
+    参数:
+        svg: 单页 SVG 文本
+
+    返回:
+        tuple[str, int]: (处理后的 SVG, 成功替换的尺寸属性个数)
+    """
+    return SLIDE_SVG_SIZE_PATTERN.subn('width="100%" height="100%"', svg)
+
+
+def read_svg_pages(pages_dir: Path) -> list[str]:
+    """
+    读取 Typst 以 `{p}` 模式导出的多页 SVG，按页码排序。
+
+    参数:
+        pages_dir: 存放 page-{p}.svg 的目录
+
+    返回:
+        list[str]: 按页码升序排列的 SVG 文本列表
+    """
+    page_files: list[tuple[int, Path]] = []
+    for page_file in pages_dir.glob("page-*.svg"):
+        match = re.fullmatch(r"page-(\d+)\.svg", page_file.name)
+        if match is not None:
+            page_files.append((int(match.group(1)), page_file))
+    page_files.sort(key=lambda item: item[0])
+
+    pages = []
+    for page_no, page_file in page_files:
+        svg, size_count = resize_svg_page(page_file.read_text(encoding="utf-8"))
+        if size_count == 0:
+            print(
+                f"  ⚠️ 第 {page_no} 页 SVG 未找到 `width=\"…pt\" height=\"…pt\"`，"
+                "可能无法自适应缩放。"
+            )
+        pages.append(svg)
+    return pages
+
+
+def query_slide_notes(typ_file: Path) -> dict[int, str]:
+    """
+    读取 Touying 演示文稿的演讲者备注。
+
+    Touying 把备注写在 <pdfpc-file> 元数据中，键 `idx` 是 0 起始的物理页码。
+    Typst 0.15 起 `typst query` 被标记为废弃，官方推荐 `typst eval`，因此这里
+    优先使用 eval，失败时回退到 query 以兼容旧版本 Typst。
+
+    参数:
+        typ_file: .typ 文件路径
+
+    返回:
+        dict[int, str]: 页码 -> 备注文本；无备注或因故无法读取时返回空字典
+    """
+    common_args = ["--root", ".", "--font-path", str(ASSETS_DIR)]
+    commands = [
+        [
+            "eval",
+            "query(<pdfpc-file>).map(it => it.value)",
+            *common_args,
+            "--in",
+            str(typ_file),
+        ],
+        [
+            "query",
+            *common_args,
+            str(typ_file),
+            "<pdfpc-file>",
+            "--field",
+            "value",
+        ],
+    ]
+
+    for command in commands:
+        try:
+            result = subprocess.run(
+                ["typst"] + command, capture_output=True, text=True, encoding="utf-8"
+            )
+        except (FileNotFoundError, OSError):
+            return {}
+
+        if result.returncode != 0 or not result.stdout.strip():
+            continue
+
+        try:
+            values = json.loads(result.stdout)
+        except json.JSONDecodeError:
+            continue
+
+        # 没有 <pdfpc-file> 标签时 query 返回空列表，说明该演示文稿没有备注
+        if not isinstance(values, list) or not values:
+            return {}
+
+        pdfpc = values[0]
+        if not isinstance(pdfpc, dict):
+            return {}
+
+        notes = {}
+        for page in pdfpc.get("pages", []):
+            if not isinstance(page, dict):
+                continue
+            page_no, note = page.get("idx"), page.get("note")
+            if isinstance(page_no, int) and isinstance(note, str):
+                notes[page_no] = note
+        return notes
+
+    print("  ⚠️ 读取 <pdfpc-file> 演讲者备注失败，本次导出不包含备注。")
+    return {}
+
+
+def replace_once(text: str, old: str, new: str) -> str:
+    """
+    替换文本且要求 old 恰好出现一次。
+
+    内置模板来自上游仓库，结构变化时立刻报错，避免静默产出错误的演示文稿。
+
+    参数:
+        text: 原文本
+        old: 待替换的子串
+        new: 替换后的子串
+
+    返回:
+        str: 替换结果
+    """
+    count = text.count(old)
+    if count != 1:
+        raise ValueError(f"内置模板结构已变化: 期望 1 处 {old!r}，实际 {count} 处")
+    return text.replace(old, new, 1)
+
+
+def get_site_lang() -> str:
+    """
+    读取站点语言（config.typ 中的 `lang: "zh"`）。
+
+    演示文稿是网站的一部分，用站点语言声明 `<html lang>` 比上游模板硬编码的
+    "en" 更准确。解析失败时回退到 "zh"。
+
+    返回:
+        str: 语言代码
+    """
+    try:
+        content = CONFIG_FILE.read_text(encoding="utf-8")
+    except OSError:
+        return "zh"
+
+    content = re.sub(r"//.*", "", content)
+    match = re.search(r'^\s*lang\s*:\s*"([^"]*)"', content, re.MULTILINE)
+    return match.group(1) if match is not None else "zh"
+
+
+def render_slide_template(
+    template: str,
+    pages: list[str],
+    notes: dict[int, str],
+    title: str,
+    lang: str,
+) -> str:
+    """
+    把内置的 touying-exporter 模板渲染成完整的 HTML 演示文稿。
+
+    上游模板是 Jinja2 模板，但动态内容只有「幻灯片列表」和「演讲者备注」两处，
+    这里用等价的字符串替换完成渲染，从而让构建脚本只依赖标准库。
+
+    参数:
+        template: 模板原文
+        pages: 按页码升序排列的 SVG 文本列表
+        notes: 页码 -> 备注文本
+        title: 演示文稿标题
+        lang: 演示文稿的语言代码
+
+    返回:
+        str: 完整的 HTML 文档
+    """
+    steps = []
+    for page_no, page in enumerate(pages):
+        step_lines = [
+            '    <div class="step slide">',
+            f"      {page.strip()}",
+        ]
+        if note := notes.get(page_no):
+            # 备注按纯文本插入，避免其中的 <、& 被当作标记解析
+            step_lines.append(
+                '      <div class="notes"><div style="white-space: pre-wrap;">'
+                + html.escape(note)
+                + "</div></div>"
+            )
+        step_lines.append("    </div>")
+        steps.append("\n".join(step_lines))
+
+    document = SLIDE_LOOP_PATTERN.sub("\n".join(steps), template)
+    # {raw} 块只用于保护其后的压缩版 impress.js，替换模板标记后不再需要
+    document = document.replace("{% raw %}", "").replace("{% endraw %}", "")
+    if "{%" in document:
+        raise ValueError("内置模板中仍有未处理的模板标记，请检查 template.html.j2")
+
+    # 模板中的标题与作者是上游示例值，替换为本站信息
+    document = replace_once(
+        document, "<title>Touying</title>", f"<title>{html.escape(title)}</title>"
+    )
+    document = replace_once(
+        document, '<meta name="description" content="Simple example touying slide show" />', ""
+    )
+    document = replace_once(document, '<meta name="author" content="OrangeX4" />', "")
+    document = replace_once(document, '<html lang="en">', f'<html lang="{html.escape(lang)}">')
+    return document
+
+
+def export_slide_deck(typ_file: Path, output_path: Path) -> bool:
+    """
+    把单个 .typ 文件导出为自包含的 HTML 演示文稿。
+
+    参数:
+        typ_file: .typ 文件路径
+        output_path: 输出的 .html 文件路径
+
+    返回:
+        bool: 是否导出成功
+    """
+    try:
+        template = SLIDE_TEMPLATE_FILE.read_text(encoding="utf-8")
+    except OSError as e:
+        print(f"  ❌ 无法读取内置幻灯片模板 {SLIDE_TEMPLATE_FILE}: {e}")
+        return False
+
+    with tempfile.TemporaryDirectory(prefix="touying-slides-") as temp_dir:
+        pages_dir = Path(temp_dir) / "pages"
+        pages_dir.mkdir()
+
+        compile_args = [
+            "compile",
+            "--root",
+            ".",
+            "--font-path",
+            str(ASSETS_DIR),
+            "--format",
+            "svg",
+            "--input",
+            f"page-path={get_page_path(typ_file)}",
+            str(typ_file),
+            str(pages_dir / "page-{p}.svg"),
+        ]
+        if not run_typst_command(compile_args):
+            return False
+
+        pages = read_svg_pages(pages_dir)
+        if not pages:
+            print(f"  ❌ 未导出任何幻灯片页面: {typ_file}")
+            return False
+
+        try:
+            document = render_slide_template(
+                template,
+                pages,
+                query_slide_notes(typ_file),
+                get_slide_title(typ_file),
+                get_site_lang(),
+            )
+        except ValueError as e:
+            print(f"  ❌ 渲染幻灯片失败: {e}")
+            return False
+
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(document, encoding="utf-8")
+
+    return True
+
+
+# ============================================================================
 # 构建命令
 # ============================================================================
 
@@ -470,7 +910,8 @@ def _compile_files(
     force: bool,
     common_deps: list[Path],
     get_output_path_func,
-    build_args_func,
+    build_args_func=None,
+    run_func=None,
 ) -> BuildStats:
     """
     通用文件编译函数，减少重复代码。
@@ -480,7 +921,9 @@ def _compile_files(
         force: 是否强制重建
         common_deps: 公共依赖列表
         get_output_path_func: 获取输出路径的函数
-        build_args_func: 构建编译参数的函数
+        build_args_func: 构建 typst 编译参数的函数（与 run_func 二选一）
+        run_func: 自定义的执行函数 run_func(typ_file, output_path) -> bool，
+            用于不走 `typst compile` 的构建流程（如幻灯片导出）
 
     返回:
         BuildStats: 构建统计信息
@@ -497,10 +940,12 @@ def _compile_files(
 
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
-        # 构建编译参数
-        args = build_args_func(typ_file, output_path)
+        if run_func is not None:
+            compiled = run_func(typ_file, output_path)
+        else:
+            compiled = run_typst_command(build_args_func(typ_file, output_path))
 
-        if run_typst_command(args):
+        if compiled:
             stats.success += 1
         else:
             print(f"  ❌ {typ_file} 编译失败")
@@ -511,7 +956,10 @@ def _compile_files(
 
 def build_html(force: bool = False) -> bool:
     """
-    编译所有 .typ 文件为 HTML（文件名中包含 PDF 的除外）。
+    编译所有 .typ 文件为 HTML。
+
+    排除两类文件：文件名中包含 PDF 的（改为编译 PDF），以及使用 Touying 的
+    演示文稿源文件（改为导出 HTML 幻灯片，见 build_slides）。
 
     参数:
         force: 是否强制重建所有文件
@@ -520,8 +968,10 @@ def build_html(force: bool = False) -> bool:
 
     typ_files = find_typ_files()
 
-    # 排除标记为 PDF 的文件
-    html_files = [f for f in typ_files if "pdf" not in f.stem.lower()]
+    # 排除标记为 PDF 的文件与演示文稿源文件
+    html_files = [
+        f for f in typ_files if "pdf" not in f.stem.lower() and not is_slide_source(f)
+    ]
 
     if not html_files:
         print("  ⚠️ 未找到任何 HTML 文件。")
@@ -534,23 +984,6 @@ def build_html(force: bool = False) -> bool:
 
     def build_html_args(typ_file: Path, output_path: Path) -> list[str]:
         """构建 HTML 编译参数"""
-        try:
-            rel_path = typ_file.relative_to(CONTENT_DIR)
-
-            if rel_path.name == "index.typ":
-                # index.typ uses the parent directory name as the path
-                # content/Blog/index.typ -> "Blog"
-                # content/index.typ -> "" (Homepage)
-                page_path = rel_path.parent.as_posix()
-                if page_path == ".":
-                    page_path = ""
-            else:
-                # Common files use the filename as the path
-                # content/about.typ -> "about"
-                page_path = rel_path.with_suffix("").as_posix()
-        except ValueError:
-            page_path = ""
-
         return [
             "compile",
             "--root",
@@ -562,7 +995,7 @@ def build_html(force: bool = False) -> bool:
             "--format",
             "html",
             "--input",
-            f"page-path={page_path}",
+            f"page-path={get_page_path(typ_file)}",
             str(typ_file),
             str(output_path),
         ]
@@ -620,6 +1053,42 @@ def build_pdf(force: bool = False) -> bool:
     )
 
     print(f"✅ PDF 构建完成。{stats.format_summary()}")
+    return not stats.has_failures
+
+
+def build_slides(force: bool = False) -> bool:
+    """
+    把 content/ 下使用 Touying 的 .typ 文件导出为 HTML 演示文稿。
+
+    输出路径与普通网页一致（`content/Slides/第一讲/index.typ` ->
+    `_site/Slides/第一讲/index.html`），因此演示文稿会进入 Sitemap，也可以
+    被其他页面直接链接。
+
+    参数:
+        force: 是否强制重建所有文件
+    """
+    slide_files = get_slide_files()
+
+    if not slide_files:
+        return True
+
+    SITE_DIR.mkdir(parents=True, exist_ok=True)
+    print("正在构建 Touying 演示文稿...")
+
+    # 公共依赖（config.typ 等）；内置模板更新后所有演示文稿也需要重新生成
+    extra_deps = find_common_dependencies()
+    if SLIDE_TEMPLATE_FILE.exists():
+        extra_deps = extra_deps + [SLIDE_TEMPLATE_FILE]
+
+    stats = _compile_files(
+        slide_files,
+        force,
+        extra_deps,
+        lambda typ_file: get_file_output_path(typ_file, "html"),
+        run_func=export_slide_deck,
+    )
+
+    print(f"✅ 演示文稿构建完成。{stats.format_summary()}")
     return not stats.has_failures
 
 
@@ -1170,7 +1639,7 @@ Sitemap: {site_url}/sitemap.xml
 
 def build(force: bool = False) -> bool:
     """
-    完整构建：HTML + PDF + 资源。
+    完整构建：HTML + 演示文稿 + PDF + 资源。
 
     参数:
         force: 是否强制重建所有文件
@@ -1190,6 +1659,7 @@ def build(force: bool = False) -> bool:
 
     print()
     results.append(build_html(force))
+    results.append(build_slides(force))
     results.append(build_pdf(force))
     print()
 
@@ -1223,12 +1693,16 @@ def create_parser() -> argparse.ArgumentParser:
     """
     parser = argparse.ArgumentParser(
         prog="build.py",
-        description="Tufted Blog Template 构建脚本 - 将 content 中的 Typst 文件编译为 HTML 和 PDF",
+        description="Tufted Blog Template 构建脚本 - 将 content 中的 Typst 文件编译为 HTML、演示文稿和 PDF",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 构建脚本默认只重新编译修改过的文件，可使用 -f/--force 选项强制完整重建：
     uv run build.py build --force
     或 python build.py build -f
+
+使用 Touying 编写的幻灯片会导出为自包含的 HTML 演示文稿，详见
+touying-exporter/README.md：
+    uv run build.py slides
 
 使用 preview 命令启动本地预览服务器：
     uv run build.py preview
@@ -1240,11 +1714,16 @@ def create_parser() -> argparse.ArgumentParser:
 
     subparsers = parser.add_subparsers(dest="command", title="可用命令", metavar="<command>")
 
-    build_parser = subparsers.add_parser("build", help="完整构建 (HTML + PDF + 资源)")
+    build_parser = subparsers.add_parser("build", help="完整构建 (HTML + 演示文稿 + PDF + 资源)")
     build_parser.add_argument("-f", "--force", action="store_true", help="强制完整重建")
 
     html_parser = subparsers.add_parser("html", help="仅构建 HTML 文件")
     html_parser.add_argument("-f", "--force", action="store_true", help="强制完整重建")
+
+    slides_parser = subparsers.add_parser(
+        "slides", help="仅构建 Touying 幻灯片 (导出为 HTML 演示文稿)"
+    )
+    slides_parser.add_argument("-f", "--force", action="store_true", help="强制完整重建")
 
     pdf_parser = subparsers.add_parser("pdf", help="仅构建 PDF 文件")
     pdf_parser.add_argument("-f", "--force", action="store_true", help="强制完整重建")
@@ -1276,7 +1755,7 @@ if __name__ == "__main__":
     script_dir = Path(__file__).parent.absolute()
     os.chdir(script_dir)
 
-    if args.command in {"build", "html", "pdf"}:
+    if args.command in {"build", "html", "slides", "pdf"}:
         warn_if_typst_version_is_outdated()
 
     # 获取 force 参数
@@ -1288,6 +1767,8 @@ if __name__ == "__main__":
             success = build(force)
         case "html":
             success = build_html(force)
+        case "slides":
+            success = build_slides(force)
         case "pdf":
             success = build_pdf(force)
         case "assets":

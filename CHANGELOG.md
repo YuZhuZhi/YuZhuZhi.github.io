@@ -6,6 +6,7 @@
 
 开发中的更新内容将在此记录。
 
+- 功能：使用 [Touying](https://github.com/touying-typ/touying) 编写的 `.typ` 文件会导出为自包含的 HTML 演示文稿（impress.js 幻灯片），通过 `python build.py slides` 单独构建；实现方式与差异见 [touying-exporter/README.md](touying-exporter/README.md)
 - 功能：在文章第一个一级标题下方显示作者、日期和可选的额外信息（[#35](https://github.com/Yousa-Mirage/Tufted-Blog-Template/pull/35), [@tortrixx](https://github.com/tortrixx)）
 - 功能：优化了图片加载逻辑，图片转为静态资源并默认懒加载（[#31](https://github.com/Yousa-Mirage/Tufted-Blog-Template/pull/31), [@CST-Cat](https://github.com/CST-Cat)）
 - 修复：优化了目录显示效果（[#39](https://github.com/Yousa-Mirage/Tufted-Blog-Template/pull/39), [@CST-Cat](https://github.com/CST-Cat))

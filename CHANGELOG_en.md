@@ -4,6 +4,7 @@
 
 ## Develop
 
+- feat: `.typ` files written with [Touying](https://github.com/touying-typ/touying) are exported as self-contained HTML presentations (impress.js slides), buildable on their own with `python build.py slides`; implementation and differences are documented in [touying-exporter/README.md](touying-exporter/README.md)
 - feat: show author, date, and optional extra information below the first level-one heading of articles ([#35](https://github.com/Yousa-Mirage/Tufted-Blog-Template/pull/35), [@tortrixx](https://github.com/tortrixx))
 - feat: optimize image loading logic by converting images to static resources and enabling lazy loading by default ([#31](https://github.com/Yousa-Mirage/Tufted-Blog-Template/pull/31), [@CST-Cat](https://github.com/CST-Cat))
 - fix: optimize the display of the table of contents ([#39](https://github.com/Yousa-Mirage/Tufted-Blog-Template/pull/39), [@CST-Cat](https://github.com/CST-Cat))
