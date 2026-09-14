@@ -38,6 +38,9 @@ Tufted Blog Template 构建脚本
 """
 
 import argparse
+import base64
+import binascii
+import hashlib
 import html
 import json
 import os
@@ -70,6 +73,7 @@ except Exception:
 CONTENT_DIR = Path("content")  # 源文件目录
 SITE_DIR = Path("_site")  # 输出目录
 ASSETS_DIR = Path("assets")  # 静态资源目录
+FONT_DIR = Path("fonts")  # 构建字体目录（不随站点发布）
 CONFIG_FILE = Path("config.typ")  # 全局配置文件
 MATHML_MIN_TYPST_VERSION = (0, 15, 0)
 
@@ -499,6 +503,34 @@ def run_typst_command(args: list[str]) -> bool:
         return False
 
 
+def get_font_args(ignore_system_fonts: bool = False) -> list[str]:
+    """
+    构建 typst 的字体参数。
+
+    - `assets/` 一直作为字体目录，与既有构建保持一致；
+    - `fonts/` 存放随仓库分发的中文字体（见 fonts/README.md）。CI 上没有任何
+      中文字体，若不在构建时提供，TeX/Typst 会把中日韩字形画成空心方框；
+    - `ignore_system_fonts=True` 时忽略系统字体，只使用随仓库分发的字体。
+      幻灯片导出使用它，使同一份演示文稿在任何机器（本地 Windows 或 CI 的
+      Linux）上都得到相同的分页与字形。
+
+    参数:
+        ignore_system_fonts: 是否忽略系统字体
+
+    返回:
+        list[str]: 要追加到 typst 命令中的字体参数
+    """
+    args = ["--font-path", str(ASSETS_DIR)]
+
+    if FONT_DIR.exists():
+        args += ["--font-path", str(FONT_DIR)]
+
+    if ignore_system_fonts:
+        args.append("--ignore-system-fonts")
+
+    return args
+
+
 # ============================================================================
 # 幻灯片（Touying）导出
 #
@@ -528,6 +560,27 @@ SLIDE_LOOP_PATTERN = re.compile(
 
 # Typst 导出的 SVG 顶层尺寸，改为跟随容器，由 impress.js 负责缩放。
 SLIDE_SVG_SIZE_PATTERN = re.compile(r'width="[0-9.]+pt" height="[0-9.]+pt"')
+
+# Typst 把位图以 data URI 内嵌进 SVG（一篇 24 页的演示文稿因此接近 10 MB）。
+# 导出时把图片提取成独立文件：HTML 只剩约十分之一，图片可被浏览器并行加载与
+# 缓存，页面顶部的 impress.js 也就能在文档尚未下载完时尽快执行。
+SLIDE_EMBEDDED_IMAGE_PATTERN = re.compile(
+    r'(?P<attr>xlink:href|href)="data:image/(?P<kind>[a-zA-Z0-9.+-]+);base64,(?P<data>[^"]*)"'
+)
+SLIDE_IMAGE_DIR_NAME = "images"
+SLIDE_IMAGE_FILE_PREFIX = "embed-"
+SLIDE_IMAGE_EXTENSIONS = {
+    "png": "png",
+    "jpeg": "jpg",
+    "jpg": "jpg",
+    "gif": "gif",
+    "webp": "webp",
+    "bmp": "bmp",
+    "tiff": "tiff",
+    "svg+xml": "svg",
+    "svg": "svg",
+    "avif": "avif",
+}
 
 
 def read_typ_source(typ_file: Path) -> str:
@@ -687,7 +740,8 @@ def query_slide_notes(typ_file: Path) -> dict[int, str]:
     返回:
         dict[int, str]: 页码 -> 备注文本；无备注或因故无法读取时返回空字典
     """
-    common_args = ["--root", ".", "--font-path", str(ASSETS_DIR)]
+    # 必须与幻灯片本身使用相同的字体设置，否则分页可能与导出的页面不一致
+    common_args = ["--root", ".", *get_font_args(ignore_system_fonts=True)]
     commands = [
         [
             "eval",
@@ -741,6 +795,58 @@ def query_slide_notes(typ_file: Path) -> dict[int, str]:
 
     print("  ⚠️ 读取 <pdfpc-file> 演讲者备注失败，本次导出不包含备注。")
     return {}
+
+
+def extract_embedded_images(pages: list[str], images_dir: Path) -> list[str]:
+    """
+    把 SVG 中内嵌的 base64 位图提取为独立文件。
+
+    Typst 的 SVG 导出会把位图以 data URI 内嵌，一篇含插图的演示文稿会因此膨胀
+    到接近 10 MB，浏览器必须收完整个文档才会执行末尾的 `impress().init()`。
+    提取成独立文件后：
+
+    - HTML 体积降到约十分之一，初始化脚本能更早执行；
+    - 多页复用的同一张图片只写出一份，并由浏览器缓存与并行加载。
+
+    参数:
+        pages: 各页 SVG 文本
+        images_dir: 存放提取图片的目录
+
+    返回:
+        list[str]: 已经替换为相对路径的各页 SVG 文本
+    """
+    # 清理上次构建遗留的内嵌图片，避免演示文稿改动后留下孤儿文件
+    if images_dir.is_dir():
+        for stale in images_dir.glob(f"{SLIDE_IMAGE_FILE_PREFIX}*"):
+            if stale.is_file():
+                stale.unlink()
+
+    written: dict[str, str] = {}
+    result = []
+
+    for page in pages:
+        def replace(match: re.Match[str], written: dict[str, str] = written) -> str:
+            kind = match.group("kind").lower()
+            try:
+                data = base64.b64decode(match.group("data"), validate=True)
+            except (binascii.Error, ValueError):
+                # 不是合法的 base64 就保持原样，交给浏览器处理
+                return match.group(0)
+
+            digest = hashlib.sha256(data).hexdigest()
+            file_name = written.get(digest)
+            if file_name is None:
+                extension = SLIDE_IMAGE_EXTENSIONS.get(kind, kind if kind.isalnum() else "bin")
+                file_name = f"{SLIDE_IMAGE_FILE_PREFIX}{digest[:16]}.{extension}"
+                images_dir.mkdir(parents=True, exist_ok=True)
+                (images_dir / file_name).write_bytes(data)
+                written[digest] = file_name
+
+            return f'{match.group("attr")}="{SLIDE_IMAGE_DIR_NAME}/{file_name}"'
+
+        result.append(SLIDE_EMBEDDED_IMAGE_PATTERN.sub(replace, page))
+
+    return result
 
 
 def replace_once(text: str, old: str, new: str) -> str:
@@ -828,6 +934,35 @@ def render_slide_template(
     if "{%" in document:
         raise ValueError("内置模板中仍有未处理的模板标记，请检查 template.html.j2")
 
+    # 上游模板的提示条是「impress.js 初始化之前一直显示」，也就是整个文档下载完
+    # 之前都会显示黄色提示条。改成默认隐藏，只有浏览器确实不支持时才显示。
+    document = replace_once(
+        document,
+        "      .impress-supported .fallback-message {\n          display: none;\n      }\n",
+        "      .fallback-message {\n"
+        "          display: none;\n"
+        "      }\n"
+        "      .impress-not-supported .fallback-message {\n"
+        "          display: block;\n"
+        "      }\n",
+    )
+    # 配合上面的样式：先摘掉标记里的 impress-not-supported（它只服务于无
+    # JavaScript 的场景），浏览器确实不支持时紧随其后的 impress.js 会加回来。
+    document = replace_once(
+        document,
+        '<div class="fallback-message">\n'
+        "    <p>Your browser <b>doesn't support the features required</b> by impress.js, so you are presented with a simplified version of this presentation.</p>\n"
+        "    <p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>\n"
+        "</div>",
+        '<div class="fallback-message">\n'
+        "    <p>Your browser <b>doesn't support the features required</b> by impress.js, so you are presented with a simplified version of this presentation.</p>\n"
+        "    <p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>\n"
+        "</div>\n"
+        "<script>\n"
+        '    document.body.classList.remove("impress-not-supported");\n'
+        "</script>",
+    )
+
     # 模板中的标题与作者是上游示例值，替换为本站信息
     document = replace_once(
         document, "<title>Touying</title>", f"<title>{html.escape(title)}</title>"
@@ -860,13 +995,13 @@ def export_slide_deck(typ_file: Path, output_path: Path) -> bool:
     with tempfile.TemporaryDirectory(prefix="touying-slides-") as temp_dir:
         pages_dir = Path(temp_dir) / "pages"
         pages_dir.mkdir()
+        output_path.parent.mkdir(parents=True, exist_ok=True)
 
         compile_args = [
             "compile",
             "--root",
             ".",
-            "--font-path",
-            str(ASSETS_DIR),
+            *get_font_args(ignore_system_fonts=True),
             "--format",
             "svg",
             "--input",
@@ -882,6 +1017,9 @@ def export_slide_deck(typ_file: Path, output_path: Path) -> bool:
             print(f"  ❌ 未导出任何幻灯片页面: {typ_file}")
             return False
 
+        # 图片相对 HTML 引用，因此必须在生成 HTML 之前提取到输出目录
+        pages = extract_embedded_images(pages, output_path.parent / SLIDE_IMAGE_DIR_NAME)
+
         try:
             document = render_slide_template(
                 template,
@@ -894,7 +1032,6 @@ def export_slide_deck(typ_file: Path, output_path: Path) -> bool:
             print(f"  ❌ 渲染幻灯片失败: {e}")
             return False
 
-        output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.write_text(document, encoding="utf-8")
 
     return True
@@ -988,8 +1125,7 @@ def build_html(force: bool = False) -> bool:
             "compile",
             "--root",
             ".",
-            "--font-path",
-            str(ASSETS_DIR),
+            *get_font_args(),
             "--features",
             "html",
             "--format",
@@ -1038,8 +1174,7 @@ def build_pdf(force: bool = False) -> bool:
             "compile",
             "--root",
             ".",
-            "--font-path",
-            str(ASSETS_DIR),
+            *get_font_args(),
             str(typ_file),
             str(output_path),
         ]
@@ -1075,10 +1210,12 @@ def build_slides(force: bool = False) -> bool:
     SITE_DIR.mkdir(parents=True, exist_ok=True)
     print("正在构建 Touying 演示文稿...")
 
-    # 公共依赖（config.typ 等）；内置模板更新后所有演示文稿也需要重新生成
+    # 公共依赖（config.typ 等）；内置模板与字体更新后所有演示文稿也需要重新生成
     extra_deps = find_common_dependencies()
     if SLIDE_TEMPLATE_FILE.exists():
         extra_deps = extra_deps + [SLIDE_TEMPLATE_FILE]
+    if FONT_DIR.exists():
+        extra_deps = extra_deps + [fontfile for fontfile in FONT_DIR.rglob("*") if fontfile.is_file()]
 
     stats = _compile_files(
         slide_files,

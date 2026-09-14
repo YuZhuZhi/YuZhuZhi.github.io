@@ -38,7 +38,13 @@
 3. 用 `typst eval "query(<pdfpc-file>).map(it => it.value)"` 读取 Touying 写入
    `<pdfpc-file>` 的演讲者备注；Typst 0.15 以下没有 `eval` 命令时回退到
    `typst query`。
-4. 把 SVG 与备注填入模板，写出 `<输出目录>/<页面路径>/index.html`。
+4. 把每页 SVG 里以 data URI 内嵌的位图提取成 `images/embed-*.{png,jpg,gif,…}`
+   独立文件（多页复用的同一张只写一份），SVG 中改写成相对路径。
+5. 把 SVG 与备注填入模板，写出 `<输出目录>/<页面路径>/index.html`。
+
+字体由 `fonts/`（见 [fonts/README.md](../fonts/README.md)）提供，并加上
+`--ignore-system-fonts`：这样同一份 `.typ` 在 CI 的 Linux 与本地 Windows 上会
+得到相同的字形与分页。
 
 ## 与上游输出的差异
 
@@ -49,7 +55,13 @@
 - 删除上游示例用的 `<meta name="description" content="Simple example touying slide show">`
   与 `<meta name="author" content="OrangeX4">`，避免把示例信息当成网站信息；
 - `<html lang>` 取自 `config.typ` 中的 `lang`，上游固定为 `en`；
-- 演讲者备注按 HTML 文本转义（上游不转义，备注里的 `<` 会破坏页面）。
+- 演讲者备注按 HTML 文本转义（上游不转义，备注里的 `<` 会破坏页面）；
+- 内嵌位图提取为独立文件。上游把图片以 base64 内嵌在 HTML 中，一份 24 页、含
+  插图的演示文稿接近 10 MB，浏览器必须下载完整个文档才会执行文档末尾的
+  `impress().init()`；提取后 HTML 约 1 MB，图片可并行加载与缓存。
+- 提示条改为「默认隐藏，浏览器确实不支持时才显示」。上游是
+  `.impress-supported .fallback-message { display: none }`，也就是在 impress.js
+  初始化完成之前（文档越大越久）都会显示那段黄色提示条。
 
 ## 在网站中使用
 
@@ -88,6 +100,8 @@
   `index.typ` 供网页演示。
 - **依赖**：演示文稿不导入 `config.typ`/`tufted`，它是一份独立的分页文档；
   公式、图片与普通 Typst 文档写法相同，图片照常放在同目录或子目录中。
+- **字体**：幻灯片构建忽略系统字体，只使用仓库 `fonts/` 中的字体；需要别的字体时
+  把字体文件放进 `fonts/`，不要依赖别人机器上装了什么。
 
 ## 更新上游模板
 

@@ -48,6 +48,11 @@
 手动覆盖。导出流程、与上游 touying-exporter 的差异以及模板更新方法见
 [touying-exporter/README.md](touying-exporter/README.md)。
 
+幻灯片构建**只使用**仓库 `fonts/` 目录中的字体（当前为 Noto Serif SC）。GitHub
+Actions 的运行器没有任何中文字体，如果不自带字体，CI 编译出的中文会变成空心方框；
+自带字体同时保证本地与线上得到相同的字形和分页。想换字体就把字体文件放进
+`fonts/`，详见 [fonts/README.md](fonts/README.md)。
+
 单独构建演示文稿：
 
 ```sh
@@ -72,6 +77,7 @@ Tufted-Blog-Template/
 │   ├── CV/                     # 简历页
 │   ├── Docs/                   # 编写文档页
 │   └── .../                    # 可自行修改或添加其他页面
+├── fonts/                 # 构建用字体（不随站点发布，保证 CI 与本地一致）
 ├── touying-exporter/      # Touying 幻灯片的 HTML 模板 (内置于本仓库)
 ├── tufted-lib/            # Typst 样式库和功能模块
 │   ├── tufted.typ             # 主模板和配置
