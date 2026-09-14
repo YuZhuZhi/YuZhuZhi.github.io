@@ -59,6 +59,26 @@ Actions 的运行器没有任何中文字体，如果不自带字体，CI 编译
 uv run build.py slides
 ```
 
+## ⚠️ 已知限制：公式里的上划线/下划线
+
+Typst 的 HTML 导出（截至 0.15.1）会**丢弃** `math.overline`、`math.underline` 和
+`math.cancel`：`$overline(x)$`、`$x$`、`$underline(x)$` 导出的 MathML 完全相同
+（`<math><mi>𝑥</mi></math>`），所以网页上看不出线的存在，随后也没有任何 CSS/JS
+可以补救。上游 issue：[typst/typst#8509](https://github.com/typst/typst/issues/8509)。
+
+相对地，`hat`、`tilde`、`dot`、`arrow`、`accent(...)`、`overbrace(...)` 都能正常
+导出为 `<mover>`。经浏览器实测可用的替代写法：
+
+| 写法 | 结果 |
+| --- | --- |
+| `$accent(alpha, macron)$` | ✅ 单个符号的上划线正常显示（建议用于共轭等） |
+| `$overbrace(A B C)$` | ✅ 会随内容拉伸，但形状是花括号而非直线 |
+| `$accent(A B C, macron)$` | ⚠️ 横线不拉伸，只盖住中间一小段 |
+| `#overline[$A B C$]` | ❌ 浏览器不会绘制（span 里只有 `<math>` 时不画装饰线） |
+| `$underline(x)$` | ❌ 与 `overline` 一样被丢弃，且暂无等价写法 |
+
+演示文稿（导出为 SVG）不受影响，那里仍是 Typst 的排版结果。
+
 ## 📂 项目结构
 
 ```plaintext

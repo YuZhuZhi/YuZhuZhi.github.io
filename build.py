@@ -582,6 +582,38 @@ SLIDE_IMAGE_EXTENSIONS = {
     "avif": "avif",
 }
 
+# 演示文稿左上角的返回链接样式。impress.js 会用 pointer-events 控制整页的交互，
+# 因此这里必须显式打开 pointer-events，否则链接点不动。
+DECK_BACK_LINK_CSS = (
+    "      /* 返回列表页入口，见 touying-exporter/README.md */\n"
+    "      a.deck-back-link {\n"
+    "          position: fixed;\n"
+    "          left: 12px;\n"
+    "          top: 12px;\n"
+    "          z-index: 20;\n"
+    "          pointer-events: auto;\n"
+    "          padding: 6px 12px;\n"
+    "          border-radius: 6px;\n"
+    "          background: rgba(0, 0, 0, 0.45);\n"
+    "          color: rgb(255, 255, 255);\n"
+    "          font: 14px/1.4 sans-serif;\n"
+    "          text-decoration: none;\n"
+    "          opacity: 0.4;\n"
+    "          transition: opacity 0.2s;\n"
+    "      }\n"
+    "      a.deck-back-link:hover { opacity: 1 }\n"
+    "      html:fullscreen a.deck-back-link { display: none }\n"
+)
+
+# 上游模板里 impress.js 用 `location.hash = ...` 记录当前页，每次翻页都会新增一条
+# 历史记录；于是浏览器的「后退」只能退回上一张幻灯片，很难离开演示文稿。
+# 改成 `location.replace`，URL 仍然显示当前页，但不再堆积历史记录。
+DECK_HASH_ASSIGNMENT = 't.location.hash=e="#/"+n.target.id'
+DECK_HASH_REPLACEMENT = 'e="#/"+n.target.id,t.location.replace(e)'
+
+HEADER_LINKS_PATTERN = re.compile(r"header-links\s*:\s*\((.*?)\)\s*,", re.DOTALL)
+HEADER_LINK_ENTRY_PATTERN = re.compile(r'"([^"]*)"\s*:\s*"([^"]*)"')
+
 
 def read_typ_source(typ_file: Path) -> str:
     """
@@ -889,12 +921,59 @@ def get_site_lang() -> str:
     return match.group(1) if match is not None else "zh"
 
 
+def get_header_links() -> dict[str, str]:
+    """
+    读取 config.typ 中顶部导航的 URL -> 显示名称映射。
+
+    用于给演示文稿的返回链接取与导航栏一致的名称（例如 `/Notes/` -> `札记`）。
+
+    返回:
+        dict[str, str]: 页面路径 -> 显示名称
+    """
+    try:
+        content = CONFIG_FILE.read_text(encoding="utf-8")
+    except OSError:
+        return {}
+
+    content = re.sub(r"//.*", "", content)
+    match = HEADER_LINKS_PATTERN.search(content)
+    if match is None:
+        return {}
+
+    return {url: label for url, label in HEADER_LINK_ENTRY_PATTERN.findall(match.group(1))}
+
+
+def get_deck_back_link(typ_file: Path) -> tuple[str, str]:
+    """
+    计算演示文稿「返回」链接的目标与文字。
+
+    目标优先取页面上级目录里真实存在的列表页（`content/<父目录>/index.typ`），
+    没有则回退到站点首页；文字取 config.typ 中 header-links 的显示名称。
+
+    参数:
+        typ_file: 演示文稿源文件路径
+
+    返回:
+        tuple[str, str]: (链接地址, 显示文字)
+    """
+    header_links = get_header_links()
+    parent = Path(get_page_path(typ_file)).parent
+    parent_path = parent.as_posix()
+
+    if parent_path not in {"", "."} and (CONTENT_DIR / parent_path / "index.typ").exists():
+        url = f"/{parent_path}/"
+        return url, header_links.get(url, parent.name)
+
+    return "/", header_links.get("/", "返回首页")
+
+
 def render_slide_template(
     template: str,
     pages: list[str],
     notes: dict[int, str],
     title: str,
     lang: str,
+    back_link: tuple[str, str],
 ) -> str:
     """
     把内置的 touying-exporter 模板渲染成完整的 HTML 演示文稿。
@@ -908,6 +987,7 @@ def render_slide_template(
         notes: 页码 -> 备注文本
         title: 演示文稿标题
         lang: 演示文稿的语言代码
+        back_link: (链接地址, 显示文字)，指向进入演示文稿之前的列表页
 
     返回:
         str: 完整的 HTML 文档
@@ -972,6 +1052,22 @@ def render_slide_template(
     )
     document = replace_once(document, '<meta name="author" content="OrangeX4" />', "")
     document = replace_once(document, '<html lang="en">', f'<html lang="{html.escape(lang)}">')
+
+    # 返回列表页的链接与「后退键不再退回上一张幻灯片」
+    back_url, back_label = back_link
+    document = replace_once(
+        document,
+        "    </style>\n    \n</head>",
+        DECK_BACK_LINK_CSS + "    </style>\n    \n</head>",
+    )
+    document = replace_once(
+        document,
+        '<body class="impress-not-supported">',
+        '<body class="impress-not-supported">\n'
+        f'<a class="deck-back-link" href="{html.escape(back_url, quote=True)}">'
+        f"{html.escape(back_label)}</a>",
+    )
+    document = replace_once(document, DECK_HASH_ASSIGNMENT, DECK_HASH_REPLACEMENT)
     return document
 
 
@@ -1027,6 +1123,7 @@ def export_slide_deck(typ_file: Path, output_path: Path) -> bool:
                 query_slide_notes(typ_file),
                 get_slide_title(typ_file),
                 get_site_lang(),
+                get_deck_back_link(typ_file),
             )
         except ValueError as e:
             print(f"  ❌ 渲染幻灯片失败: {e}")

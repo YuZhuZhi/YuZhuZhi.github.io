@@ -8,6 +8,7 @@
 
 - 修复：幻灯片导出改为自带仓库 `fonts/` 中的中文字体并忽略系统字体，解决 GitHub Actions 上编译出的中文变成空心方框（本地预览正常）的问题，同时保证本地与线上字形、分页一致
 - 修复：幻灯片中的内嵌位图提取为独立文件（HTML 由约 10 MB 降到约 1 MB），并把「浏览器不支持」提示条改为默认隐藏，避免页面较大时长时间显示黄色提示条、impress.js 迟迟未初始化
+- 修复：幻灯片左上角新增「返回列表页」入口，并把 impress.js 写 `location.hash` 改为 `location.replace`，使浏览器后退键一次即可离开演示文稿
 - 功能：使用 [Touying](https://github.com/touying-typ/touying) 编写的 `.typ` 文件会导出为自包含的 HTML 演示文稿（impress.js 幻灯片），通过 `python build.py slides` 单独构建；实现方式与差异见 [touying-exporter/README.md](touying-exporter/README.md)
 - 功能：在文章第一个一级标题下方显示作者、日期和可选的额外信息（[#35](https://github.com/Yousa-Mirage/Tufted-Blog-Template/pull/35), [@tortrixx](https://github.com/tortrixx)）
 - 功能：优化了图片加载逻辑，图片转为静态资源并默认懒加载（[#31](https://github.com/Yousa-Mirage/Tufted-Blog-Template/pull/31), [@CST-Cat](https://github.com/CST-Cat)）
