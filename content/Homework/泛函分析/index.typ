@@ -4,6 +4,8 @@
     description: "",
 )
 
+#let frasig(x) = $frac(#x, 1 + #x)$
+
 = 泛函分析作业
 
 = 第一次作业：习题一之 1 、2、3
@@ -132,3 +134,82 @@ $
   >=& sum frac(1, 2^k) dot frac(d_(k)(x,y), 1 + d_(k)(x,y)) \
   =& d(x,y)
 $
+
+#html.hr()
+
+= 第二次作业：习题一之 5、6、7、12
+
+== 习题一之 5
+
+#tufted.problem[
+  在距离空间中，半径为4的开球可以是半径为3的开球的真子集吗？
+]
+
+构造距离空间 $X = {x, y, z}$，且 $d(x, y) = 2$，$d(y, z) = 2$，$d(x, z) = 4$。
+
+那么，$S(x, 4) = {x, y}$，$S(y, 3) = {x, y, z}$，因此是存在的。
+
+== 习题一之 6
+
+#tufted.problem[
+  证明在距离空间中，如果一个半径为7的开球包含在一个半径为3的开球中，则这两个球重合。
+]
+
+只需证明不存在一个点 $x$，同时满足 $x in S(x_(i), 3)$ 且 $x in.not S(x_(j), 7)$。
+
+如果该点符合此条件，那么存在 $d(x, x_(i)) < 3$ 且 $d(x, x_(j)) >= 7$。而对第一式使用三角不等式，有：
+$
+  d(x, x_(j)) + d(x_(j), x_(i)) < 3
+$
+由距离的非负性，这与 $d(x, x_(j)) >= 7$ 矛盾。故不存在这样的点 $x$，因此两个球重合。
+
+== 习题一之 7
+
+#tufted.problem[
+  证明在空间 $s$ 中，按距离收敛等价于按坐标收敛。
+]
+
+#let absk7 = $abs(x_(n)^((i)) - x^((i)))$
+
+先证明 按距离收敛 $=>$ 按坐标收敛。此时，
+$
+  d(x_(n), x) = sum_(i) frac(1, 2^(i)) frasig(absk7) -> 0.
+$
+故对任意$i$，
+$
+  frasig(absk7) <= d(x_(n), x) -> 0.
+$
+而函数$frasig(x)$在$[0, +infinity)$上单调递增且连续，所以亦有$absk7 -> 0 => x_(n)^((i)) -> x^((i))$，从而得证。
+
+接下来证明 按坐标收敛 $=>$ 按距离收敛。此时，$forall i, absk7 -> 0$。同时由于 $x > frasig(x) > 0$，亦有 $frasig(absk7) -> 0$。
+
+由于求和 $sum frac(1, 2^k) = 1$ 收敛，则 $forall epsilon > 0$， $exists N_(0)$ 使 $sum_(i=N_(0) + 1) frac(1, 2^(i)) < frac(epsilon, 2)$。
+
+而 $absk7 -> 0$，所以存在 $N_1$ 使得 $i > N_1$ 时，$absk7 < frac(epsilon, 2)$。进一步由于 $x > frasig(x)$ 则 $frasig(absk7) < frac(epsilon, 2)$。于是：
+$
+  &d(x_(n), x) \
+  =& sum_(i) frac(1, 2^(i)) frasig(absk7) \
+  =& sum_(i=1)^(N_(0)) frac(1, 2^(i)) frasig(absk7) + sum_(i=N_(0) + 1)^(infinity) frac(1, 2^(i)) frasig(absk7) \
+  <& frac(epsilon, 2) sum_(i=1)^(N_(0)) + sum_(i=N_(0) + 1)^(infinity) frac(1, 2^(i)) dot frac(epsilon, 2) \
+  <& frac(epsilon, 2) + frac(epsilon, 2) = epsilon
+$
+则 $d(x_(n), x) -> 0$，从而得证。
+
+== 习题一之 12
+
+#tufted.problem[
+  设 $(X, d)$ 是距离空间，$A subset X$，令
+  $
+    f(x) = inf_(y in A) d(x, y) quad quad (x in X),
+  $
+  证明 $f(x)$ 是 $X$ 上的连续函数。
+]
+
+设 $x, x_(0) in X$，及 $y in A$，有
+$
+  &d(x, y) <= d(x, x_(0)) + d(x_(0), y) \
+  =>& inf d(x, y) <= inf {d(x, x_(0)) + d(x_(0), y)} \
+  =>& f(x) <= d(x, x_(0)) + f(x_(0)) \
+  =>& f(x) - f(x_(0)) <= d(x, x_(0))
+$
+同理 $f(x_(0)) - f(x) <= d(x_(0), x)$，即 $|f(x) - f(x_(0))| <= d(x, x_(0))$。因此 $forall epsilon>0$，只需取 $delta = epsilon$，即可有 $d(x, x_(0)) < delta$ 时，$|f(x) - f(x_(0))| < epsilon$。这便说明 $f(x)$ 在任意 $x_(0) in X$ 处连续。
