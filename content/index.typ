@@ -38,7 +38,7 @@
 
 根据一些目前可公开的情报，理论上来说，御伫之可能是一个人。
 
-- 学校：中山大学（Sun Yat-sen University）。
+- 学校：#link("https://www.sysu.edu.cn/sysuen/")[中山大学（Sun Yat-sen University）]。
 - 兴趣：量子计算、物理、一些代码小玩具。
 - 技能：C++、Python、C\#、Typst、LaTeX。 \ （技能等级均为Lv.1/Lv.100）
 - 开源：维护若干仓库，内容为课程笔记、课程作业和一些没用的小工具。
@@ -63,7 +63,7 @@
 
 // - #link("https://www.bilibili.com/video/BV1b7411H7t7/?spm_id_from=333.1387.0.0&vd_source=9f0989cf46e495ed836dd439540db3ca")[当广东北江实验学校Minecraft化！]
 
-#html.hr()
+// #html.hr()
 
 #html.br()
 #html.br()

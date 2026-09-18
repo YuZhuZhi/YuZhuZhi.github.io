@@ -8,6 +8,16 @@ Cross-document view transitions and site-wide translucent card materials.
 	navigation: auto;
 }
 
+/* Keep the site background behind both snapshots so a page transition
+   never exposes the browser's default white canvas between frames. */
+::view-transition {
+	background-color: var(--theme-bg, #fcf9f2);
+}
+
+::view-transition-group(root) {
+	background-color: var(--theme-bg, #fcf9f2);
+}
+
 @keyframes page-out {
 	to {
 		opacity: 0;
@@ -97,8 +107,8 @@ body > header.site-header:nth-of-type(2) {
 	--surface-card-shadow-hover:
 		0 1.05rem 2.6rem rgba(44, 44, 44, 0.075),
 		0 0.25rem 0.8rem rgba(44, 44, 44, 0.045);
-	--note-card-bg: rgba(255, 255, 254, 0.6);
-	--note-card-bg-hover: rgba(255, 255, 254, 0.74);
+	--note-card-bg: rgba(255, 255, 254, 0.5);
+	--note-card-bg-hover: rgba(255, 255, 254, 0.64);
 	--note-card-border: rgba(44, 44, 44, 0.085);
 	--note-card-border-hover: rgba(44, 44, 44, 0.14);
 	--note-card-shadow:
@@ -126,8 +136,8 @@ html:not([data-theme]) {
 	--surface-card-shadow-hover:
 		0 1.05rem 2.6rem rgba(0, 0, 0, 0.2),
 		0 0.25rem 0.8rem rgba(0, 0, 0, 0.13);
-	--note-card-bg: rgba(60, 66, 78, 0.5);
-	--note-card-bg-hover: rgba(66, 73, 86, 0.62);
+	--note-card-bg: rgba(60, 66, 78, 0.42);
+	--note-card-bg-hover: rgba(66, 73, 86, 0.54);
 	--note-card-border: rgba(229, 230, 232, 0.085);
 	--note-card-border-hover: rgba(229, 230, 232, 0.14);
 	--note-card-shadow:
@@ -155,8 +165,8 @@ html:not([data-theme]) {
 		--surface-card-shadow-hover:
 			0 1.05rem 2.6rem rgba(44, 44, 44, 0.075),
 			0 0.25rem 0.8rem rgba(44, 44, 44, 0.045);
-		--note-card-bg: rgba(255, 255, 254, 0.6);
-		--note-card-bg-hover: rgba(255, 255, 254, 0.74);
+		--note-card-bg: rgba(255, 255, 254, 0.5);
+		--note-card-bg-hover: rgba(255, 255, 254, 0.64);
 		--note-card-border: rgba(44, 44, 44, 0.085);
 		--note-card-border-hover: rgba(44, 44, 44, 0.14);
 		--note-card-shadow:

@@ -174,7 +174,7 @@
 )
 
 // 图表卡：居中放图 + 出处
-#let figure-card(image-path, source, height: 240pt, caption: none, box-height: auto) = {
+#let figure-card(image-path, source, height: 240pt, caption: none, box-height: auto, figWidth: 100%) = {
   block(
     width: 100%,
     height: box-height,
@@ -184,7 +184,7 @@
     inset: 10pt,
   )[
     #align(center + horizon)[
-      #image(image-path, height: height)
+      #image(image-path, width: figWidth, height: height)
     ]
     #if caption != none {
       align(center)[#text(size: 13pt, fill: mute-ink)[#caption]]
@@ -413,12 +413,13 @@
   tone: "plain",
   fractions: (1.05fr, 1fr),
   gap: 12pt,
+  figWidth: 100%,
 ) = layout(size => {
   let fs = fractions.map(to-frac)
   let total = fs.sum()
   let col1 = (size.width - gap) * fs.at(0) / total
   let right-content = if right != none { right } else {
-    figure-card(image-path, source, height: img-height, box-height: 100%)
+    figure-card(image-path, source, height: img-height, box-height: 100%, figWidth: figWidth)
   }
   block(width: 100%, height: size.height)[
     #grid(
@@ -427,6 +428,40 @@
       column-gutter: gap,
       fit-card(title, body, tone: tone, avail: size.height, width: col1),
       right-content,
+    )
+  ]
+})
+
+// 一页：上=图卡、下=说明卡（宽图用这种上下结构，图能占满整页宽度而不被裁切）
+//   image-height 不填时按区域自动留出说明文字的位置
+#let page-figure-notes(
+  image-path,
+  source,
+  notes-title,
+  notes,
+  caption: none,
+  weights: (3.4fr, 1fr),
+  gap: 12pt,
+  tone: "wash",
+  figWidth: 100%,
+) = layout(size => {
+  let ws = norm-weights(weights)
+  let avail = size.height - gap
+  let r1 = ws.at(0) * avail
+  let r2 = ws.at(1) * avail
+  block(width: 100%, height: size.height)[
+    #grid(
+      rows: (r1, r2),
+      row-gutter: gap,
+      figure-card(
+        image-path,
+        source,
+        height: r1 - 40pt,
+        caption: caption,
+        box-height: 100%,
+        figWidth: figWidth
+      ),
+      fit-card(notes-title, notes, tone: tone, avail: r2, width: size.width),
     )
   ]
 })
@@ -591,17 +626,17 @@
   ],
     [CSS 结构：$Z$ 型与 $X$ 型分开],
     [
-    - 生成元分成纯 $Z$ 型与纯 $X$ 型两组，可以被写为矩阵 $H_Z$（$n_Z times n$）与 $H_X$（$n_X times n$）。
+    - 生成元分成纯 $Z$ 型与纯 $X$ 型两组，可以被写为校验矩阵 $H_Z$（$n_Z times n$）与 $H_X$（$n_X times n$）。
     - 要求 $Z$ 型与 $X$ 型稳定子两两对易，等价于
-      #align(center)[$ H_Z H_X^T = 0. $]
-      逐元素推导见 @app:css。
+      #align(center)[$ H_Z H_X^T = 0, $]
+      意味着这两个稳定子共同作用的比特数为偶数。推导见 @app:css。
     - 逻辑算符条件：$H_X A_Z^T = 0$、$H_Z A_X^T = 0$，且算符本身不落在稳定子群中。多数 LDPC 码都是 CSS 码；非 CSS 码可映射为 CSS，代价是更多物理比特。
   ],
     tone1: "wash",
     tone2: "plain",
   )
   #speaker-note[
-    全场地图。提醒：约束为什么这么写、保辛条件怎么推，这些细节放在附录 A–D，正文只讲用法。
+    提醒：约束为什么这么写、保辛条件怎么推，这些细节放在附录 A–D，正文只讲用法。纠错码决定 H_X H_Z，其中的逻辑算符需要受它约束求解。
   ]
 ]
 
@@ -611,24 +646,25 @@
   #page-2cards(
     [Clifford 操作 = 保辛的二进制矩阵],
     [
-    - 酉操作的作用是 $P -> U_"op"^dagger P U_"op"$；Clifford 操作把 Pauli 链映为 Pauli 链（最多带相位）。
-    - 忽略相位后它是 $bb(F)_2^(2 n)$ 上的线性映射，可用 $2 n times 2 n$ 二进制矩阵表示：$A_P -> A_P U$。*行约定*：第 $j$ 行是 $Z_j$ 的像，第 $(n+j)$ 行是 $X_j$ 的像。
+    - 酉操作的作用是 $P -> U_"op"^dagger P U_"op"$；Clifford 操作把 Pauli 链映为 Pauli 链，意味着 $U^dagger P U = plus.minus P'$。
+    - 忽略相位后 $U$ 是 $bb(F)_2^(2 n)$ 上的线性映射，可用 $2 n times 2 n$ 二进制矩阵表示：$A_P -> A_P U$。
+    - *行约定*：第 $j$ 行是 $Z_j$ 的像，第 $(n+j)$ 行是 $X_j$ 的像。
     - 保辛条件：对任意 $A, B$，$A Lambda B^T = (A U) Lambda (B U)^T = A (U Lambda U^T) B^T$，因此
       $ U Lambda U^T = Lambda. $ <eq:保辛条件>
       取基向量逐个元素比较即可得到（展开见 @app:symp）。
   ],
-    [分块形式与二次约束的来源],
+    [分块形式],
     [
     - 把 $U$ 按 $n times n$ 分块写成 $U = mat(A, B; C, D)$，@eq:保辛条件 等价于三条矩阵恒等式：
       $ A B^T + B A^T = 0, quad C D^T + D C^T = 0, quad A D^T + B C^T = I_n. $
     - 满足 @eq:保辛条件 的矩阵构成辛群 $"Sp"(2 n, bb(F)_2)$ —— "找一个逻辑操作"就是"在辛群里找满足码结构条件的矩阵"。
-    - 注意 @eq:保辛条件 的每个矩阵元都是 $U$ 中两个元素之积：*这就是后文"二次约束"的来源*。
+    // - 注意 @eq:保辛条件 的每个矩阵元都是 $U$ 中两个元素之积：*这就是后文"二次约束"的来源*。
   ],
     tone1: "wash",
     tone2: "plain",
   )
   #speaker-note[
-    全篇最"硬"的一步，值得板书：把 $A Lambda B^T = A (U Lambda U^T) B^T$ 对基向量取，就得到 @eq:保辛条件；分块三条恒等式的展开见附录 A（@app:symp）。
+    把 $A Lambda B^T = A (U Lambda U^T) B^T$ 对基向量取，就得到 @eq:保辛条件；分块三条恒等式的展开见附录 A（@app:symp）。注意 3 的每个矩阵元都是 $U$ 中两个元素之积：这就是后文"二次约束"的来源。
   ]
 ]
 
@@ -637,25 +673,25 @@
 
 = 代数方法
 
-== 三条约束：把逻辑操作写成方程
+== 三条约束
 
 #slide[
   #page-2cards(
-    [求解目标就是下面三组条件],
+    [求解目标],
     [
-    - *① 保辛（ @eq:保辛条件）*：$U Lambda U^T = Lambda$ —— 保证任意 Pauli 链之间的对易/反对易关系不变。
-    - *② 码结构（式 (3)）*：
-      #align(center)[$ mat(H_Z, 0; 0, H_X) U = mat(H_Z, 0; 0, H_X). $]
-      论文为求解方便*直接要求每个稳定子生成元回到自身*；更一般的情形允许稳定子置换/重组，但会引入组合问题。
-    - *③ 目标映射（式 (4)）*：
-      #align(center)[$ mat(overline(Z), 0; 0, overline(X)) U = mat(overline(Z)^Z, overline(X)^Z; overline(Z)^X, overline(X)^X). $]
+    + *保辛（@eq:保辛条件）*：$U Lambda U^T = Lambda$ —— 保证任意 Pauli 链之间的对易/反对易关系不变。
+    + *码结构（@eq:码结构）*：
+      $ mat(H_Z, 0; 0, H_X) U = mat(H_Z, 0; 0, H_X). $ <eq:码结构>
+      论文为求解方便*直接要求每个稳定子生成元在变换之后回到自身*。更一般的情形允许稳定子置换/重组，但会引入组合问题。
+    + *目标映射（@eq:目标映射）*：
+      $ mat(overline(Z), 0; 0, overline(X)) U = mat(overline(Z)^Z, overline(X)^Z; overline(Z)^X, overline(X)^X). $ <eq:目标映射>
       $overline(Z)$、$overline(X)$ 各是 $k times n$；右端四块表示像的 $Z$/$X$ 部分，可由 $overline(Z)$、$overline(X)$ 的行线性表示。
   ],
     [两个例子的目标映射],
     [
-    - $overline(H)_1 overline(I)_2$：$overline(Z)_1 -> overline(X)_1$、$overline(X)_1 -> overline(Z)_1$，其余不变（式 (7)）。
-    - $overline(S)_1 overline(I)_2$：$overline(X)_1 -> overline(Z)_1 overline(X)_1$，其余不变（式 (8)）。
-    - 于是"设计线路"变成"求满足 (2)(3)(4) 的 $U$"，解出后分解成物理门。
+    - $overline(H)_1 overline(I)_2$：$overline(Z)_1 -> overline(X)_1$、$overline(X)_1 -> overline(Z)_1$，其余不变#highlight[（式 (7)）]。
+    - $overline(S)_1 overline(I)_2$：$overline(X)_1 -> overline(Z)_1 overline(X)_1$，其余不变#highlight[（式 (8)）]。
+    - 于是"设计线路"变成"求满足 @eq:保辛条件 @eq:码结构 @eq:目标映射 的 $U$"，解出后分解成物理门。
   ],
     tone1: "wash",
     tone2: "plain",
@@ -673,15 +709,15 @@
     [
     - 把 $U$ 的元素记作 $U_(i j)$， @eq:保辛条件 的每个矩阵元都是"两个元素相乘再求和"：
       #align(center)[$ (U Lambda U^T)_(i j) = sum_(k = 1)^n U_(i, k+n) U_(j k) + sum_(k = n+1)^(2 n) U_(i, k-n) U_(j k). $]
-      因此 @eq:保辛条件 给出 $O(n^2)$ 个*二次*方程（分块展开见 @app:symp），而式 (3)(4) 都是线性的。
-    - *线性化*：对出现在这些二次方程中的每一对元素引入新变量 $v_(a b c d) = U_(a b) U_(c d)$；代入后 @eq:保辛条件 变成关于 $(U, v)$ 的线性方程，再与式 (3)(4) 合并。
+      因此 @eq:保辛条件 给出 $O(n^2)$ 个*二次*方程（分块展开见 @app:symp），而 @eq:码结构，@eq:目标映射 都是线性的。
+    - *线性化*：对出现在这些二次方程中的每一对元素引入新变量 $v_(a b c d) = U_(a b) U_(c d)$；代入后 @eq:保辛条件 变成关于 $(U, v)$ 的线性方程，再与 @eq:码结构，@eq:目标映射 合并。
     - *规模*：论文指出线性方程组的行数（方程数）与列数（未知量数）都在 $O(n^2)$ 量级且*高度稀疏* —— 每个方程只涉及少数几个变量。
   ],
     [复杂度与一致性回代],
     [
-    - *复杂度*：稀疏消元的总代价"略高于 $O(n^4)$"（论文原话 slightly over $O(n^4)$），不是指数级；对比态矢量方法的 $4^n$ 维空间。量级估计见 @app:linear。
+    - *复杂度*：稀疏消元的总代价"略高于 $O(n^4)$"，不是指数级；对比态矢量方法的 $4^n$ 维空间。量级估计见 @app:linear。
     - *一致性回代*：$v$ 是形式变量，必须满足 $v_(a b c d) = U_(a b) U_(c d)$；论文在解空间里做"二次变量与 $U$ 元素的匹配"，并指出这一步开销很小。
-    - *规模示例*：$d = 7$ 环面码 $n = 2 d^2 = 98$，$U$ 是 $196 times 196$，元素约 $3.8 times 10^4$ 个 —— 直接枚举 $2^38416$ 不可行。
+    - *规模示例*：$d = 7$ 环面码 $n = 2 d^2 = 98$，$U$ 是 $196 times 196$，元素约 $3.8 times 10^4$ 个 —— 而直接枚举 $2^38416$ 不可行。
   ],
     tone1: "wash",
     tone2: "plain",
@@ -698,7 +734,7 @@
     [门的种类与它们对 $U$ 的作用],
     [
     #light-table(
-      (auto, 1.15fr, 1.3fr),
+      (auto, 1.1fr, 1.3fr),
       ("门", "对 Pauli 链的作用（物理效果）", "对 $U$ 的列操作（右乘初等矩阵）"),
       (
         ([$H_i$], [$Z_i <-> X_i$], [交换第 $i$ 列与第 $(i+n)$ 列]),
@@ -722,48 +758,95 @@
   ]
 ]
 
-== 辛高斯消元：四步流程（Fig. 1）
+== 辛高斯消元
 
 #slide[
-  #page-2col(
-    [四步（对应论文正文的流程）],
+  #page-2cards(
+    [四步：把 $U$ 用四种辛操作消成 $I_(2 n)$],
     [
       - *① 双比特门*：只看 $U$ 左侧 $2 n times n$ 部分，用 CNOT/SWAP 型操作把它化为列阶梯形（reduced column echelon form）；右侧 $n$ 列被同步作用。
-      - *② $H$ 门换列*：若左上还没出现 $I_n$，说明右半存在带零元的列（$U$ 满秩），用 $H$ 把右半的列换进来再重复 ①。通常此时左上、右下两个块都成了 $I_n$。
+      - *② $H$ 门换列*：若左上还没出现 $I_n$，说明右半存在带零元的列（$U$ 满秩，不会出现全零列），用 $H$ 把右半的列换进来再重复 ①。通常此时左上、右下两个块都成了 $I_n$。
       - *③ 清左下*：单个元素 $(i+n, i)$ 用 $S_i$ 消去；成对元素 $(i+n, j)$ 与 $(j+n, i)$（$i < j$）用 $H_i "CNOT"_(j i) H_i$ 一起清掉。
       - *④ 清右上*：右上角若还有非零元，再补 $H$ 门处理，最终 $U -> I_(2 n)$，分解结束。
-      - 边界情形（只剩左下/右上非零等）论文逐类给出清除手法；完整证明在 SM 中。
     ],
-    image-path: "img/fig1.png",
-    source: "Fig. 1",
-    img-height: 250pt,
-    fractions: (1.1fr, 1fr),
+    [边界情形与读数规则],
+    [
+      - 只剩左下非零、只剩右上非零等边界情形，论文逐类给出了清除手法；完整证明在 SM 中。
+      - *为什么可以这样消*：这四类初等矩阵不构成全部初等操作，但都是辛的，每步都保持 $U Lambda U^T = Lambda$，所以消元顺序必须专门设计。
+      - *门序列怎么读*：由 $U P_1 dots.c P_T = I_(2 n)$ 得 $U = P_T dots.c P_1$，最终线路要把消元过程*逆序*读出（Fig. 1 的时间轴指向左侧）；$T$ 就是化简前的物理门数。
+    ],
+    tone1: "wash",
+    tone2: "plain",
   )
   #speaker-note[
-    对照 Fig. 1 上排"矩阵演化"与下排"量子线路"：上面是 $U$ 逐步消成 $I$，下面是同步产生的门序列（时间轴向左）。
+    四步先讲清楚，再把图单独翻到下一页放大讲。
     重点解释第 ③ 步的 $H "CNOT" H$：同时清除一对互相关联的非零元，而不破坏已经做好的 $I_n$ 块。
   ]
 ]
 
-== 化简与输出：能减多少门
+== 四步消元流程图（Fig. 1）
 
 #slide[
-  #page-2col(
+  #page-figure-notes(
+    "img/fig1.png",
+    "Fig. 1",
+    [],
+    [
+      - *上排*是变换矩阵 $U$ 的演化: 先把左侧 $2 n times n$ 化为列阶梯形, 再 $H$ 换列、$S$ 清左下、$H$ 清右上, 最后得到 $I_(2 n)$。
+      - *下排*是与每一步同步的量子线路：矩阵上做一次初等列操作，线路上就多一个对应的门。
+      - *时间轴 $t$ 向左*：因为门序列要逆序读出，所以线路要从右往左看。
+    ],
+    figWidth: 65%
+    // caption: [分解流程：上排是矩阵演化，下排是对应的量子线路],
+  )
+  #speaker-note[
+    这页专门讲图：先指虚线框对应四步，再指下排线路说明"一次矩阵操作 = 一个物理门"，最后强调时间轴向左。
+  ]
+]
+
+== 化简与输出
+
+#slide[
+  #page-2cards(
     [两条化简规则，迭代使用],
     [
       - *SWAP 折算*：一个 SWAP 等于三个 CNOT（Fig. 2(a)），统计门数时把所有双比特门统一折算成 CNOT。
       - *五 CNOT 模板*：满足该模板的三 CNOT 组合可以化成两个 CNOT（Fig. 2(b)）；CNOT 之间常有对易关系，这类组合在实际线路里出现得很频繁。
       - *迭代*：替换后可能出现新的可化简组合，反复搜索直到无法继续；化简只改变实现方式，不改变 $U$。
-      - *输出*：物理门序列 + 门数（简化前 / 简化后）；门与稳定子送入 Stim 可得逻辑错误率（见 4.2）。
     ],
-    image-path: "img/fig2.png",
-    source: "Fig. 2",
-    img-height: 230pt,
-    fractions: (1fr, 1.1fr),
+    [输出与代价],
+    [
+      - *输出*：物理门序列 + 门数（简化前 / 简化后两个数）。
+      - *接仿真*：门与稳定子送入 Stim 可得逻辑错误率（见 4.2）。
+      - *代价*：化简只是模板级局部优化，门数不保证最优；更长的 CNOT 恒等式是否还有收益，论文没有回答（见 5.2 的开放问题）。
+    ],
+    tone1: "wash",
+    tone2: "plain",
   )
   #speaker-note[
     化简为什么重要：环面码上的拟合指数从 $alpha = 2.51$ 降到 $2.28$，全部来自这里。
     提问预案："只用到五个 CNOT 的模板，更长的恒等式还有收益吗？" —— 见 5.2 的开放问题。
+  ]
+]
+
+== 化简规则示意图（Fig. 2）
+
+#slide[
+  #page-figure-notes(
+    "img/fig2.png",
+    "Fig. 2",
+    [],
+    [
+      - *Fig. 2(a) 左侧*：一个 SWAP 可以用三个 CNOT 代替 —— 这是把双比特门统一折算成 CNOT 的依据。
+      - *Fig. 2(a) 右侧*：两个 CNOT 在某些情形下对易（可以交换顺序），这给"重新组合、消除门"留出了空间。
+      - *Fig. 2(b) 五 CNOT 模板*：五个 CNOT 的组合等于恒等，于是可以从不同位置"切三留二"，把三个 CNOT 换成两个。
+    ],
+    // caption: [两比特门的等价关系与五 CNOT 化简模板],
+    figWidth: 75%
+  )
+  #speaker-note[
+    把两条规则的根据讲清楚：对易关系决定能不能换顺序，恒等式决定能不能减门。
+    可以顺带提问：引入更长的恒等式模板还能再省多少门？
   ]
 ]
 
@@ -778,7 +861,7 @@
   #page-2col(
     [环面码：参数、稳定子与逻辑算符],
     [
-      - *参数*：码距 $d$ 的环面码物理比特数 $n = 2 d^2$，逻辑比特数 $k = 2$（论文正文给出）。
+      - *参数*：码距 $d$ 的环面码物理比特数 $n = 2 d^2$，逻辑比特数 $k = 2$。
       - *结构*：比特放在方格的*边*上；每个面给一个 weight-4 的 $Z$ 稳定子，每个顶点给一个 weight-4 的 $X$ 稳定子。
       - *逻辑算符*：沿非平凡闭环的 $X$ 链与 $Z$ 链。Fig. 3 的 $d = 7$ 实例中，深色点是真实比特、浅色点是边界带来的虚拟比特，彩线标出两个逻辑比特的 $overline(Z)$、$overline(X)$。
       - *几何方法的极限*：横向 $H$ + SWAP 恢复稳定子结构会*同时*交换两个逻辑比特的 $Z$ 与 $X$，"只动一个"做不到。
@@ -787,8 +870,9 @@
     ],
     image-path: "img/fig3.png",
     source: "Fig. 3：$d = 7$ 的环面码",
-    img-height: 280pt,
+    img-height: 300pt,
     fractions: (1.15fr, 1fr),
+    figWidth: 90%
   )
   #speaker-note[
     先讲图：方格、边上的比特、面与顶点对应的稳定子，再说明逻辑算符沿非平凡闭环。
@@ -801,7 +885,7 @@
 #slide[
   #layout(size => block(width: 100%, height: size.height)[
     #grid(
-      columns: (1.05fr, 1fr),
+      columns: (0.8fr, 1fr),
       rows: (size.height,),
       column-gutter: 12pt,
       card([资源与错误率：三个可以记住的结论], [
@@ -818,8 +902,8 @@
       grid(
         rows: (1fr, 1fr),
         row-gutter: 12pt,
-        figure-card("img/fig4a.png", "Fig. 4(a)", height: 150pt, box-height: 100%),
-        figure-card("img/fig4b.png", "Fig. 4(b)", height: 150pt, box-height: 100%),
+        figure-card("img/fig4a.png", "Fig. 4(a)", height: 150pt, box-height: 100%, figWidth: 50%),
+        figure-card("img/fig4b.png", "Fig. 4(b)", height: 150pt, box-height: 100%, figWidth: 50%),
       ),
     )
   ])
@@ -852,9 +936,9 @@
       inset: 10pt,
     )[
       #align(center + horizon)[
-        #image("img/fig5a.png", width: 96%)
+        #image("img/fig5a.png", width: 100%)
         #v(4pt)
-        #image("img/fig5b.png", height: 150pt)
+        #image("img/fig5b.png", width: 100%)
         #v(4pt)
         #text(size: 12pt, fill: mute-ink)[Fig. 5(a)(b)]
       ]
@@ -870,7 +954,7 @@
 
 #slide[
   #page-2col(
-    [$\{r, s\}$ 双曲曲面码与最小的 $\{4,5\}$ 实现],
+    [${r, s}$ 双曲曲面码与最小的 ${4,5}$ 实现],
     [
       #set text(size: 16pt)
       - *局部规则*：与环面码一样把比特放在边上；$s$ 个相邻 $r$-边形在同一顶点相遇，构成一个 $X$ 稳定子。因此 $Z$ 稳定子是 $r$-权、$X$ 稳定子是 $s$-权。
@@ -881,9 +965,10 @@
     ],
     image-path: "img/fig6.png",
     source: "Fig. 6",
-    img-height: 280pt,
+    img-height: 330pt,
     tone: "wash",
-    fractions: (1.2fr, 1fr),
+    fractions: (1.1fr, 1fr),
+    figWidth: 90%
   )
   #speaker-note[
     讲三层：局部铺砌规则 → 可铺砌条件 → 粘合成闭曲面带来的拓扑自由度。
