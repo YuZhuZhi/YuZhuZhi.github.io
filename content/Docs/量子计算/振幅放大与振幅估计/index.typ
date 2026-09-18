@@ -1,7 +1,7 @@
 #import "@preview/physica:0.9.8": *
 #import "@preview/lovelace:0.2.0": *
 #set math.mat(delim: "[", row-gap: 4pt, column-gap: 8pt)
-#import "../../index.typ": template, tufted
+#import "../../../index.typ": template, tufted, overline
 #show: template.with(
     title: "量子计算（七）——振幅放大与振幅估计",
     description: "这篇文章基于Brassard的论文*Quantum amplitude amplification and estimation* @Quantum-amplitude-amplification-and-estimation 写成，大致概括了其中的算法思路，并具体计算了其中一些内容。因此这篇文章的主题就是*数学计算*，难度相比之前会有较大的跃升。但之后会回到原先基础算法的简单讲解。事实上，如果读完了这篇文章，基本就相当于理解了 Grover 算法的原理。",

@@ -1,7 +1,7 @@
 #import "@preview/physica:0.9.8": *
 #import "@preview/theorion:0.6.0": *
 #set math.mat(delim: "[", row-gap: 4pt, column-gap: 8pt)
-#import "../../index.typ": template, tufted
+#import "../../../index.typ": template, tufted, overline
 #show: template.with(
     title: "量子计算（六）——量子傅里叶变换与相位估计",
     description: "本文介绍了量子傅里叶变换的定义、构建方法以及相位反冲的原理，并通过对离散傅里叶变换的量子化，展示了量子傅里叶变换在量子计算中的重要作用。",

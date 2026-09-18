@@ -1,4 +1,4 @@
-#import "../../index.typ": template, tufted
+#import "../../../index.typ": template, tufted, overline
 #import "@preview/physica:0.9.8": *
 #set math.mat(delim: "[", row-gap: 4pt, column-gap: 8pt)
 #show: template.with(

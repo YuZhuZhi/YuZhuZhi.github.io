@@ -1,6 +1,6 @@
 #import "@preview/physica:0.9.8": *
 #set math.mat(delim: "[", row-gap: 4pt, column-gap: 8pt)
-#import "../../../../index.typ": template, tufted
+#import "../../../../index.typ": template, tufted, overline
 #show: template.with(
     title: "离散数学（三）——集合与计数",
     description: "",

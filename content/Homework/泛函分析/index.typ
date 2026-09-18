@@ -190,7 +190,7 @@ $
   &d(x_(n), x) \
   =& sum_(i) frac(1, 2^(i)) frasig(absk7) \
   =& sum_(i=1)^(N_(0)) frac(1, 2^(i)) frasig(absk7) + sum_(i=N_(0) + 1)^(infinity) frac(1, 2^(i)) frasig(absk7) \
-  <& frac(epsilon, 2) sum_(i=1)^(N_(0)) + sum_(i=N_(0) + 1)^(infinity) frac(1, 2^(i)) dot frac(epsilon, 2) \
+  <& frac(epsilon, 2) + sum_(i=N_(0) + 1)^(infinity) frac(1, 2^(i)) dot frac(epsilon, 2) \
   <& frac(epsilon, 2) + frac(epsilon, 2) = epsilon
 $
 则 $d(x_(n), x) -> 0$，从而得证。

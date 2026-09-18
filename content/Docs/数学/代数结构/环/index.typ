@@ -1,5 +1,5 @@
 #set math.mat(delim: "[", row-gap: 4pt, column-gap: 8pt)
-#import "../../../../index.typ": template, tufted
+#import "../../../../index.typ": template, tufted, overline
 #show: template.with(
     title: "代数结构（二）——环",
     description: "环、理想、商环、整环、唯一分解与有限域",

@@ -4,15 +4,23 @@
   description: "一些笔记",
 )
 
+#set footnote(numbering: "*")
 
 = 札记
 
 == 2026
 
 #tufted.blog-entry(
-  date: datetime(year: 2026, month: 9, day: 15),
-  path: "测试/",
-  title: "测试PPT",
+  date: datetime(year: 2026, month: 9, day: 18),
+  path: "Systematic Algebraic Method to Identify Clifford Operations for Quantum Error-Correction Codes/",
+  title: [组会报告——量子纠错 #footnote[_Liu S-C, Lin Y-X, Wang Y-X, Peng L-Y. Systematic Algebraic Method to Identify Clifford Operations for Quantum Error-Correction Codes. Chinese Physics Letters, 2026, 43(4): 040603. doi:10.1088/0256-307X/43/4/040603._]（PowerPoint）],
+)
+
+
+#tufted.blog-entry(
+  date: datetime(year: 2026, month: 5, day: 15),
+  path: "BB84科普/",
+  title: "BB84 科普（PowerPoint）",
 )
 
 
@@ -41,6 +49,6 @@
 
 #tufted.full-width[
   #image("../imgs/albion-1.png") \
-  _--银丝散作云痕，素手轻拂香温。浮窗晴翠渐暖，笑谈昨夜星辰。\
-  寂寥空寒衾枕，惊觉四顾昏昏。方知清梦满船，惟余晓色纷纷。--_
+  _--素丝垂瀑，皎若月华流照；碧瞳含渊，湛如寒潭映霄。玄角嶙峋，似岩壑之斜挑；尖耳微翘，恰新叶之舒梢。 \ 
+  颊泛轻霞，唇噙半笑；影摇虚壁，光散空寮。欲辨已迷，唯余烟袅。--_
 ]

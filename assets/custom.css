@@ -5,15 +5,15 @@ Add your custom CSS styles here to override or extend the default styles.
 *******************************************************************************/
 
 
-/* 桌面端 margin note 改为楷体 */
+/* 边注中的拉丁字符使用 Times New Roman，中文继续回退到楷体。 */
 .marginnote {
-    font-family: "楷体", "KaiTi", "华文楷书", "STKaiti", serif !important;
+    font-family: "Times New Roman", "楷体", "KaiTi", "华文楷书", "STKaiti", serif !important;
 }
 
-/* 移动端 margin note 同样改为楷体 */
+/* 移动端 margin note 使用相同的中英文字体回退顺序。 */
 @media (max-width: 760px) {
 	.marginnote {
-		font-family: "楷体", "KaiTi", "华文楷书", "STKaiti", serif;
+		font-family: "Times New Roman", "楷体", "KaiTi", "华文楷书", "STKaiti", serif;
 	}
 }
 

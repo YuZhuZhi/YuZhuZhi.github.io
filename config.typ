@@ -2,8 +2,8 @@
 
 // 各扩展使用独立缓存键；只在对应资源发生变化时递增。
 #let site-css = (
-  "/assets/site-extensions.css?v=20260910-1",
-  "/assets/custom.css",
+  "/assets/site-extensions.css?v=20260918-1",
+  "/assets/custom.css?v=20260918-1",
   "/assets/code-theme-one-dark-pro.css?v=1",
   "/assets/vendor/live2d-widget/waifu.css",
   "/assets/live2d-widget.css?v=3",
