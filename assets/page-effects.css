@@ -1,0 +1,284 @@
+/*******************************************************************************
+PAGE EFFECTS AND CARD SURFACES
+
+Cross-document view transitions and site-wide translucent card materials.
+*******************************************************************************/
+
+@view-transition {
+	navigation: auto;
+}
+
+@keyframes page-out {
+	to {
+		opacity: 0;
+		transform: translateY(1rem);
+	}
+}
+
+@keyframes page-in {
+	from {
+		opacity: 0;
+		transform: translateY(2rem);
+	}
+}
+
+::view-transition-old(root) {
+	animation: page-out 200ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+::view-transition-new(root) {
+	animation: page-in 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+/* Keep the two fixed page headers outside the root page transition. */
+body > header.site-header:nth-of-type(1) {
+	view-transition-name: site-brand;
+}
+
+body > header.site-header:nth-of-type(2) {
+	view-transition-name: site-nav;
+}
+
+::view-transition-group(site-brand),
+::view-transition-group(site-nav) {
+	animation: none;
+}
+
+::view-transition-old(site-brand),
+::view-transition-new(site-brand),
+::view-transition-old(site-nav),
+::view-transition-new(site-nav) {
+	animation: none;
+}
+
+/* Persistent page furniture should also remain visually still. */
+#cursor-halo {
+	view-transition-name: cursor-halo;
+}
+
+#waifu {
+	view-transition-name: live2d-widget;
+}
+
+#page-jump-btn {
+	view-transition-name: back-to-top;
+}
+
+#home-butterflies {
+	view-transition-name: home-butterflies;
+}
+
+::view-transition-group(cursor-halo),
+::view-transition-group(live2d-widget),
+::view-transition-group(back-to-top),
+::view-transition-group(home-butterflies) {
+	animation: none;
+}
+
+::view-transition-old(cursor-halo),
+::view-transition-new(cursor-halo),
+::view-transition-old(live2d-widget),
+::view-transition-new(live2d-widget),
+::view-transition-old(back-to-top),
+::view-transition-new(back-to-top),
+::view-transition-old(home-butterflies),
+::view-transition-new(home-butterflies) {
+	animation: none;
+}
+
+:root {
+	--surface-card-bg: rgba(255, 255, 252, 0.46);
+	--surface-card-bg-hover: rgba(255, 255, 252, 0.62);
+	--surface-card-border: rgba(44, 44, 44, 0.06);
+	--surface-card-border-hover: rgba(44, 44, 44, 0.11);
+	--surface-card-shadow:
+		0 0.9rem 2.2rem rgba(44, 44, 44, 0.055),
+		0 0.2rem 0.65rem rgba(44, 44, 44, 0.035);
+	--surface-card-shadow-hover:
+		0 1.05rem 2.6rem rgba(44, 44, 44, 0.075),
+		0 0.25rem 0.8rem rgba(44, 44, 44, 0.045);
+	--note-card-bg: rgba(255, 255, 254, 0.6);
+	--note-card-bg-hover: rgba(255, 255, 254, 0.74);
+	--note-card-border: rgba(44, 44, 44, 0.085);
+	--note-card-border-hover: rgba(44, 44, 44, 0.14);
+	--note-card-shadow:
+		0 1.1rem 3rem rgba(44, 44, 44, 0.1),
+		0 0.25rem 0.9rem rgba(44, 44, 44, 0.05);
+	--note-card-shadow-hover:
+		0 1.35rem 3.4rem rgba(44, 44, 44, 0.14),
+		0 0.35rem 1rem rgba(44, 44, 44, 0.07);
+	--toc-card-bg: rgba(255, 255, 252, 0.24);
+	--toc-card-border: rgba(44, 44, 44, 0.045);
+	--toc-card-shadow:
+		0 0.45rem 1.4rem rgba(44, 44, 44, 0.03),
+		0 0.12rem 0.4rem rgba(44, 44, 44, 0.02);
+}
+
+html[data-theme="dark"],
+html:not([data-theme]) {
+	--surface-card-bg: rgba(52, 57, 67, 0.38);
+	--surface-card-bg-hover: rgba(56, 62, 73, 0.5);
+	--surface-card-border: rgba(229, 230, 232, 0.055);
+	--surface-card-border-hover: rgba(229, 230, 232, 0.1);
+	--surface-card-shadow:
+		0 0.9rem 2.2rem rgba(0, 0, 0, 0.16),
+		0 0.2rem 0.65rem rgba(0, 0, 0, 0.1);
+	--surface-card-shadow-hover:
+		0 1.05rem 2.6rem rgba(0, 0, 0, 0.2),
+		0 0.25rem 0.8rem rgba(0, 0, 0, 0.13);
+	--note-card-bg: rgba(60, 66, 78, 0.5);
+	--note-card-bg-hover: rgba(66, 73, 86, 0.62);
+	--note-card-border: rgba(229, 230, 232, 0.085);
+	--note-card-border-hover: rgba(229, 230, 232, 0.14);
+	--note-card-shadow:
+		0 1.1rem 3rem rgba(0, 0, 0, 0.36),
+		0 0.25rem 0.9rem rgba(0, 0, 0, 0.22);
+	--note-card-shadow-hover:
+		0 1.35rem 3.4rem rgba(0, 0, 0, 0.44),
+		0 0.35rem 1rem rgba(0, 0, 0, 0.26);
+	--toc-card-bg: rgba(52, 57, 67, 0.22);
+	--toc-card-border: rgba(229, 230, 232, 0.04);
+	--toc-card-shadow:
+		0 0.45rem 1.4rem rgba(0, 0, 0, 0.1),
+		0 0.12rem 0.4rem rgba(0, 0, 0, 0.06);
+}
+
+@media (prefers-color-scheme: light) {
+	html:not([data-theme]) {
+		--surface-card-bg: rgba(255, 255, 252, 0.46);
+		--surface-card-bg-hover: rgba(255, 255, 252, 0.62);
+		--surface-card-border: rgba(44, 44, 44, 0.06);
+		--surface-card-border-hover: rgba(44, 44, 44, 0.11);
+		--surface-card-shadow:
+			0 0.9rem 2.2rem rgba(44, 44, 44, 0.055),
+			0 0.2rem 0.65rem rgba(44, 44, 44, 0.035);
+		--surface-card-shadow-hover:
+			0 1.05rem 2.6rem rgba(44, 44, 44, 0.075),
+			0 0.25rem 0.8rem rgba(44, 44, 44, 0.045);
+		--note-card-bg: rgba(255, 255, 254, 0.6);
+		--note-card-bg-hover: rgba(255, 255, 254, 0.74);
+		--note-card-border: rgba(44, 44, 44, 0.085);
+		--note-card-border-hover: rgba(44, 44, 44, 0.14);
+		--note-card-shadow:
+			0 1.1rem 3rem rgba(44, 44, 44, 0.1),
+			0 0.25rem 0.9rem rgba(44, 44, 44, 0.05);
+		--note-card-shadow-hover:
+			0 1.35rem 3.4rem rgba(44, 44, 44, 0.14),
+			0 0.35rem 1rem rgba(44, 44, 44, 0.07);
+		--toc-card-bg: rgba(255, 255, 252, 0.24);
+		--toc-card-border: rgba(44, 44, 44, 0.045);
+		--toc-card-shadow:
+			0 0.45rem 1.4rem rgba(44, 44, 44, 0.03),
+			0 0.12rem 0.4rem rgba(44, 44, 44, 0.02);
+	}
+}
+
+/*******************************************************************************
+BLOG ENTRY CARDS
+*******************************************************************************/
+
+.blog-entry {
+	box-sizing: border-box;
+	margin: 0.75rem 0;
+	padding: 1rem 1.25rem;
+	border: 1px solid var(--surface-card-border);
+	border-bottom: 1px solid var(--surface-card-border);
+	border-radius: 0.9rem;
+	background: var(--surface-card-bg);
+	box-shadow: var(--surface-card-shadow);
+	transition:
+		background-color 180ms ease,
+		border-color 180ms ease,
+		box-shadow 180ms ease,
+		transform 180ms ease;
+}
+
+.blog-entry:hover {
+	border-color: var(--surface-card-border-hover);
+	background: var(--surface-card-bg-hover);
+	box-shadow: var(--surface-card-shadow-hover);
+	transform: translateY(-2px);
+}
+
+/*******************************************************************************
+MARGIN NOTE CARDS
+*******************************************************************************/
+
+@media (min-width: 761px) {
+	.marginnote {
+		box-sizing: border-box;
+		padding: 0.6rem 0.7rem;
+		border: 1px solid var(--note-card-border);
+		border-radius: 0.65rem;
+		background: var(--note-card-bg);
+		box-shadow: var(--note-card-shadow);
+	}
+
+	.marginnote:hover {
+		border-color: var(--note-card-border-hover);
+		box-shadow: var(--note-card-shadow-hover);
+	}
+}
+
+/*******************************************************************************
+TABLE OF CONTENTS CARD
+*******************************************************************************/
+
+@media (min-width: 1200px) {
+	.toc-sidebar {
+		top: 10rem;
+		left: 0.35%;
+		width: 11.8%;
+		max-height: calc(100vh - 12rem);
+		box-sizing: border-box;
+		padding: 0.75rem 0.55rem;
+		border: 1px solid var(--toc-card-border);
+		border-radius: 0.85rem;
+		background: var(--toc-card-bg);
+		box-shadow: var(--toc-card-shadow);
+		color: var(--theme-text, #555);
+		scrollbar-width: thin;
+	}
+
+	.toc-sidebar::before {
+		content: "目录";
+		display: block;
+		margin: 0.1rem 0.5rem 0.55rem;
+		color: var(--theme-footer, #777);
+		font-size: 0.72rem;
+		font-weight: 700;
+		letter-spacing: 0.12em;
+	}
+
+	.toc-sidebar a:any-link {
+		border-left: 0;
+		border-radius: 0.45rem;
+		padding: 0.35rem 0.4rem;
+		transition:
+			background-color 160ms ease,
+			color 160ms ease,
+			transform 160ms ease;
+	}
+
+	.toc-sidebar a:hover,
+	.toc-sidebar a:focus-visible,
+	.toc-sidebar a.is-active {
+		border-left-color: transparent;
+		background: var(--nav-hover-bg, rgba(128, 128, 128, 0.08));
+		color: var(--theme-heading, #111);
+		transform: translateX(2px);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	::view-transition-old(root),
+	::view-transition-new(root) {
+		animation: none;
+	}
+
+	.blog-entry,
+	.toc-sidebar a,
+	.marginnote {
+		transition: none;
+	}
+}

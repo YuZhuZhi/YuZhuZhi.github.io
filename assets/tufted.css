@@ -688,8 +688,7 @@ sup.footnote-ref {
 	top: -0.5em;
 }
 
-.footnote-ref,
-.footnote-ref + .marginnote {
+.footnote-ref {
 	--highlight: transparent;
 	background-color: var(--highlight);
 	box-shadow: 0 0 0 5px var(--highlight);
@@ -697,12 +696,6 @@ sup.footnote-ref {
 	transition:
 		background-color 0.3s ease 1s,
 		box-shadow 0.3s ease 1s;
-}
-
-/* Highlight margin note when footnote reference is hovered */
-.footnote-ref:hover + .marginnote {
-	--highlight: var(--highlight-weak);
-	transition-delay: 0s;
 }
 
 /* Highlight footnote reference when margin note is hovered */

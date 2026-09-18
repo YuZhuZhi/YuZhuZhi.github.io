@@ -1,0 +1,284 @@
+/*******************************************************************************
+SITE UI
+
+Navigation links and animated Docs category tabs.
+*******************************************************************************/
+
+:root {
+	--butterfly-lavender: #a5a1e8;
+	--butterfly-cyan: #7dd3fc;
+	--nav-active-bg: linear-gradient(
+		135deg,
+		rgba(165, 161, 232, 0.1),
+		rgba(125, 211, 252, 0.055)
+	);
+	--nav-active-border: rgba(165, 161, 232, 0.18);
+	--nav-hover-bg: rgba(128, 128, 128, 0.08);
+	--nav-radius: 0.5rem;
+}
+
+html[data-theme="dark"],
+html:not([data-theme]) {
+	--butterfly-lavender: #b9b7ff;
+	--butterfly-cyan: #93d8ff;
+	--nav-active-bg: linear-gradient(
+		135deg,
+		rgba(185, 183, 255, 0.13),
+		rgba(147, 216, 255, 0.07)
+	);
+	--nav-active-border: rgba(185, 183, 255, 0.22);
+	--nav-hover-bg: rgba(255, 255, 255, 0.07);
+}
+
+@media (prefers-color-scheme: light) {
+	html:not([data-theme]) {
+		--butterfly-lavender: #a5a1e8;
+		--butterfly-cyan: #7dd3fc;
+		--nav-active-bg: linear-gradient(
+			135deg,
+			rgba(165, 161, 232, 0.1),
+			rgba(125, 211, 252, 0.055)
+		);
+		--nav-active-border: rgba(165, 161, 232, 0.18);
+		--nav-hover-bg: rgba(128, 128, 128, 0.08);
+	}
+}
+
+/*******************************************************************************
+NAVIGATION
+*******************************************************************************/
+
+.site-nav {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 1em;
+	width: 100%;
+	margin-top: 0.5rem;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	box-shadow: none;
+}
+
+.site-nav a:any-link {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 0;
+	margin: 0;
+	padding: 0.3em 0.55em;
+	border: 1px solid transparent;
+	border-radius: var(--nav-radius);
+	background: transparent;
+	box-shadow: none;
+	color: color-mix(in srgb, var(--theme-text) 82%, transparent);
+	font-size: 1.5rem;
+	font-weight: 600;
+	letter-spacing: 0.01em;
+	line-height: 1.15;
+	text-decoration: none;
+	transition:
+		color 180ms ease,
+		background-color 180ms ease,
+		border-color 180ms ease;
+}
+
+.site-nav a:hover,
+.site-nav a:focus-visible {
+	border-color: color-mix(in srgb, var(--theme-text) 10%, transparent);
+	background: var(--nav-hover-bg);
+	color: var(--theme-heading);
+	outline: none;
+}
+
+.site-nav a.is-active {
+	border-color: var(--nav-active-border);
+	background: var(--nav-active-bg);
+	color: var(--theme-heading);
+	box-shadow: none;
+}
+
+.site-nav .theme-toggle-btn {
+	width: 2.5rem;
+	height: 2.5rem;
+	margin: 0 3em 0 auto;
+	align-self: center;
+	border: 1px solid transparent;
+	border-radius: var(--nav-radius);
+	background: transparent;
+	color: var(--theme-text);
+	transition:
+		color 180ms ease,
+		background-color 180ms ease,
+		border-color 180ms ease;
+}
+
+.site-nav .theme-toggle-btn:hover,
+.site-nav .theme-toggle-btn:focus-visible {
+	border-color: color-mix(in srgb, var(--theme-text) 10%, transparent);
+	background: var(--nav-hover-bg);
+	color: var(--theme-heading);
+}
+
+/*******************************************************************************
+DOCS CATEGORY TABS
+*******************************************************************************/
+
+.docs-tab-buttons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75em;
+	margin: 0 0 0.75em;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	box-shadow: none;
+}
+
+.docs-tab-button {
+	box-sizing: border-box;
+	inline-size: 5.5em;
+	flex: 0 0 5.5em;
+	min-height: 0;
+	padding: 0.32em 0.62em;
+	border: 1px solid transparent;
+	border-radius: var(--nav-radius);
+	background: transparent;
+	color: color-mix(in srgb, var(--theme-text) 80%, transparent);
+	font-size: 1.25rem;
+	font-weight: 600;
+	line-height: 1.2;
+	transition:
+		color 160ms ease,
+		background-color 160ms ease,
+		border-color 160ms ease;
+}
+
+.docs-tab-button:hover,
+.docs-tab-button:focus-visible {
+	border-color: color-mix(in srgb, var(--theme-text) 10%, transparent);
+	background: var(--nav-hover-bg);
+	color: var(--theme-heading);
+	outline: none;
+}
+
+.docs-tabs:has(#docs-tab-quantum:checked) label[for="docs-tab-quantum"],
+.docs-tabs:has(#docs-tab-math:checked) label[for="docs-tab-math"],
+.docs-tabs:has(#docs-tab-physics:checked) label[for="docs-tab-physics"],
+.docs-tabs:has(#docs-tab-computer:checked) label[for="docs-tab-computer"],
+.docs-tabs:has(#docs-tab-essay:checked) label[for="docs-tab-essay"] {
+	border-color: var(--nav-active-border);
+	background: var(--nav-active-bg);
+	color: var(--theme-heading);
+	box-shadow: none;
+	font-weight: 700;
+}
+
+@keyframes docs-panel-in {
+	from {
+		opacity: 0;
+		transform: translateY(0.65rem);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes docs-panel-item-in {
+	from {
+		opacity: 0;
+		transform: translateY(0.45rem);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.docs-tabs:has(#docs-tab-quantum:checked) .docs-tab-panel-quantum,
+.docs-tabs:has(#docs-tab-math:checked) .docs-tab-panel-math,
+.docs-tabs:has(#docs-tab-physics:checked) .docs-tab-panel-physics,
+.docs-tabs:has(#docs-tab-computer:checked) .docs-tab-panel-computer,
+.docs-tabs:has(#docs-tab-essay:checked) .docs-tab-panel-essay {
+	animation: docs-panel-in 280ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.docs-tabs:has(#docs-tab-quantum:checked) .docs-tab-panel-quantum > *,
+.docs-tabs:has(#docs-tab-math:checked) .docs-tab-panel-math > *,
+.docs-tabs:has(#docs-tab-physics:checked) .docs-tab-panel-physics > *,
+.docs-tabs:has(#docs-tab-computer:checked) .docs-tab-panel-computer > *,
+.docs-tabs:has(#docs-tab-essay:checked) .docs-tab-panel-essay > * {
+	animation: docs-panel-item-in 320ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.docs-tabs:has(#docs-tab-quantum:checked) .docs-tab-panel-quantum > *:nth-child(1),
+.docs-tabs:has(#docs-tab-math:checked) .docs-tab-panel-math > *:nth-child(1),
+.docs-tabs:has(#docs-tab-physics:checked) .docs-tab-panel-physics > *:nth-child(1),
+.docs-tabs:has(#docs-tab-computer:checked) .docs-tab-panel-computer > *:nth-child(1),
+.docs-tabs:has(#docs-tab-essay:checked) .docs-tab-panel-essay > *:nth-child(1) {
+	animation-delay: 20ms;
+}
+
+.docs-tabs:has(#docs-tab-quantum:checked) .docs-tab-panel-quantum > *:nth-child(2),
+.docs-tabs:has(#docs-tab-math:checked) .docs-tab-panel-math > *:nth-child(2),
+.docs-tabs:has(#docs-tab-physics:checked) .docs-tab-panel-physics > *:nth-child(2),
+.docs-tabs:has(#docs-tab-computer:checked) .docs-tab-panel-computer > *:nth-child(2),
+.docs-tabs:has(#docs-tab-essay:checked) .docs-tab-panel-essay > *:nth-child(2) {
+	animation-delay: 70ms;
+}
+
+.docs-tabs:has(#docs-tab-quantum:checked) .docs-tab-panel-quantum > *:nth-child(3),
+.docs-tabs:has(#docs-tab-math:checked) .docs-tab-panel-math > *:nth-child(3),
+.docs-tabs:has(#docs-tab-physics:checked) .docs-tab-panel-physics > *:nth-child(3),
+.docs-tabs:has(#docs-tab-computer:checked) .docs-tab-panel-computer > *:nth-child(3),
+.docs-tabs:has(#docs-tab-essay:checked) .docs-tab-panel-essay > *:nth-child(3) {
+	animation-delay: 120ms;
+}
+
+.docs-tabs:has(#docs-tab-quantum:checked) .docs-tab-panel-quantum > *:nth-child(4),
+.docs-tabs:has(#docs-tab-math:checked) .docs-tab-panel-math > *:nth-child(4),
+.docs-tabs:has(#docs-tab-physics:checked) .docs-tab-panel-physics > *:nth-child(4),
+.docs-tabs:has(#docs-tab-computer:checked) .docs-tab-panel-computer > *:nth-child(4),
+.docs-tabs:has(#docs-tab-essay:checked) .docs-tab-panel-essay > *:nth-child(4) {
+	animation-delay: 170ms;
+}
+
+@media (max-width: 760px) {
+	.site-nav {
+		width: 100%;
+		justify-content: flex-start;
+		gap: 0.5em;
+	}
+
+	.site-nav .theme-toggle-btn {
+		margin-right: 0;
+	}
+
+	.docs-tab-buttons {
+		display: grid;
+		width: 100%;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 0.5em;
+	}
+
+	.docs-tab-button {
+		box-sizing: border-box;
+		inline-size: auto;
+		width: 100%;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site-nav a,
+	.site-nav .theme-toggle-btn,
+	.docs-tab-button,
+	.docs-tab-panel,
+	.docs-tab-panel > * {
+		animation: none;
+		transition: none;
+	}
+}
