@@ -2,10 +2,10 @@
 
 // 各扩展使用独立缓存键；只在对应资源发生变化时递增。
 #let site-css = (
-  "/assets/site-extensions.css?v=20260918-1",
+  "/assets/site-extensions.css?v=20260919-3",
   "/assets/custom.css?v=20260918-1",
-  "/assets/page-effects.css?v=20260919-7",
-  "/assets/site-ui.css?v=20260919-5",
+  "/assets/page-effects.css?v=20260919-8",
+  "/assets/site-ui.css?v=20260919-22",
   "/assets/code-theme-one-dark-pro.css?v=1",
   "/assets/vendor/live2d-widget/waifu.css",
   "/assets/live2d-widget.css?v=3",
@@ -13,7 +13,8 @@
 )
 
 #let site-js = (
-  "/assets/site-ui.js?v=20260919-2",
+  "/assets/page-transition.js?v=20260919-2",
+  "/assets/site-ui.js?v=20260919-13",
   "/assets/smooth-anchors.js?v=20260919-2",
   "/assets/live2d-widget.js?v=14",
   "/assets/cursor-glow.js?v=20260730-13",

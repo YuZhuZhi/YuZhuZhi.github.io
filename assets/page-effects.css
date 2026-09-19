@@ -1,22 +1,8 @@
 /*******************************************************************************
 PAGE EFFECTS AND CARD SURFACES
 
-Cross-document view transitions and site-wide translucent card materials.
+Site-controlled page transitions and translucent card materials.
 *******************************************************************************/
-
-@view-transition {
-	navigation: auto;
-}
-
-/* Keep the site background behind both snapshots so a page transition
-   never exposes the browser's default white canvas between frames. */
-::view-transition {
-	background-color: var(--theme-bg, #fcf9f2);
-}
-
-::view-transition-group(root) {
-	background-color: var(--theme-bg, #fcf9f2);
-}
 
 @keyframes page-out {
 	to {
@@ -32,68 +18,35 @@ Cross-document view transitions and site-wide translucent card materials.
 	}
 }
 
-::view-transition-old(root) {
-	animation: page-out 200ms cubic-bezier(0.4, 0, 0.2, 1) both;
+@keyframes blog-entry-in {
+	from {
+		opacity: 0;
+		transform: translateY(1.4rem);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
-::view-transition-new(root) {
+html.page-leaving body > article,
+html.page-leaving body > footer {
+	animation: page-out 180ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+html.page-entering body > article:not(:has(.blog-entry)),
+html.page-entering body > footer {
 	animation: page-in 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
-/* Keep the two fixed page headers outside the root page transition. */
-body > header.site-header:nth-of-type(1) {
-	view-transition-name: site-brand;
+/* Blog lists reveal entries from top to bottom in a piano-like sequence. */
+html.js .blog-entry:not(.is-revealed) {
+	opacity: 0;
 }
 
-body > header.site-header:nth-of-type(2) {
-	view-transition-name: site-nav;
-}
-
-::view-transition-group(site-brand),
-::view-transition-group(site-nav) {
-	animation: none;
-}
-
-::view-transition-old(site-brand),
-::view-transition-new(site-brand),
-::view-transition-old(site-nav),
-::view-transition-new(site-nav) {
-	animation: none;
-}
-
-/* Persistent page furniture should also remain visually still. */
-#cursor-halo {
-	view-transition-name: cursor-halo;
-}
-
-#waifu {
-	view-transition-name: live2d-widget;
-}
-
-#page-jump-btn {
-	view-transition-name: back-to-top;
-}
-
-#home-butterflies {
-	view-transition-name: home-butterflies;
-}
-
-::view-transition-group(cursor-halo),
-::view-transition-group(live2d-widget),
-::view-transition-group(back-to-top),
-::view-transition-group(home-butterflies) {
-	animation: none;
-}
-
-::view-transition-old(cursor-halo),
-::view-transition-new(cursor-halo),
-::view-transition-old(live2d-widget),
-::view-transition-new(live2d-widget),
-::view-transition-old(back-to-top),
-::view-transition-new(back-to-top),
-::view-transition-old(home-butterflies),
-::view-transition-new(home-butterflies) {
-	animation: none;
+.blog-entry.is-entering {
+	animation: blog-entry-in 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+	animation-delay: calc(var(--entry-index, 0) * 85ms);
 }
 
 :root {
@@ -281,9 +234,16 @@ TABLE OF CONTENTS CARD
 }
 
 @media (prefers-reduced-motion: reduce) {
-	::view-transition-old(root),
-	::view-transition-new(root) {
+	html.page-leaving body > article,
+	html.page-leaving body > footer,
+	html.page-entering body > article:not(:has(.blog-entry)),
+	html.page-entering body > footer,
+	.blog-entry.is-entering {
 		animation: none;
+	}
+
+	html.js .blog-entry:not(.is-revealed) {
+		opacity: 1;
 	}
 
 	.blog-entry,

@@ -15,6 +15,9 @@ Navigation links and animated Docs category tabs.
 	--nav-active-border: rgba(165, 161, 232, 0.18);
 	--nav-hover-bg: rgba(128, 128, 128, 0.08);
 	--nav-radius: 0.5rem;
+	--archive-line: rgba(128, 128, 128, 0.28);
+	--archive-dot: rgba(96, 96, 96, 0.55);
+	--archive-heading-dot: rgba(17, 17, 17, 0.8);
 }
 
 html[data-theme="dark"],
@@ -28,6 +31,9 @@ html:not([data-theme]) {
 	);
 	--nav-active-border: rgba(185, 183, 255, 0.22);
 	--nav-hover-bg: rgba(255, 255, 255, 0.07);
+	--archive-line: rgba(255, 255, 255, 0.14);
+	--archive-dot: rgba(200, 200, 206, 0.5);
+	--archive-heading-dot: rgba(235, 235, 240, 0.82);
 }
 
 @media (prefers-color-scheme: light) {
@@ -41,6 +47,9 @@ html:not([data-theme]) {
 		);
 		--nav-active-border: rgba(165, 161, 232, 0.18);
 		--nav-hover-bg: rgba(128, 128, 128, 0.08);
+		--archive-line: rgba(128, 128, 128, 0.28);
+		--archive-dot: rgba(96, 96, 96, 0.55);
+		--archive-heading-dot: rgba(17, 17, 17, 0.8);
 	}
 }
 
@@ -247,6 +256,241 @@ DOCS CATEGORY TABS
 	animation-delay: 170ms;
 }
 
+/*******************************************************************************
+DOCS ARCHIVE TIMELINE
+*******************************************************************************/
+
+.docs-archive-group {
+	--archive-left: 4.5rem;
+	--archive-chain: 2rem;
+	position: relative;
+	margin: 1.05rem 0 1.4rem;
+}
+
+.docs-archive-heading-row {
+	position: relative;
+	display: grid;
+	grid-template-columns: var(--archive-left) var(--archive-chain) minmax(0, 1fr);
+	align-items: center;
+	min-height: 1.8rem;
+	padding: 0.12rem 0;
+	border-radius: 0.45rem;
+	cursor: pointer;
+	user-select: none;
+	transition: background-color 160ms ease;
+}
+
+.docs-archive-heading-row:hover,
+.docs-archive-heading-row:focus-visible {
+	background: var(--nav-hover-bg);
+	outline: none;
+}
+
+.docs-archive-heading-row::before {
+	content: "";
+	grid-column: 2;
+	grid-row: 1;
+	justify-self: center;
+	width: 0.62rem;
+	height: 0.62rem;
+	border: 0;
+	border-radius: 50%;
+	background: var(--archive-heading-dot);
+	box-shadow: 0 0 0 4px var(--theme-bg);
+}
+
+.docs-archive-heading-row::after {
+	content: "";
+	grid-column: 3;
+	grid-row: 1;
+	justify-self: end;
+	width: 0;
+	height: 0;
+	margin-right: 0.15rem;
+	border-top: 0.38rem solid transparent;
+	border-bottom: 0.38rem solid transparent;
+	border-left: 0.58rem solid color-mix(in srgb, var(--theme-text) 52%, transparent);
+	transform: rotate(0deg);
+	transform-origin: 35% 50%;
+	transition:
+		transform 180ms ease,
+		border-left-color 180ms ease;
+}
+
+.docs-archive-group:not(.is-collapsed) .docs-archive-heading-row::after {
+	border-left-color: var(--nav-accent);
+	transform: rotate(90deg);
+}
+
+.docs-archive-heading {
+	grid-column: 3;
+	grid-row: 1;
+	margin: 0;
+	color: var(--theme-heading);
+	font-size: 1.65rem;
+	font-style: normal;
+	font-weight: 700;
+	line-height: 1.3;
+}
+
+.docs-archive-count {
+	grid-column: 1;
+	grid-row: 1;
+	justify-self: end;
+	padding-right: 0.55rem;
+	color: color-mix(in srgb, var(--theme-text) 52%, transparent);
+	font-size: 0.82rem;
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+.docs-archive-list {
+	position: relative;
+	display: grid;
+	overflow: hidden;
+	margin: 0.25rem 0 0;
+	padding: 0;
+	list-style: none;
+	counter-reset: docs-item;
+	transition:
+		max-height 420ms cubic-bezier(0.4, 0, 0.2, 1),
+		opacity 260ms ease;
+}
+
+.docs-archive-list::before {
+	content: "";
+	position: absolute;
+	top: -0.35rem;
+	bottom: var(--archive-tail, 1.1rem);
+	left: calc(var(--archive-left) + (var(--archive-chain) / 2) - 1px);
+	width: 0;
+	border-left-width: 2px;
+	border-left-style: dashed;
+	border-left-color: var(--archive-line);
+	transform-origin: top;
+}
+
+.docs-archive-list.is-unnumbered {
+	counter-reset: none;
+}
+
+.docs-archive-item.is-unnumbered {
+	counter-increment: none;
+}
+
+.docs-archive-item.is-unnumbered a:any-link::before {
+	content: none;
+}
+
+.docs-archive-group > hr {
+	width: 100%;
+}
+
+.docs-archive-item {
+	position: relative;
+	margin: 0;
+	counter-increment: docs-item;
+}
+
+.docs-archive-item a:any-link {
+	display: grid;
+	grid-template-columns: var(--archive-left) var(--archive-chain) minmax(0, 1fr);
+	align-items: center;
+	min-height: 2rem;
+	padding: 0.2rem 0;
+	border-radius: 0.45rem;
+	color: color-mix(in srgb, var(--theme-text) 84%, transparent);
+	font-size: 1.25rem;
+	text-decoration: none;
+	transition:
+		color 180ms ease,
+		background-color 180ms ease,
+		transform 180ms ease;
+}
+
+.docs-archive-item a:any-link::before {
+	content: counter(docs-item);
+	grid-column: 1;
+	grid-row: 1;
+	justify-self: end;
+	padding-right: 0.55rem;
+	color: color-mix(in srgb, var(--theme-text) 58%, transparent);
+	font-size: 0.88rem;
+	font-variant-numeric: tabular-nums;
+	line-height: 1;
+	text-align: right;
+}
+
+.docs-archive-node {
+	grid-column: 2;
+	grid-row: 1;
+	justify-self: center;
+	align-self: center;
+	width: 0.5rem;
+	height: 0.5rem;
+	border-radius: 999px;
+	background: var(--archive-dot, rgba(96, 96, 96, 0.55));
+	box-shadow: 0 0 0 3px var(--theme-bg);
+	pointer-events: none;
+	transform: scale(1);
+	transform-origin: center;
+	transition:
+		transform 180ms ease,
+		background-color 180ms ease,
+		box-shadow 180ms ease;
+}
+
+.docs-archive-link-text {
+	grid-column: 3;
+	grid-row: 1;
+	min-width: 0;
+	text-align: left;
+}
+
+.docs-archive-item.is-entering {
+	animation: docs-archive-item-in 440ms cubic-bezier(0.22, 1, 0.36, 1) both;
+	animation-delay: calc(var(--item-index, 0) * 70ms);
+}
+
+.docs-archive-item.is-leaving {
+	animation: docs-archive-item-out 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
+	animation-delay: calc(var(--item-index, 0) * 45ms);
+}
+
+@keyframes docs-archive-item-in {
+	from {
+		opacity: 0;
+		transform: translateY(0.9rem);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes docs-archive-item-out {
+	to {
+		opacity: 0;
+		transform: translateY(-0.55rem);
+	}
+}
+
+.docs-archive-item a:hover,
+.docs-archive-item a:focus-visible {
+	background: var(--nav-hover-bg);
+	color: var(--theme-heading);
+	outline: none;
+}
+
+.docs-archive-item:hover .docs-archive-node,
+.docs-archive-item a:focus-visible .docs-archive-node,
+.docs-archive-node.is-active {
+	transform: scale(0.64, 2.2);
+	border-radius: 0.12rem;
+	background: var(--archive-dot, rgba(96, 96, 96, 0.55));
+	box-shadow: 0 0 0 4px var(--nav-accent-soft);
+}
+
 @media (max-width: 760px) {
 	.site-nav {
 		width: 100%;
@@ -270,6 +514,11 @@ DOCS CATEGORY TABS
 		inline-size: auto;
 		width: 100%;
 	}
+
+	.docs-archive-group {
+		--archive-left: 3.2rem;
+		--archive-chain: 1.6rem;
+	}
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -277,7 +526,13 @@ DOCS CATEGORY TABS
 	.site-nav .theme-toggle-btn,
 	.docs-tab-button,
 	.docs-tab-panel,
-	.docs-tab-panel > * {
+	.docs-tab-panel > *,
+	.docs-archive-item.is-entering,
+	.docs-archive-item.is-leaving,
+	.docs-archive-group > .marginnote.is-archive-entering,
+	.docs-archive-group > .marginnote.is-archive-leaving,
+	.docs-archive-list::before,
+	.docs-archive-group > hr {
 		animation: none;
 		transition: none;
 	}
