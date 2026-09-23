@@ -5,7 +5,7 @@
   "/assets/site-extensions.css?v=20260923-1",
   "/assets/custom.css?v=20260918-1",
   "/assets/page-effects.css?v=20260924-4",
-  "/assets/site-ui.css?v=20260924-5",
+  "/assets/site-ui.css?v=20260924-6",
   "/assets/code-theme-one-dark-pro.css?v=1",
   "/assets/vendor/live2d-widget/waifu.css",
   "/assets/live2d-widget.css?v=3",

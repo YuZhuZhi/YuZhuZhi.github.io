@@ -18,7 +18,7 @@ Navigation links and animated Docs category tabs.
 	--archive-line: rgba(128, 128, 128, 0.28);
 	--archive-dot: rgba(96, 96, 96, 0.55);
 	--archive-heading-dot: rgba(17, 17, 17, 0.8);
-	--site-header-bg: rgba(255, 255, 255, 0.92);
+	--site-header-bg: rgba(255, 255, 255, 0.72);
 	--site-header-shadow: 0 0.15rem 0.5rem rgba(44, 44, 44, 0.035);
 }
 
@@ -36,7 +36,7 @@ html:not([data-theme]) {
 	--archive-line: rgba(255, 255, 255, 0.14);
 	--archive-dot: rgba(200, 200, 206, 0.5);
 	--archive-heading-dot: rgba(235, 235, 240, 0.82);
-	--site-header-bg: rgba(33, 37, 43, 0.94);
+	--site-header-bg: rgba(33, 37, 43, 0.76);
 	--site-header-shadow: 0 0.15rem 0.5rem rgba(0, 0, 0, 0.14);
 }
 
@@ -54,7 +54,7 @@ html:not([data-theme]) {
 		--archive-line: rgba(128, 128, 128, 0.28);
 		--archive-dot: rgba(96, 96, 96, 0.55);
 		--archive-heading-dot: rgba(17, 17, 17, 0.8);
-		--site-header-bg: rgba(255, 255, 255, 0.92);
+		--site-header-bg: rgba(255, 255, 255, 0.72);
 		--site-header-shadow: 0 0.15rem 0.5rem rgba(44, 44, 44, 0.035);
 	}
 }
@@ -405,7 +405,8 @@ DOCS ARCHIVE TIMELINE
 	min-height: 2rem;
 	padding: 0.2rem 0;
 	border-radius: 0.45rem;
-	color: color-mix(in srgb, var(--theme-text) 84%, transparent);
+	color: var(--theme-text);
+	font-weight: 500;
 	font-size: 1.25rem;
 	text-decoration: none;
 	transition:
@@ -420,7 +421,7 @@ DOCS ARCHIVE TIMELINE
 	grid-row: 1;
 	justify-self: end;
 	padding-right: 0.55rem;
-	color: color-mix(in srgb, var(--theme-text) 58%, transparent);
+	color: color-mix(in srgb, var(--theme-text) 76%, transparent);
 	font-size: 0.88rem;
 	font-variant-numeric: tabular-nums;
 	line-height: 1;
@@ -567,8 +568,8 @@ body > .site-header-shell > header.site-header-nav {
 	border-bottom: 1px solid var(--surface-card-border);
 	background: var(--site-header-bg);
 	box-shadow: var(--site-header-shadow);
-	-webkit-backdrop-filter: blur(14px);
-	backdrop-filter: blur(14px);
+	-webkit-backdrop-filter: blur(18px) saturate(1.5);
+	backdrop-filter: blur(18px) saturate(1.5);
 }
 
 body > .site-header-shell .site-nav {
