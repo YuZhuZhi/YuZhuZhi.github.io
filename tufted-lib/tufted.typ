@@ -86,7 +86,7 @@
           "/assets/format-headings.js",
           "/assets/theme-toggle.js",
           "/assets/marginnote-toggle.js",
-          "/assets/toc.js?v=20260829-1",
+          "/assets/toc.js?v=20260924-1",
           "/assets/back-to-top.js",
           "/assets/math-copy.js",
         )
@@ -97,42 +97,71 @@
 
       // Body
       html.body({
-        // Custom header elements (site header, not navigation)
-        html.header(
-          class: "site-header",
-          {
-            for (i, element) in header-elements.enumerate() {
-              element
-              if i < header-elements.len() - 1 {
-                html.br()
+        // Site header with brand, navigation, search, and theme controls.
+        html.div(
+          class: "site-header-shell",
+          html.header(
+            class: "site-header site-header-nav",
+            {
+              html.div(
+                class: "site-header-brand",
+                {
+                  for (i, element) in header-elements.enumerate() {
+                    element
+                    if i < header-elements.len() - 1 {
+                      html.br()
+                    }
+                  }
+                }
+              )
+
+              if header-links != none {
+                html.nav(
+                  class: "site-nav",
+                  {
+                    for (href, title) in header-links {
+                      html.a(href: href, title)
+                    }
+                    html.elem(
+                      "div",
+                      attrs: (class: "site-search", role: "search"),
+                      {
+                        html.elem(
+                          "input",
+                          attrs: (
+                            type: "search",
+                            class: "site-search-input",
+                            placeholder: "搜索文章…",
+                            aria-label: "搜索站点",
+                            autocomplete: "off",
+                          ),
+                          "",
+                        )
+                        html.elem(
+                          "div",
+                          attrs: (
+                            class: "site-search-results",
+                            role: "listbox",
+                          ),
+                          "",
+                        )
+                      },
+                    )
+                    html.elem(
+                      "button",
+                      attrs: (
+                        id: "theme-toggle",
+                        class: "theme-toggle-btn",
+                        type: "button",
+                        aria-label: "Toggle theme",
+                      ),
+                      "",
+                    )
+                  },
+                )
               }
             }
-          },
-        )
-
-        // Add website navigation
-        html.header(
-          class: "site-header",
-          if header-links != none {
-            html.nav(
-              class: "site-nav",
-              {
-                for (href, title) in header-links {
-                  html.a(href: href, title)
-                }
-                html.elem(
-                  "button",
-                  attrs: (
-                    id: "theme-toggle",
-                    class: "theme-toggle-btn",
-                    type: "button",
-                    aria-label: "Toggle theme",
-                  ),
-                  "",
-                )
-              },
-            )
-          }
+          )
         )
 
         // Main content

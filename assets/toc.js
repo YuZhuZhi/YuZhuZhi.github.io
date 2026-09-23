@@ -22,7 +22,7 @@
 	}
 
 	function collectHeadings(section) {
-		return Array.from(section.querySelectorAll("h2, h3")).filter(
+		return Array.from(section.querySelectorAll("h2, h3, h4")).filter(
 			(heading) => !heading.closest('[role="doc-bibliography"]'),
 		);
 	}
@@ -59,10 +59,9 @@
 			const item = document.createElement("li");
 			const link = document.createElement("a");
 
+			const level = heading.tagName === "H2" ? 1 : 2;
 			item.classList.add(`toc-${heading.tagName.toLowerCase()}`);
-			if (index > 0) {
-				item.classList.add("toc-after-title");
-			}
+			item.classList.add(`toc-level-${level}`);
 			link.href = `#${id}`;
 			link.textContent = heading.textContent.trim();
 
@@ -136,7 +135,11 @@
 			return;
 		}
 
-		const headings = collectHeadings(section);
+		const allHeadings = collectHeadings(section);
+		const headings =
+			allHeadings.length > 0 && allHeadings[0].tagName === "H2"
+				? allHeadings.slice(1)
+				: allHeadings;
 		if (headings.length < MIN_TOC_HEADINGS) {
 			return;
 		}

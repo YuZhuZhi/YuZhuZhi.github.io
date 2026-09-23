@@ -1242,7 +1242,10 @@ def build_html(force: bool = False) -> bool:
     )
 
     print(f"✅ HTML 构建完成。{stats.format_summary()}")
-    return not stats.has_failures
+    if stats.has_failures:
+        return False
+
+    return generate_search_index()
 
 
 def build_pdf(force: bool = False) -> bool:
@@ -1850,6 +1853,62 @@ def generate_sitemap(site_url: str) -> bool:
         return True
     except Exception as e:
         print(f"❌ Sitemap 构建失败: {e}")
+        return False
+
+
+def generate_search_index() -> bool:
+    """
+    扫描已生成的 HTML，写入体积较小的客户端搜索索引。
+
+    索引只包含页面标题、描述、链接和各级标题文本，不写入正文，
+    避免静态站点首次搜索时下载大量文章内容。
+    """
+    entries = []
+    seen_links = set()
+
+    for html_path in sorted(SITE_DIR.rglob("*.html")):
+        if html_path.name == "404.html":
+            continue
+
+        metadata = parse_html_metadata(html_path)
+        title = metadata.get("title", "").strip()
+        link = metadata.get("link", "").strip()
+        if not title or not link or link in seen_links:
+            continue
+
+        try:
+            content = html_path.read_text(encoding="utf-8")
+        except OSError:
+            continue
+
+        headings = []
+        for match in re.finditer(r"<h[1-3]\b[^>]*>(.*?)</h[1-3]>", content, re.I | re.S):
+            text = re.sub(r"<[^>]+>", "", match.group(1))
+            text = html.unescape(text)
+            text = re.sub(r"\s+", " ", text).strip()
+            if text and text not in headings:
+                headings.append(text)
+
+        entries.append(
+            {
+                "title": title,
+                "url": link,
+                "description": metadata.get("description", "").strip(),
+                "headings": headings,
+            }
+        )
+        seen_links.add(link)
+
+    search_path = SITE_DIR / "search-index.json"
+    try:
+        search_path.write_text(
+            json.dumps(entries, ensure_ascii=False, separators=(",", ":")),
+            encoding="utf-8",
+        )
+        print(f"✅ 搜索索引构建完成: {search_path} ({len(entries)} 个页面)")
+        return True
+    except Exception as exc:
+        print(f"❌ 搜索索引构建失败: {exc}")
         return False
 
 

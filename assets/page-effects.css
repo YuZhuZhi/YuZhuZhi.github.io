@@ -29,12 +29,12 @@ Site-controlled page transitions and translucent card materials.
 	}
 }
 
-html.page-leaving body > article,
+html.page-leaving body > article:not(:has(.docs-tabs)),
 html.page-leaving body > footer {
 	animation: page-out 180ms cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
-html.page-entering body > article:not(:has(.blog-entry)),
+html.page-entering body > article:not(:has(.blog-entry)):not(:has(.docs-tabs)),
 html.page-entering body > footer {
 	animation: page-in 300ms cubic-bezier(0.4, 0, 0.2, 1) both;
 }
@@ -199,7 +199,7 @@ TABLE OF CONTENTS CARD
 		border-radius: 0.85rem;
 		background: var(--toc-card-bg);
 		box-shadow: var(--toc-card-shadow);
-		color: var(--theme-text, #555);
+		color: color-mix(in srgb, var(--theme-text) 60%, transparent);
 		scrollbar-width: thin;
 	}
 
@@ -233,10 +233,36 @@ TABLE OF CONTENTS CARD
 	}
 }
 
+/* Light hierarchy rail for article subheadings. */
+.toc-sidebar .toc-level-1 > a {
+	color: color-mix(in srgb, var(--theme-text) 82%, transparent);
+	font-weight: 650;
+	font-size: 0.96rem;
+}
+
+.toc-sidebar .toc-level-2 {
+	padding-left: 0;
+}
+
+.toc-sidebar .toc-level-2 > a {
+	margin-left: 1.1rem !important;
+	border-left: 1px solid color-mix(in srgb, var(--nav-accent) 24%, transparent);
+	border-radius: 0 0.45rem 0.45rem 0;
+	padding-left: 0.65rem;
+	color: color-mix(in srgb, var(--theme-text) 55%, transparent);
+	font-size: 0.9rem;
+}
+
+.toc-sidebar .toc-level-2 > a.is-active {
+	border-left-color: var(--nav-accent);
+	color: var(--theme-heading, #111);
+	background: var(--nav-hover-bg, rgba(128, 128, 128, 0.08));
+}
+
 @media (prefers-reduced-motion: reduce) {
-	html.page-leaving body > article,
+	html.page-leaving body > article:not(:has(.docs-tabs)),
 	html.page-leaving body > footer,
-	html.page-entering body > article:not(:has(.blog-entry)),
+	html.page-entering body > article:not(:has(.blog-entry)):not(:has(.docs-tabs)),
 	html.page-entering body > footer,
 	.blog-entry.is-entering {
 		animation: none;
