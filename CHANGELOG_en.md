@@ -4,6 +4,7 @@
 
 ## Develop
 
+- fix: formulas containing `overline`, `underline`, or `cancel` are exported as SVG in HTML again (Typst 0.15's MathML export silently drops these three elements, leaving only the base content), while all other formulas keep using MathML; the decision is made on the content tree rather than the source text, so aliases (`#let ov = math.overline`) and custom functions (`#let close(x) = $overline(#x)$`) trigger it as well — see `tufted-lib/math.typ`
 - fix: slide export now ships its own Chinese fonts (`fonts/`) and ignores system fonts, fixing CJK text rendered as empty boxes on GitHub Actions (while local previews looked fine) and keeping glyphs and pagination identical between local and CI
 - fix: embedded raster images are extracted into separate files (HTML drops from ~10 MB to ~1 MB), and the "browser not supported" banner is hidden by default instead of showing until impress.js initializes
 - fix: decks now have a "back to list" link in the top-left corner, and impress.js writes the current step with `location.replace` instead of `location.hash`, so the browser back button leaves the deck in a single press

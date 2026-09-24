@@ -199,6 +199,12 @@ figure > .math-block {
 	opacity: 1;
 }
 
+/* 按 SVG 导出的公式（见 tufted-lib/math.typ），复制得到的是 SVG 源码 */
+.math-inline.math-svg.is-copyable::after,
+.math-block.math-svg.is-copyable::after {
+	content: "Copy SVG";
+}
+
 .math-inline > math,
 .math-block > math {
 	color: inherit;

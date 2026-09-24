@@ -6,6 +6,7 @@
 
 开发中的更新内容将在此记录。
 
+- 修复：含 `overline`、`underline`、`cancel` 的公式在 HTML 导出时改用 SVG 输出（Typst 0.15 的 MathML 导出会直接丢掉这三个记号，公式只剩底下的内容），其余公式保持 MathML；是否需要 SVG 按内容树里的元素判断，因此别名（`#let ov = math.overline`）与自定义函数（`#let close(x) = $overline(#x)$`）同样会触发，详见 `tufted-lib/math.typ`
 - 修复：幻灯片导出改为自带仓库 `fonts/` 中的中文字体并忽略系统字体，解决 GitHub Actions 上编译出的中文变成空心方框（本地预览正常）的问题，同时保证本地与线上字形、分页一致
 - 修复：幻灯片中的内嵌位图提取为独立文件（HTML 由约 10 MB 降到约 1 MB），并把「浏览器不支持」提示条改为默认隐藏，避免页面较大时长时间显示黄色提示条、impress.js 迟迟未初始化
 - 修复：幻灯片左上角新增「返回列表页」入口，并把 impress.js 写 `location.hash` 改为 `location.replace`，使浏览器后退键一次即可离开演示文稿

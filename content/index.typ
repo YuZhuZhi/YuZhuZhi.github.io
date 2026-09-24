@@ -4,24 +4,11 @@
 // tufted.margin-note 可以让你在边栏中放置内容
 // 宽大的边栏是 tufte 样式的特点，将注释放于其中并与正文并排，便于对照
 
-#let overline(body) = html.elem("mover", attrs: (accent: "true"))[
-    #body
-    #html.elem("mo", "_")
-]
-
-#let underline(body) = context {
-  if target() == "html" {
-    html.elem(
-      "span",
-      attrs: (
-        style: "font-family: 'New Computer Modern Math', 'Latin Modern Math', 'STIX Two Math', serif; font-style: italic; text-decoration: underline; text-underline-offset: 0.2em; text-decoration-thickness: 0.06em;"
-      ),
-      body
-    )
-  } else {
-    math.underline(body)
-  }
-}
+// 其它页面用 `#import "../index.typ": overline, underline` 复用这两个记号。
+// 这里直接指向内建的数学元素：`template-math` 按元素识别它们，遇到就整条公式
+// 改用 SVG 导出（MathML 会丢掉横线与下划线，只剩底下的内容）。
+#let overline = math.overline
+#let underline = math.underline
 
 #tufted.margin-note[
     // #figure(caption: [这是御伫之常用的头像])[#image("imgs/albion.jpg", width: 50%)]
@@ -53,7 +40,7 @@
 
 #tufted.remark[看板娘小提示][
     - 阅读中遇见不明觉厉的词？轻轻*拖选*一下呐 \~ *链接*什么的，人家早就准备好啦！\ 请在对话框中查收喔！
-    - 那个……小声说一句喔 \~ 现在 Typst 的 HTML 导出还不太完美，尤其*数学公式*\ 容易抽风#footnote[例如，当前 $overline(x)$ 、 $underline(x)$ 实际是使用 CSS 绘制而非 MathML，因此可能一些渲染会有问题。]，可能会让您看得有点费劲…… 真的很抱歉啦，求轻拍！(＞＜)
+    - 那个……小声说一句喔 \~ 现在 Typst 的 HTML 导出还不太完美，尤其*数学公式*\ 容易抽风#footnote[例如 $overline(x)$ 、 $underline(x)$ 导出为 MathML 时上横线与下划线会丢失，因此含这两个记号的公式改用 SVG 图片导出。]，可能会让您看得有点费劲…… 真的很抱歉啦，求轻拍！(＞＜)
     - 找不到我？请多加载一会，或尝试刷新页面或清理浏览器缓存喔！
 ]
 
