@@ -1,5 +1,5 @@
 // =====================================================================================
-// 组会报告（30 页）：Systematic Algebraic Method to Identify Clifford Operations
+// 组会报告（41 页）：Systematic Algebraic Method to Identify Clifford Operations
 //                 for Quantum Error-Correction Codes
 //   S.-C. Liu, Y.-X. Lin, Y.-X. Wang, L.-Y. Peng,
 //   Chin. Phys. Lett. 43, 040603 (2026).  DOI: 10.1088/0256-307X/43/4/040603
@@ -20,6 +20,15 @@
 // #import "@preview/theorion:0.5.0": *
 #import "@preview/tablex:0.0.9": tablex, rowspanx, colspanx, hlinex
 #import themes.aqua: *
+
+// 每页讲稿及问答由 speak/notes.typ 统一维护，不进入观众视图。
+#import "speak/notes.typ": entries
+#import "speak/questions.typ": extra-questions
+#let talk-notes = range(entries.len()).map(i => {
+  let entry = entries.at(i)
+  let first-question = entry.body + "\n\n可能提问：" + entry.question + "\n参考回答：" + entry.answer
+  first-question + extra-questions.at(i).map(qa => "\n\n可能提问：" + qa.question + "\n参考回答：" + qa.answer).join("")
+})
 
 // #let cetz-canvas = touying-reducer.with(reduce: canvas, cover: draw.hide.with(bounds: true))
 
@@ -477,6 +486,7 @@
     School of Physics, Peking University, Beijing 100871, China \
     $#none^2$Collaborative Innovation Center of Extreme Optics, Shanxi University, Taiyuan 030006, China ]
 ])
+#speaker-note[#talk-notes.at(0)]
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // 第 2 页：目录与时间分配
@@ -512,6 +522,7 @@
 // 一、研究背景与动机
 
 = 研究背景与动机
+#speaker-note[#talk-notes.at(1)]
 
 == 噪声、阈值与开销
 
@@ -532,9 +543,7 @@
     tone1: "wash",
     tone2: "caution",
   )
-  #speaker-note[
-    只给直觉：噪声 → 编码 → 阈值 → 逻辑错误率下降，但开销上升。熟悉 QEC 的听众可以只讲下面那张卡片。
-  ]
+  #speaker-note[#talk-notes.at(2)]
 ]
 
 == 三条路线与三个缺点
@@ -557,9 +566,7 @@
     tone1: "wash",
     tone2: "caution",
   )
-  #speaker-note[
-    把三个缺点说具体，尤其缺点一（单比特 H/S 门）—— 这是本文两个例子的来源。预判提问："Dehn twist 不就够了吗？"答：它给的是两个逻辑比特之间的 CNOT 类操作。
-  ]
+  #speaker-note[#talk-notes.at(3)]
 ]
 
 == 本文的贡献
@@ -581,15 +588,14 @@
     tone1: "wash",
     tone2: "caution",
   )
-  #speaker-note[
-    只给直觉：噪声 → 编码 → 阈值 → 逻辑错误率下降，但开销上升。熟悉 QEC 的听众可以只讲下面那张卡片。
-  ]
+  #speaker-note[#talk-notes.at(4)]
 ]
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // 二、预备知识
 
 = 预备知识
+#speaker-note[#talk-notes.at(5)]
 
 == Pauli 链、辛内积与对易条件
 
@@ -609,9 +615,7 @@
     tone1: "wash",
     tone2: "plain",
   )
-  #speaker-note[
-    把三个缺点说具体，尤其缺点一（单比特 H/S 门）—— 这是本文两个例子的来源。预判提问：“Dehn twist 不就够了吗？”答：它给的是两个逻辑比特之间的 CNOT 类操作。
-  ]
+  #speaker-note[#talk-notes.at(6)]
 ]
 
 == 稳定子码与 CSS 码 <稳定子码与CSS码>
@@ -635,9 +639,7 @@
     tone1: "wash",
     tone2: "plain",
   )
-  #speaker-note[
-    提醒：约束为什么这么写、保辛条件怎么推，这些细节放在附录 A–D，正文只讲用法。纠错码决定 H_X H_Z，其中的逻辑算符需要受它约束求解。
-  ]
+  #speaker-note[#talk-notes.at(7)]
 ]
 
 == Clifford 操作与辛条件
@@ -663,15 +665,14 @@
     tone1: "wash",
     tone2: "plain",
   )
-  #speaker-note[
-    把 $A Lambda B^T = A (U Lambda U^T) B^T$ 对基向量取，就得到 @eq:保辛条件；分块三条恒等式的展开见附录 A（@app:symp）。注意 3 的每个矩阵元都是 $U$ 中两个元素之积：这就是后文"二次约束"的来源。
-  ]
+  #speaker-note[#talk-notes.at(8)]
 ]
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // 三、代数方法
 
 = 代数方法
+#speaker-note[#talk-notes.at(9)]
 
 == 三条约束 <sec:三条约束>
 
@@ -696,9 +697,7 @@
     tone1: "wash",
     tone2: "plain",
   )
-  #speaker-note[
-    用 $n = 2$ 举例：$X_1 Z_2 -> (1,0|0,1)$、$Y_1 -> (1,0|1,0)$；强调 $A_Z$ 在前、$A_X$ 在后，后面所有分块矩阵的左半/右半都按这个顺序。
-  ]
+  #speaker-note[#talk-notes.at(10)]
 ]
 
 == 二次约束与线性化
@@ -722,9 +721,7 @@
     tone1: "wash",
     tone2: "plain",
   )
-  #speaker-note[
-    熟悉稳定子形式的听众只需强调 $k = n - m$ 与式 (1)；后面算双曲码逻辑比特数（$60 - 52 = 8$）用的就是 $k = n - m$。
-  ]
+  #speaker-note[#talk-notes.at(11)]
 ]
 
 == 物理门分解
@@ -754,9 +751,7 @@
     tone1: "wash",
     tone2: "plain",
   )
-  #speaker-note[
-    把 $A Lambda B^T = A (U Lambda U^T) B^T$ 对基向量取，就得到 @eq:保辛条件；分块三条恒等式的展开见附录 A。
-  ]
+  #speaker-note[#talk-notes.at(12)]
 ]
 
 == 辛高斯消元
@@ -779,9 +774,7 @@
     tone1: "wash",
     tone2: "plain",
   )
-  #speaker-note[
-    重点解释第 ③ 步的 $H "CNOT" H$：同时清除一对互相关联的非零元，而不破坏已经做好的 $I_n$ 块。
-  ]
+  #speaker-note[#talk-notes.at(13)]
 ]
 
 == 四步消元流程图
@@ -799,9 +792,7 @@
     figWidth: 65%
     // caption: [分解流程：上排是矩阵演化，下排是对应的量子线路],
   )
-  #speaker-note[
-    这页专门讲图：先指虚线框对应四步，再指下排线路说明"一次矩阵操作 = 一个物理门"，最后强调时间轴向左。
-  ]
+  #speaker-note[#talk-notes.at(14)]
 ]
 
 == 化简与输出
@@ -823,10 +814,7 @@
     tone1: "wash",
     tone2: "plain",
   )
-  #speaker-note[
-    化简为什么重要：环面码上的拟合指数从 $alpha = 2.51$ 降到 $2.28$，全部来自这里。
-    提问预案："只用到五个 CNOT 的模板，更长的恒等式还有收益吗？" —— 见 5.2 的开放问题。
-  ]
+  #speaker-note[#talk-notes.at(15)]
 ]
 
 == 化简规则示意图
@@ -844,16 +832,14 @@
     // caption: [两比特门的等价关系与五 CNOT 化简模板],
     figWidth: 75%
   )
-  #speaker-note[
-    把两条规则的根据讲清楚：对易关系决定能不能换顺序，恒等式决定能不能减门。
-    可以顺带提问：引入更长的恒等式模板还能再省多少门？
-  ]
+  #speaker-note[#talk-notes.at(16)]
 ]
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // 四、结果
 
 = 结果
+#speaker-note[#talk-notes.at(17)]
 
 == 环面码与目标操作 $overline(H)_1 overline(I)_2$
 
@@ -874,11 +860,7 @@
     fractions: (1.15fr, 1fr),
     figWidth: 90%
   )
-  #speaker-note[
-    先讲图：方格、边上的比特、面与顶点对应的稳定子，再说明逻辑算符沿非平凡闭环。
-    现场算规模：$d = 7$ 时 $n = 2 times 49 = 98$，$U$ 是 $196 times 196$。
-    $d = 3$ 的完整结果在 SM 中
-  ]
+  #speaker-note[#talk-notes.at(18)]
 ]
 
 == 资源标度与逻辑错误率 <sec:资源标度与逻辑错误率>
@@ -908,11 +890,7 @@
       ),
     )
   ])
-  #speaker-note[
-    先把 $alpha$ 的两个值说清（都来自论文），再说"与一轮稳定子测量同量级"这个对照。
-    右图强调两个相反趋势：总量上升、单位门下降 —— 后者才是容错的希望所在。
-    论文没有给出每个 $d$ 的具体 CNOT 数（需查 SM 或自行复现）
-  ]
+  #speaker-note[#talk-notes.at(19)]
 ]
 
 == 连续 Clifford 操作：一步实现 $overline(S)$ 与 $overline(H)$
@@ -945,10 +923,7 @@
       ]
     ],
   )
-  #speaker-note[
-    Fig. 5(b) 里圆点是"一步法"的 $overline(S) overline(H)$，三角形是分两步；论文说一步法少约三分之一门数。
-    顺带提醒：这条线路的用途是制备相位偏移 Bell 态。
-  ]
+  #speaker-note[#talk-notes.at(20)]
 ]
 
 == 双曲 ${4,5}$ 曲面码：结构与规模
@@ -971,10 +946,7 @@
     fractions: (1.1fr, 1fr),
     figWidth: 90%
   )
-  #speaker-note[
-    讲三层：局部铺砌规则 → 可铺砌条件 → 粘合成闭曲面带来的拓扑自由度。
-    数两个关键数字：60 个比特、52 个独立稳定子、8 个逻辑比特（复习 $k = n - m$）。
-  ]
+  #speaker-note[#talk-notes.at(21)]
 ]
 
 == 双曲码资源与三个例子
@@ -1004,16 +976,14 @@
     tone: "wash",
     fractions: (1.25fr, 1fr),
   )
-  #speaker-note[
-    这一页把双曲码资源收口，并给出三行汇总，方便听众拍照。
-    "资源"一列是标度或量级，不是某次运行的确切门数。
-  ]
+  #speaker-note[#talk-notes.at(22)]
 ]
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 // 五、讨论与总结
 
 = 余篇散入斜阳里 \ 且听满座起春风
+#speaker-note[#talk-notes.at(23)]
 
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1021,6 +991,7 @@
 // 附录：SM（补充材料）详解
 
 = 附录
+#speaker-note[#talk-notes.at(24)]
 
 // 沿用正文的 page-2cards / page-2col，字号与样式仅在卡片正文中设置。
 #let app-body(body, size: 18.5pt) = {
@@ -1052,6 +1023,7 @@
     ]],
     gap: 10pt,
   )
+  #speaker-note[#talk-notes.at(25)]
 ]
 
 == B：保辛条件的三组方程 <app:symp>
@@ -1076,6 +1048,7 @@
     ]],
     gap: 10pt,
   )
+  #speaker-note[#talk-notes.at(26)]
 ]
 
 == C：线性条件与自由变量的削减 <sm:vars>
@@ -1100,6 +1073,7 @@
     ]],
     gap: 10pt,
   )
+  #speaker-note[#talk-notes.at(27)]
 ]
 
 == D：通过主元构造特解 $B$ <sm:particular>
@@ -1128,6 +1102,7 @@
     ]],
     gap: 10pt,
   )
+  #speaker-note[#talk-notes.at(28)]
 ]
 
 == E：二次项提升与一条完整的展开式 <sm:lift>
@@ -1151,6 +1126,7 @@
     ]],
     gap: 10pt,
   )
+  #speaker-note[#talk-notes.at(29)]
 ]
 
 == F：向量化与系数矩阵的规模 <app:linear>
@@ -1178,6 +1154,7 @@
     ]],
     gap: 10pt,
   )
+  #speaker-note[#talk-notes.at(30)]
 ]
 
 == G：提升矩阵的七类核方向 <sm:proof>
@@ -1203,6 +1180,7 @@
     ]],
     gap: 10pt,
   )
+  #speaker-note[#talk-notes.at(31)]
 ]
 
 == H：提升方程的稀疏特解 <sm:sparse>
@@ -1227,6 +1205,7 @@
     ]],
     gap: 10pt,
   )
+  #speaker-note[#talk-notes.at(32)]
 ]
 
 == I：乘积匹配与显式修正 <sm:matching>
@@ -1251,6 +1230,7 @@
     ]],
     gap: 10pt,
   )
+  #speaker-note[#talk-notes.at(33)]
 ]
 
 == J：物理门的辛矩阵与相位 <app:gates>
@@ -1272,6 +1252,7 @@
     ]],
     gap: 10pt,
   )
+  #speaker-note[#talk-notes.at(34)]
 ]
 
 == K：可逆对角块后的严格消元 <sm:elimination>
@@ -1295,6 +1276,7 @@
     ]],
     gap: 10pt,
   )
+  #speaker-note[#talk-notes.at(35)]
 ]
 
 == L：两比特辛消元的逐步演示 <sm:toy>
@@ -1318,6 +1300,7 @@
     tone: "wash",
     fractions: (1.2fr, 1fr),
   )
+  #speaker-note[#talk-notes.at(36)]
 ]
 
 == M：$d=3$ 环面码的具体输入 <sm:d3>
@@ -1343,6 +1326,7 @@
     tone: "wash",
     fractions: (1.2fr, 1fr),
   )
+  #speaker-note[#talk-notes.at(37)]
 ]
 
 == N：环面码的解、门序列与核验 <sm:seq>
@@ -1367,6 +1351,7 @@
     tone: "wash",
     fractions: (1.2fr, 1fr),
   )
+  #speaker-note[#talk-notes.at(38)]
 ]
 
 == O：有限双曲码的商群与陪集 <sm:hypergroup>
@@ -1389,6 +1374,7 @@
     ]],
     gap: 10pt,
   )
+  #speaker-note[#talk-notes.at(39)]
 ]
 
 == P：关联矩阵的秩与逻辑比特数 <sm:hyper>
@@ -1412,4 +1398,5 @@
     ]],
     gap: 10pt,
   )
+  #speaker-note[#talk-notes.at(40)]
 ]

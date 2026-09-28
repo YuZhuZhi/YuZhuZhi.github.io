@@ -46,6 +46,86 @@
 		});
 	}
 
+	function initHeaderReveal() {
+		const shell = document.querySelector(".site-header-shell");
+		if (!shell) return;
+
+		const desktopPointer = window.matchMedia(
+			"(min-width: 761px) and (hover: hover) and (pointer: fine)",
+		);
+		const revealZone = 32;
+		let headerHeight = 0;
+		let hoverReveal = false;
+
+		function measureHeader() {
+			headerHeight = shell.getBoundingClientRect().height;
+			document.body.style.setProperty("--site-header-height", `${headerHeight}px`);
+		}
+
+		function scrollProgress() {
+			const start = window.innerHeight / 2;
+			return Math.max(0, Math.min(1, (window.scrollY - start) / start));
+		}
+
+		function renderHeader(animated = false) {
+			const progress = desktopPointer.matches ? scrollProgress() : 0;
+			const revealed = desktopPointer.matches &&
+				(hoverReveal || shell.contains(document.activeElement));
+			const target = revealed ? 0 : progress;
+			shell.classList.toggle("is-hover-animated", animated);
+			document.body.classList.toggle("is-header-animated", animated);
+			shell.style.setProperty("--site-header-offset", `${-target * 100}%`);
+			shell.classList.toggle("is-fully-hidden", target >= 1);
+			document.body.classList.toggle("is-header-peeking", revealed && progress > 0);
+		}
+
+		function syncWithScroll() {
+			hoverReveal = false;
+			renderHeader();
+		}
+
+		measureHeader();
+		syncWithScroll();
+		window.addEventListener("scroll", syncWithScroll, { passive: true });
+		window.addEventListener("pageshow", syncWithScroll);
+		window.addEventListener("resize", () => {
+			measureHeader();
+			syncWithScroll();
+		});
+		desktopPointer.addEventListener("change", syncWithScroll);
+		if ("ResizeObserver" in window) {
+			new ResizeObserver(measureHeader).observe(shell);
+		}
+		shell.addEventListener("transitionend", (event) => {
+			if (event.propertyName !== "transform") return;
+			shell.classList.remove("is-hover-animated");
+			document.body.classList.remove("is-header-animated");
+		});
+
+		document.addEventListener("mousemove", (event) => {
+			if (!desktopPointer.matches) return;
+			if (scrollProgress() === 0) return;
+			if (event.clientY <= revealZone) {
+				if (hoverReveal) return;
+				hoverReveal = true;
+				renderHeader(true);
+			} else if (
+				event.clientY > headerHeight + revealZone &&
+				hoverReveal
+			) {
+				hoverReveal = false;
+				renderHeader(true);
+			}
+		});
+
+		shell.addEventListener("focusin", () => renderHeader(true));
+		shell.addEventListener("focusout", () => {
+			window.requestAnimationFrame(() => {
+				if (!shell.contains(document.activeElement)) renderHeader(true);
+			});
+		});
+	}
+
 	function clearGroupTimer(group) {
 		if (group.dataset.toggleTimer) {
 			window.clearTimeout(Number(group.dataset.toggleTimer));
@@ -283,10 +363,12 @@
 
 	if (document.readyState === "loading") {
 		document.addEventListener("DOMContentLoaded", () => {
+			initHeaderReveal();
 			updateActiveNav();
 			buildDocsArchive();
 		});
 	} else {
+		initHeaderReveal();
 		updateActiveNav();
 		buildDocsArchive();
 	}

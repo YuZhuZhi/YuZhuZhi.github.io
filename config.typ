@@ -5,7 +5,7 @@
   "/assets/site-extensions.css?v=20260923-1",
   "/assets/custom.css?v=20260918-1",
   "/assets/page-effects.css?v=20260924-4",
-  "/assets/site-ui.css?v=20260924-6",
+  "/assets/site-ui.css?v=20260928-2",
   "/assets/code-theme-one-dark-pro.css?v=1",
   "/assets/vendor/live2d-widget/waifu.css",
   "/assets/live2d-widget.css?v=3",
@@ -14,7 +14,7 @@
 
 #let site-js = (
   "/assets/page-transition.js?v=20260919-2",
-  "/assets/site-ui.js?v=20260923-1",
+  "/assets/site-ui.js?v=20260928-2",
   "/assets/site-search.js?v=20260923-2",
   "/assets/smooth-anchors.js?v=20260919-2",
   "/assets/live2d-widget.js?v=14",
