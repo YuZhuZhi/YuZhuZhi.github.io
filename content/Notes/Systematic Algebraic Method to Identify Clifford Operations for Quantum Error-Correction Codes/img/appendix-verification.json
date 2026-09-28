@@ -1,0 +1,579 @@
+{
+  "n": 18,
+  "k": 2,
+  "rank_HZ": 8,
+  "rank_HX": 8,
+  "gates": {
+    "CNOT": 75,
+    "SWAP": 5,
+    "H": 1
+  },
+  "CNOT_equivalents": 90,
+  "symplectic": true,
+  "stabilizers_fixed": true,
+  "logical_target": true,
+  "S53_blocks": true,
+  "all_elimination_steps_symplectic": true,
+  "phase_checked": false,
+  "toy_start": [
+    [
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      1,
+      1,
+      0
+    ],
+    [
+      1,
+      1,
+      0,
+      1
+    ],
+    [
+      0,
+      1,
+      0,
+      1
+    ]
+  ],
+  "lifted_construction": {
+    "I": {
+      "n_Z": 8,
+      "n_X": 8,
+      "lifted_equations": 630,
+      "sparse_variables": 352,
+      "matching_K_is_identity": true,
+      "all_original_constraints": true
+    },
+    "H1": {
+      "n_Z": 8,
+      "n_X": 8,
+      "lifted_equations": 630,
+      "sparse_variables": 352,
+      "matching_K_is_identity": true,
+      "all_original_constraints": true
+    },
+    "S1": {
+      "n_Z": 8,
+      "n_X": 8,
+      "lifted_equations": 630,
+      "sparse_variables": 352,
+      "matching_K_is_identity": true,
+      "all_original_constraints": true
+    },
+    "CNOT12": {
+      "n_Z": 8,
+      "n_X": 8,
+      "lifted_equations": 630,
+      "sparse_variables": 352,
+      "matching_K_is_identity": true,
+      "all_original_constraints": true
+    },
+    "unequal_1_2": {
+      "n_Z": 1,
+      "n_X": 2,
+      "sparse_lift_consistent": false,
+      "independent_pivot_right_inverses": true,
+      "known_full_solution_verified": true,
+      "H_Z": [
+        [
+          1,
+          0,
+          0,
+          1,
+          0
+        ]
+      ],
+      "H_X": [
+        [
+          0,
+          0,
+          1,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          0,
+          1,
+          0
+        ]
+      ],
+      "logical_Z": [
+        [
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          1
+        ]
+      ],
+      "logical_X": [
+        [
+          0,
+          1,
+          1,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          0
+        ]
+      ],
+      "target": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0
+        ]
+      ],
+      "full_U": [
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ]
+      ],
+      "note": "S=T=0 is inconsistent for these chosen B blocks. This is not a no-go for logical Clifford operations."
+    },
+    "unequal_2_1": {
+      "n_Z": 2,
+      "n_X": 1,
+      "sparse_lift_consistent": false,
+      "independent_pivot_right_inverses": true,
+      "known_full_solution_verified": true,
+      "H_Z": [
+        [
+          1,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          1,
+          1
+        ]
+      ],
+      "H_X": [
+        [
+          1,
+          1,
+          0,
+          1,
+          0
+        ]
+      ],
+      "logical_Z": [
+        [
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          1
+        ]
+      ],
+      "logical_X": [
+        [
+          0,
+          1,
+          1,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          0
+        ]
+      ],
+      "target": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0
+        ]
+      ],
+      "full_U": [
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ]
+      ],
+      "note": "S=T=0 is inconsistent for these chosen B blocks. This is not a no-go for logical Clifford operations."
+    },
+    "unequal_0_1": {
+      "n_Z": 0,
+      "n_X": 1,
+      "lifted_equations": 15,
+      "sparse_variables": 3,
+      "matching_K_is_identity": true,
+      "all_original_constraints": true,
+      "sparse_lift_consistent": true
+    },
+    "unequal_1_0": {
+      "n_Z": 1,
+      "n_X": 0,
+      "lifted_equations": 15,
+      "sparse_variables": 3,
+      "matching_K_is_identity": true,
+      "all_original_constraints": true,
+      "sparse_lift_consistent": true
+    },
+    "unequal_0_0": {
+      "n_Z": 0,
+      "n_X": 0,
+      "lifted_equations": 6,
+      "sparse_variables": 0,
+      "matching_K_is_identity": true,
+      "all_original_constraints": true,
+      "sparse_lift_consistent": true
+    }
+  }
+}
