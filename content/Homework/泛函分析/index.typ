@@ -276,3 +276,102 @@ $
 由题目条件每个 $x in X$ 存在 $M_(x) > 0$，使一切 $F in cal(F)$ 有 $abs(F(x)) <= M_(x)$，那么取 $n > M_(x)$，则 $x in E_(n)$。故 $X = union.big_(n=1)^(infinity) E_(n)$。而 $X$ 是第二纲集，则至少一个 $E_(n_(0))$ 有非空内部，即存在非空开集 $U subset E_(n_(0))$。
 
 取 $M = n_(0) > 0$，于是任意 $x in U$ 有 $x in E_(n_(0))$，从而对一切 $F in cal(F)$，有 $|F(x)| <= n_(0) = M$。如此，存在开集 $U$ 和常数 $M > 0$，使得对于每一 $x in U$ 及所有 $F in cal(F)$，有 $|F(x)| <= M$。
+
+= 第三次作业：习题一之 16、17、18、19
+
+== 习题一之 16
+
+#tufted.problem[
+  举例说明，在压缩映射原理中，
+  + 空间完备性条件不可少；
+  + 映射 $T$ 所满足的条件不能代之以条件：$ d(T x, T y) < d(x, y) quad quad (x != y) $。
+]
+
+
+
+
+== 习题一之 17
+
+#tufted.problem[
+  证明：存在闭区间 $[0,1]$ 上的连续函数 $x(t)$，使得
+  $ x(t) = frac(1, 2) sin x(t) - a(t), $
+  其中 $a(t)$ 是给定的 $[0,1]$ 上的连续函数。
+]
+
+首先，易证 $C[0, 1]$ 是完备距离空间。
+
+定义映射
+$ (T x)(t) = frac(1, 2) sin x(t) - a(t) $。
+由于 $a$ 连续，若 $x$ 连续，则 $T x$ 连续，所以 $T: C[0, 1] -> C[0, 1]$。
+
+对任意 $x, y in C[0, 1]$，有
+$
+|(T x)(t) - (T y)(t)| = frac(1, 2) |sin x(t) - sin y(t)| <= frac(1, 2) |x(t) - y(t)|.
+$
+因此 $d(T x, T y) <= frac(1, 2) d(x, y)$。故 $T$ 是压缩映射，压缩常数为 $1/2$。由压缩映射原理，存在唯一的 $x in C[0, 1]$，使得 $T x = x$，即
+$
+x(t) = frac(1, 2) sin x(t) - a(t)。
+$
+所以存在闭区间 $[0, 1]$ 上的连续函数 $x(t)$ 满足所给方程。
+
+== 习题一之 18
+
+#tufted.problem[
+  设 $X$ 是完备距离空间，$T$ 是 $X$ 上到自身的映射，在闭球 $close(B) = {x in X : d(x_(0), x) <= r}$ 上，$d(T x, T y) <= theta d(x, y)$ 且 $d(x_(0), T x_(0)) < (1 - theta) r$，其中 $0 <= theta < 1$。证明 $T$ 在 $close(B)$ 上有唯一不动点。
+]
+
+设$overline(B) = {x in X: d(x_0, x) <= r}$。先证明 $T(overline(B)) subset overline(B)$。对任意 $x in overline(B)$，有
+$
+d(x_0, T x) <=& d(x_0, T x_0) + d(T x_0, T x) \
+  <=& d(x_0, T x_0) + theta d(x_0, x) \
+  <=& d(x_0, T x_0) + theta r \
+  <& (1 - theta) r + theta r = r .
+$
+所以 $T x in overline(B)$。因此 $T: overline(B) -> overline(B)$。
+
+又因为 $X$ 完备，$overline(B)$ 是 $X$ 的闭子集，所以 $overline(B)$ 也是完备距离空间。在 $overline(B)$ 上，$T$ 满足
+$
+d(T x, T y) <= theta d(x, y), quad 0 <= theta < 1。
+$
+故 $T$ 是 $overline(B)$ 上的压缩映射。由压缩映射原理，$T$ 在 $overline(B)$ 上有唯一不动点。
+
+== 习题一之 19
+
+#tufted.problem[
+  设 $(t_(0), s_(0)) in bb(R)^2$，$f(t,s)$ 在 $(t_(0), s_(0))$ 的邻域 $N$ 中连续，$s_(0) = f(t_(0), s_(0))$，$f_(s)'(t,s)$ 在 $N$ 中存在且在 $(t_(0), s_(0))$ 连续并且 $f_(s)'(t_(0), s_(0)) = 0$。用压缩映射原理证明：存在 $delta > 0, x(t) in C[t_(0) - delta, t_(0) + delta]$，使得 $s_(0) = x(t_(0)), x(t) = f(t, x(t)), t in [t_(0) - delta, t_(0) + delta]$。
+]
+
+由题设，$f(t, s)$ 在 $(t_0, s_0)$ 的邻域 $N$ 中连续，且 $s_0 = f(t_0, s_0), quad f_s'(t_0, s_0) = 0$。由于 $f_s'(t, s)$ 在 $N$ 中存在且在 $(t_0, s_0)$ 连续，取足够小的  $delta_1 > 0, rho_1 > 0$，使得
+$
+Q = [t_0 - delta_1, t_0 + delta_1] times [s_0 - rho_1, s_0 + rho_1] subset N,
+$
+并且$|f_s'(t, s)| <= frac(1, 2), quad (t, s) in Q$。
+于是对任意 $s_1, s_2 in [s_0 - rho_1, s_0 + rho_1]$，有
+$
+|f(t, s_1) - f(t, s_2)| <= frac(1, 2) |s_1 - s_2|.
+$
+
+又因为 $f(t, s_0)$ 连续且 $f(t_0, s_0) = s_0$，可取 $0 < delta <= delta_1$，使得当 $|t - t_0| <= delta$ 时，$|f(t, s_0) - s_0| <= frac(rho_1, 2)$。令 $I = [t_0 - delta, t_0 + delta], quad rho = rho_1$，考虑空间
+$
+M = {x in C(I): x(t_0) = s_0, |x(t) - s_0| <= rho, t in I},
+$
+则 $M$ 是 $C(I)$ 中的闭子集，从而是完备距离空间。
+
+在 $M$ 上定义映射 $(T x)(t) = f(t, x(t))$。若 $x in M$，则 $(T x)(t_0) = f(t_0, x(t_0)) = f(t_0, s_0) = s_0$，并且对任意 $t in I$，
+$
+|(T x)(t) - s_0| =& |f(t, x(t)) - f(t_0, s_0)| \
+  <=& |f(t, x(t)) - f(t, s_0)| + |f(t, s_0) - s_0| \
+  <=& frac(1, 2) |x(t) - s_0| + frac(rho, 2) \
+  <=& frac(1, 2) rho + frac(rho, 2) = rho。
+$
+所以 $T x in M$，即 $T: M -> M$。
+
+对任意 $x, y in M$，有
+$
+|(T x)(t) - (T y)(t)| = |f(t, x(t)) - f(t, y(t))| <= frac(1, 2) |x(t) - y(t)|。
+$
+故 $d(T x, T y) <= frac(1, 2) d(x, y)$。因此 $T$ 是 $M$ 上的压缩映射。由压缩映射原理，存在唯一的 $x in M$，使得 $T x = x$，即
+$
+x(t) = f(t, x(t)), quad t in [t_0 - delta, t_0 + delta]，
+$
+且 $x(t_0) = s_0$。证毕。
