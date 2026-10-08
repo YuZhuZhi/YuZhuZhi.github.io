@@ -1,5 +1,5 @@
 #import "notes.typ": entries
-#import "questions.typ": extra-questions
+#import "questions.typ": all-questions
 #import "../../index.typ": template, tufted
 #show: template.with(
     title: "Systematic Algebraic Method to Identify Clifford Operations for Quantum Error-Correction Codes 讲稿",
@@ -10,12 +10,10 @@
 #show heading.where(level: 1): set text(size: 20pt, weight: "bold", fill: rgb("#0B5E1F"))
 
 #for (i, entry) in entries.enumerate() {
-  let questions = ((question: entry.question, answer: entry.answer),) + extra-questions.at(i)
+  let questions = all-questions.at(i)
   heading(level: 1, [第 #str(i + 1) 页：#entry.title])
 
-  for paragraph in entry.body.split("\n\n") {
-    par(paragraph)
-  }
+  entry.paragraphs
 
   block(
     width: 100%,

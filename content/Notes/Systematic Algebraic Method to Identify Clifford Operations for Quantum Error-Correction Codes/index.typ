@@ -21,13 +21,17 @@
 #import "@preview/tablex:0.0.9": tablex, rowspanx, colspanx, hlinex
 #import themes.aqua: *
 
-// 每页讲稿及问答由 speak/notes.typ 统一维护，不进入观众视图。
+// 逐页讲稿与问答分别由 speak/notes.typ、speak/questions.typ 维护，不进入观众视图。
 #import "speak/notes.typ": entries
-#import "speak/questions.typ": extra-questions
+#import "speak/questions.typ": all-questions
 #let talk-notes = range(entries.len()).map(i => {
   let entry = entries.at(i)
-  let first-question = entry.body + "\n\n可能提问：" + entry.question + "\n参考回答：" + entry.answer
-  first-question + extra-questions.at(i).map(qa => "\n\n可能提问：" + qa.question + "\n参考回答：" + qa.answer).join("")
+  all-questions.at(i).fold(entry.paragraphs, (note, qa) => note + [
+    #parbreak()
+    可能提问：#qa.question
+    #parbreak()
+    参考回答：#qa.answer
+  ])
 })
 
 // #let cetz-canvas = touying-reducer.with(reduce: canvas, cover: draw.hide.with(bounds: true))
@@ -634,7 +638,7 @@
     - 酉操作的作用是 $P -> U_"op"^dagger P U_"op"$；Clifford 操作把 Pauli 链映为 Pauli 链，意味着 $U_"op"^dagger P U_"op" = plus.minus P'$。
     - 忽略相位，设 $U$ 是 $bb(F)_2^(2 n)$ 上的线性映射，可用 $2 n times 2 n$ 二进制矩阵表示：$A_P -> A_P U$。
     - *行约定*：$U$ 的第 $j$ 行是 $Z_j$ 的像，第 $(n+j)$ 行是 $X_j$ 的像。
-    - 保辛条件：对任意 $A, B$，$A Lambda B^T = (A U) Lambda (B U)^T = A (U Lambda U^T) B^T$，因此
+    - 保辛条件：对任意 Pauli 链 $A, B$，$A Lambda B^T = (A U) Lambda (B U)^T = A (U Lambda U^T) B^T$，因此
       $ U Lambda U^T = Lambda. $ <eq:保辛条件>
       取基向量逐个元素比较即可得到（展开见 @app:symp）。
   ],
@@ -664,7 +668,7 @@
     [求解目标],
     [
     + *保辛（@eq:保辛条件）*：$U Lambda U^T = Lambda$ —— 保证任意 Pauli 链之间的对易/反对易关系不变。
-    + *码结构（@eq:码结构）*：
+    + *稳定子生成元不变（@eq:码结构）*：
       $ mat(H_Z, 0; 0, H_X) U = mat(H_Z, 0; 0, H_X). $ <eq:码结构>
       论文为求解方便*直接要求每个稳定子生成元在变换之后回到自身*。更一般的情形允许稳定子置换/重组，但会引入组合问题。
     + *目标映射（@eq:目标映射）*：
@@ -673,9 +677,9 @@
   ],
     [两个例子的目标映射],
     [
-    - $overline(H)_1 overline(I)_2$：$overline(Z)_1 -> overline(X)_1$、$overline(X)_1 -> overline(Z)_1$，其余不变#highlight[（式 (7)）]。
-    - $overline(S)_1 overline(I)_2$：$overline(X)_1 -> overline(Z)_1 overline(X)_1$，其余不变#highlight[（式 (8)）]。
-    - 于是"设计线路"变成"求满足 @eq:保辛条件 @eq:码结构 @eq:目标映射 的 $U$"，解出后分解成物理门。
+    - $overline(H)_1 overline(I)_2$：$overline(Z)_1 -> overline(X)_1$、$overline(X)_1 -> overline(Z)_1$，其余不变。
+    - $overline(S)_1 overline(I)_2$：$overline(X)_1 -> overline(Z)_1 overline(X)_1$，其余不变。
+    - 于是"设计线路"变成"求满足 @eq:保辛条件 @eq:码结构 @eq:目标映射 的 $U$"，解出后再分解成物理门。
   ],
     tone1: "wash",
     tone2: "plain",
@@ -687,7 +691,7 @@
 
 #slide[
   #page-2cards(
-    [难点在 @eq:保辛条件：它是二次的],
+    [@eq:保辛条件 是二次的],
     [
     - 把 $U$ 的元素记作 $U_(i j)$， @eq:保辛条件 的每个矩阵元都是"两个元素相乘再求和"：
       #align(center)[$ (U Lambda U^T)_(i j) = sum_(k = 1)^n U_(i, k+n) U_(j k) + sum_(k = n+1)^(2 n) U_(i, k-n) U_(j k). $]
@@ -697,7 +701,7 @@
   ],
     [复杂度与一致性回代],
     [
-    - *复杂度*：稀疏消元的总代价"略高于 $O(n^4)$"，不是指数级；对比态矢量方法的 $4^n$ 维空间。量级估计见 @app:linear。
+    - *复杂度*：稀疏消元的总代价"略高于 $O(n^4)$"，对比态矢量方法的 $4^n$ 维空间。量级估计见 @app:linear。
     - *一致性回代*：$v$ 是形式变量，必须满足 $v_(a b c d) = U_(a b) U_(c d)$；论文在解空间里做"二次变量与 $U$ 元素的匹配"，并指出这一步开销很小。
     - *规模示例*：$d = 7$ 环面码 $n = 2 d^2 = 98$，$U$ 是 $196 times 196$，元素约 $3.8 times 10^4$ 个 —— 而直接枚举 $2^38416$ 不可行。
   ],
@@ -718,14 +722,14 @@
       ("门", "对 Pauli 链的作用（物理效果）", "对 $U$ 的列操作（右乘初等矩阵）"),
       (
         ([$H_i$], [$Z_i <-> X_i$], [交换第 $i$ 列与第 $(i+n)$ 列]),
-        ([$S_i$], [$X_i -> Z_i X_i$（相差相位）], [把第 $(i+n)$ 列加到第 $i$ 列]),
+        ([$S_i$], [$X_i -> Z_i X_i$], [把第 $(i+n)$ 列加到第 $i$ 列]),
         ([$"CNOT"_(i j)$], [$X_i -> X_i X_j$、$Z_j -> Z_i Z_j$], [第 $j$ 列加到第 $i$ 列；第 $(i+n)$ 列加到第 $(j+n)$ 列]),
         ([$"SWAP"_(i j)$], [$Z_i <-> Z_j$、$X_i <-> X_j$], [交换第 $i$、$j$ 列；交换第 $(i+n)$、$(j+n)$ 列]),
       ),
       size: 16pt
     )
   ],
-    [只允许这四类辛操作，把 $U$ 化为 $I_(2 n)$],
+    [只允许四类辛操作把 $U$ 化为 $I_(2 n)$],
     [
     - 这四类初等矩阵*不构成*全部初等操作，但都是*辛*的，即每步保持 @eq:保辛条件 ：$U Lambda U^T = Lambda$，所以高斯消元时顺序必须专门设计。
     - 记初等矩阵为 $P_k$：$U P_1 dots.c P_T = I_(2 n)$ ⟹ $U = P_T dots.c P_1$，门序列按*逆序*读出，$T$ 是化简前的物理门数。
