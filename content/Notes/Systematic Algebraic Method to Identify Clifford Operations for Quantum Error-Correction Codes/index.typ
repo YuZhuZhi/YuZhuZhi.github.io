@@ -1207,25 +1207,30 @@
   #speaker-note[#talk-notes.at(29)]
 ]
 
-== 核空间参数化：自由变量从 $4 n^2$ 降到 $2 n (n - k)$ <app:vars>
+== 核空间参数化：未知量从 $4 n^2$ 降到 $2 n (n - k)$ <app:vars>
 
 #slide[
   #page-2cards(
-    [每个半块的两列共享同一个核],
+    [先找允许的调整方向],
     [#app-body[
-      因为 $H_Z H_X^T = 0$（见 @app:css），而且逻辑行与另一类稳定子对易，所以 $overline(Z) H_X^T = 0$。于是
-  $ M_Z H_X^T = mat(overline(Z) H_X^T; H_Z H_X^T) = 0 quad ==> quad "col"(H_X^T) subset.eq ker M_Z. $
-      再比维数。$M_Z$ 的秩是 $k + n_Z$，而 $k = n - n_Z - n_X$，所以
-  $ dim ker M_Z = n - (k + n_Z) = n_X. $
-      $H_X$ 行满秩，$H_X^T$ 的列数正好也是 $n_X$；两个空间维数相同，于是
-  $ "col"(H_X^T) = ker M_Z. $ <eq:app-kernel>
-      同理 $"col"(H_Z^T) = ker M_X$，维数 $n_Z$。
+      把逻辑 $Z$ 与 $Z$ 型稳定子的行放在一起：
+      $ M_Z = mat(overline(Z); H_Z). $
+      指定的算符映射要求$M_Z U_(Z Z) = C_(Z Z)$。若 $B_(Z Z)$ 是一个特解，则
+      $ M_Z (U_(Z Z) - B_(Z Z)) = 0. $
+      因此，差矩阵的每一列都在 $ker M_Z$ 中。我们要找的，就是这些允许的调整方向。
     ]],
-    [为什么必须先用这个核],
+    [这些方向由稳定子给出],
     [#app-body[
-      - $M_Z$ 的每一列都是 $H_X^T$ 各列的线性组合，所以它*自动满足*码结构与目标映射。
-      - 如果直接在全部 $2 n times 2 n$ 的二进制矩阵里盲找，这些信息就白丢了；先参数化，每个候选点天生符合码要求。
-      - 前提仍是 @app:css 的自检：$H_Z$、$H_X$ 行满秩、逻辑行组合独立。否则 $dim ker M_Z$ 会算错，自由变量数跟着错。
+      由 @app:css 中的对易关系，
+      $ M_Z H_X^T
+        = mat(overline(Z) H_X^T; H_Z H_X^T)
+        = 0. $
+      所以 $H_X^T$ 的列都在 $ker M_Z$ 中。
+
+      在 $M_Z$ 行满秩的前提下，$dim ker M_Z = n - (k + n_Z) = n_X$。而 $H_X^T$ 恰有 $n_X$ 个独立列，因此
+      $ "col"(H_X^T) = ker M_Z. $ <eq:app-kernel>
+
+      同理，$"col"(H_Z^T) = ker M_X$，维数为 $n_Z$。
     ]],
     tone1: "wash",
     tone2: "plain",
@@ -1236,24 +1241,30 @@
 
 #slide[
   #page-2cards(
-    [写成"一个特解 + 核空间"],
+    [用组合系数表示所有线性解],
     [#app-body[
-      #set list(spacing: 15pt)
-      于是两个半块的*所有*线性解都可以写成
-  $ U_(Z Z) = H_X^T U^1_(Z Z) + B_(Z Z), quad U_(Z X) = H_X^T U^1_(Z X) + B_(Z X), $ <eq:app-param-z>
-  $ U_(X Z) = H_Z^T U^1_(X Z) + B_(X Z), quad U_(X X) = H_Z^T U^1_(X X) + B_(X X). $ <eq:app-param-x>
-  - $U^1_(Z Z), U^1_(Z X)$ 是 $n_X times n$ 矩阵；$U^1_(X Z), U^1_(X X)$ 是 $n_Z times n$ 矩阵。
-  - $B$ 是特解，构造见 @app:particular。
+      每个允许的调整列都是核基的线性组合。把各列的组合系数收集成矩阵，就得到
+      $ U_(Z Z) = B_(Z Z) + H_X^T R, quad U_(Z X) = B_(Z X) + H_X^T S. $ <eq:app-param-z>
+      同理，
+      $ U_(X Z) = B_(X Z) + H_Z^T T, quad U_(X X) = B_(X X) + H_Z^T V. $ <eq:app-param-x>
+
+      - $B$ 是固定的特解，构造见 @app:particular。
+      - $R, S$ 的尺寸为 $n_X times n$；$T, V$ 的尺寸为 $n_Z times n$。
+      - 补充材料记作
+        $ R = U^1_(Z Z), quad S = U^1_(Z X), $
+        $ T = U^1_(X Z), quad V = U^1_(X X). $
     ]],
-    [变量数与正文记号对照],
+    [减少未知量，再施加辛约束],
     [#app-body[
-      #set list(spacing: 15pt)
-      - 自由变量数：
-        $ 2 n (n_X + n_Z) = 2 n (n - k), $
-        而不是 $4 n^2$。
-      - 正文用的 $R, S, T, V$ 就是这四个自由块：
-        $ R = U^1_(Z Z), quad S = U^1_(Z X), quad T = U^1_(X Z), quad V = U^1_(X X). $
-      - 上标 $1$ 表示"自由变量部分"，上标 $b$ 表示"特解"，全文统一用这两个记号。
+      原来四个 $n times n$ 块共有 $4 n^2$ 个未知量。现在只需确定四个系数矩阵，则未知量为：
+      $ 2 n n_X + 2 n n_Z = 2 n (n - k). $
+
+      *任意选择这些系数，都满足前述线性映射约束*，因为核空间调整不会改变映射结果。
+
+      但要得到合法的 Clifford 变换，还必须满足辛条件
+      $ U J U^T = J. $
+
+      因此，下一步是在 $R, S, T, V$ 上求解辛约束；这里的参数数目并不是最终可任意选择的自由度。
     ]],
     tone1: "wash",
     tone2: "plain",
