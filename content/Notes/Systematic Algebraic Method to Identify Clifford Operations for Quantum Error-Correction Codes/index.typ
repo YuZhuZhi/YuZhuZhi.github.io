@@ -679,7 +679,7 @@
     [
     - $overline(H)_1 overline(I)_2$：$overline(Z)_1 -> overline(X)_1$、$overline(X)_1 -> overline(Z)_1$，其余不变。
     - $overline(S)_1 overline(I)_2$：$overline(X)_1 -> overline(Z)_1 overline(X)_1$，其余不变。
-    - 于是"设计线路"变成"求满足 @eq:保辛条件 @eq:码结构 @eq:目标映射 的 $U$"，解出后再分解成物理门。
+    // - 于是"设计线路"变成"求满足 @eq:保辛条件 @eq:码结构 @eq:目标映射 的 $U$"，解出后再分解成物理门。三条约束具体怎么合成一个线性方程组，见 @app:merge；自由变量的削减与特解见 @app:vars、@app:particular。
   ],
     tone1: "wash",
     tone2: "plain",
@@ -696,14 +696,14 @@
     - 把 $U$ 的元素记作 $U_(i j)$， @eq:保辛条件 的每个矩阵元都是"两个元素相乘再求和"：
       #align(center)[$ (U Lambda U^T)_(i j) = sum_(k = 1)^n U_(i, k+n) U_(j k) + sum_(k = n+1)^(2 n) U_(i, k-n) U_(j k). $]
       因此 @eq:保辛条件 给出 $O(n^2)$ 个*二次*方程（分块展开见 @app:symp），而 @eq:码结构，@eq:目标映射 都是线性的。
-    - *线性化*：对出现在这些二次方程中的每一对元素引入新变量 $v_(a b c d) = U_(a b) U_(c d)$；代入后 @eq:保辛条件 变成关于 $(U, v)$ 的线性方程，再与 @eq:码结构，@eq:目标映射 合并。
+    - *线性化*：对出现在这些二次方程中的每一对元素引入新变量 $v_(a b c d) = U_(a b) U_(c d)$；代入后 @eq:保辛条件 变成关于 $(U, v)$ 的线性方程，再与 @eq:码结构，@eq:目标映射 合并。合并的确切含义见 @app:merge。
     - *规模*：论文指出线性方程组的行数（方程数）与列数（未知量数）都在 $O(n^2)$ 量级且*高度稀疏* —— 每个方程只涉及少数几个变量。
   ],
-    [复杂度与一致性回代],
+    [复杂度与二次约束验证],
     [
     - *复杂度*：稀疏消元的总代价"略高于 $O(n^4)$"，对比态矢量方法的 $4^n$ 维空间。量级估计见 @app:linear。
-    - *一致性回代*：$v$ 是形式变量，必须满足 $v_(a b c d) = U_(a b) U_(c d)$；论文在解空间里做"二次变量与 $U$ 元素的匹配"，并指出这一步开销很小。
-    - *规模示例*：$d = 7$ 环面码 $n = 2 d^2 = 98$，$U$ 是 $196 times 196$，元素约 $3.8 times 10^4$ 个 —— 而直接枚举 $2^38416$ 不可行。
+    - *二次约束验证*：$v$ 是形式变量，必须满足 $v_(a b c d) = U_(a b) U_(c d)$；论文在解空间里做"二次变量与 $U$ 元素的匹配"，并指出这一步开销很小。@app:kernel、@app:sparse、@app:matching。
+    - *规模示例*：$d = 7$ 环面码 $n = 2 d^2 = 98$，$U$ 是 $196 times 196 = 38416$，故直接枚举 $U_"op"$ 是不可行的。
   ],
     tone1: "wash",
     tone2: "plain",
@@ -714,30 +714,71 @@
 == 物理门分解
 
 #slide[
-  #page-2cards(
-    [门的种类与它们对 $U$ 的作用],
-    [
-    #light-table(
-      (0.3fr, 0.8fr, 1.3fr),
-      ("门", "对 Pauli 链的作用（物理效果）", "对 $U$ 的列操作（右乘初等矩阵）"),
-      (
-        ([$H_i$], [$Z_i <-> X_i$], [交换第 $i$ 列与第 $(i+n)$ 列]),
-        ([$S_i$], [$X_i -> Z_i X_i$], [把第 $(i+n)$ 列加到第 $i$ 列]),
-        ([$"CNOT"_(i j)$], [$X_i -> X_i X_j$、$Z_j -> Z_i Z_j$], [第 $j$ 列加到第 $i$ 列；第 $(i+n)$ 列加到第 $(j+n)$ 列]),
-        ([$"SWAP"_(i j)$], [$Z_i <-> Z_j$、$X_i <-> X_j$], [交换第 $i$、$j$ 列；交换第 $(i+n)$、$(j+n)$ 列]),
-      ),
-      size: 16pt
-    )
-  ],
-    [只允许四类辛操作把 $U$ 化为 $I_(2 n)$],
-    [
-    - 这四类初等矩阵*不构成*全部初等操作，但都是*辛*的，即每步保持 @eq:保辛条件 ：$U Lambda U^T = Lambda$，所以高斯消元时顺序必须专门设计。
-    - 记初等矩阵为 $P_k$：$U P_1 dots.c P_T = I_(2 n)$ ⟹ $U = P_T dots.c P_1$，门序列按*逆序*读出，$T$ 是化简前的物理门数。
-    - $n = 2$ 的显式 $4 times 4$ 矩阵见 @app:gates，可以直接核对上表的列操作。
-  ],
-    tone1: "wash",
-    tone2: "plain",
-  )
+  // 上卡仍是整页宽的表；下卡只占左侧，右侧留给环面码的消元动画（不配任何说明文字）。
+  #layout(size => {
+    let gap = 12pt
+    let avail = size.height - gap
+    let h1 = 0.45 * avail            // 上卡高度：与原来的 rsize: 0.45 一致
+    let h2 = avail - h1              // 下卡与动画所在的一行
+    let left-w = (size.width - gap) * 0.68
+    let right-w = size.width - gap - left-w
+    block(width: 100%, height: size.height)[
+      #grid(
+        rows: (h1, h2),
+        row-gutter: gap,
+        fit-card(
+          [门的种类与它们对 $U$ 的作用],
+          [
+            #light-table(
+              (0.3fr, 0.8fr, 1.3fr),
+              ("门", "对 Pauli 链的作用（物理效果）", "对 $U$ 的列操作（右乘初等矩阵）"),
+              (
+                ([$H_i$], [$Z_i <-> X_i$], [交换第 $i$ 列与第 $(i+n)$ 列]),
+                ([$S_i$], [$X_i -> Z_i X_i$], [把第 $(i+n)$ 列加到第 $i$ 列]),
+                ([$"CNOT"_(i j)$], [$X_i -> X_i X_j$、$Z_j -> Z_i Z_j$], [第 $j$ 列加到第 $i$ 列；第 $(i+n)$ 列加到第 $(j+n)$ 列]),
+                ([$"SWAP"_(i j)$], [$Z_i <-> Z_j$、$X_i <-> X_j$], [交换第 $i$、$j$ 列；交换第 $(i+n)$、$(j+n)$ 列]),
+              ),
+              size: 16pt
+            )
+          ],
+          tone: "wash",
+          avail: h1,
+          width: size.width,
+        ),
+        grid(
+          columns: (left-w, right-w),
+          rows: (h2,),
+          column-gutter: gap,
+          fit-card(
+            [只允许四类辛操作把 $U$ 化为 $I_(2 n)$],
+            [
+            - 这四类初等矩阵*不构成*全部初等操作，但都是*辛*的，即每步保持 @eq:保辛条件 ：$U Lambda U^T = Lambda$，所以高斯消元时顺序必须专门设计。
+            - 记初等矩阵为 $P_k$。那么 $U P_1 dots.c P_T = I_(2 n)$ $==>$ $U = P_T dots.c P_1$，门序列按*逆序*读出，$T$ 是化简前的物理门数。
+            // - $n = 2$ 的显式 $4 times 4$ 矩阵见 @app:gates，可以直接核对上表的列操作。
+            ],
+            tone: "plain",
+            avail: h2,
+            width: left-w,
+          ),
+          block(
+            width: 100%,
+            height: 100%,
+            fill: white,
+            stroke: 0.7pt + green-line,
+            radius: 4pt,
+            inset: 8pt,
+          )[
+            #align(center + horizon)[#image(
+              if sys.inputs.at("appendix-static", default: "false") == "true" { "img/appendix-toric-poster.png" } else { "img/appendix-toric.gif" },
+              width: 100%,
+              height: h2 - 16pt,
+              fit: "contain",
+            )]
+          ],
+        ),
+      )
+    ]
+  })
   #speaker-note[#talk-notes.at(12)]
 ]
 
@@ -748,15 +789,15 @@
     [$U --> I_(2 n)$ 四步消元],
     [
       + *双比特门*：只看 $U$ 左侧 $2 n times n$ 部分，用 CNOT/SWAP 操作把它化为列阶梯形；右侧 $n$ 列会被同步作用。
-      + *$H$ 门换列*：若左上还没出现 $I_n$，说明右半存在带零元的列（$U$ 满秩，不会出现全零列），因此用 $H$ 把右半的列换进来再重复*第一步*。通常此时左上、右下两个块都已是 $I_n$。
+      + *$H$ 门换列*：若左上还没出现 $I_n$，说明右半存在带零元的列（因 $U$ 满秩，不会出现全零列），因此用 $H$ 把右半的列换进来再重复*第一步*。通常此时左上、右下两个块都已是 $I_n$。
       + *消左下*：单个元素 $(i+n, i)$ 用 $S_i$ 消去；成对元素 $(i+n, j)$ 与 $(j+n, i)$（$i < j$）用 $H_i "CNOT"_(j i) H_i$ 一起消掉。
       + *消右上*：右上角若还有非零元，再继续使用 $H$ 门处理，最终 $U -> I_(2 n)$，分解结束。
     ],
     [边界情形与读数规则],
     [
-      - 只剩左下非零、只剩右上非零等边界情形，论文逐类给出了消除手法；完整证明在 SM 中。
-      - *为什么可以这样消*：这四类初等矩阵不构成全部初等操作，但都是辛的，每步都保持 $U Lambda U^T = Lambda$，所以消元顺序必须专门设计。
-      - *门序列怎么读*：由 $U P_1 dots.c P_T = I_(2 n)$ 得 $U = P_T dots.c P_1$，最终线路要把消元过程*逆序*读出（Fig. 1 的时间轴指向左侧）；$T$ 就是化简前的物理门数。
+      - 只剩左下非零、只剩右上非零等边界情形，论文逐类给出了消除手法。
+      - *可行性*：这四类初等矩阵不构成全部初等操作，但都是辛的，每步都保持 $U Lambda U^T = Lambda$，所以消元顺序必须专门设计。
+      - *门序列读出*：由 $U P_1 dots.c P_T = I_(2 n)$ 得 $U = P_T dots.c P_1$，最终线路要把消元过程*逆序*读出（Fig. 1 的时间轴指向左侧）；$T$ 就是化简前的物理门数。
     ],
     tone1: "wash",
     tone2: "plain",
@@ -839,7 +880,7 @@
       - *逻辑算符*：沿非平凡闭环的 $X$ 链与 $Z$ 链。Fig. 3 的 $d = 7$ 实例中，深色点是真实比特、浅色点是边界带来的虚拟比特，彩线标出两个逻辑比特的 $overline(Z)$、$overline(X)$。
       - *几何方法的极限*：横向 $H$ + SWAP 恢复稳定子结构会*同时*交换两个逻辑比特的 $Z$ 与 $X$，无法实现*只作用在一个逻辑比特上*的 $H$ 门。
       - *目标映射*：$overline(Z)_1 -> overline(X)_1$、$overline(Z)_2 -> overline(Z)_2$、$overline(X)_1 -> overline(Z)_1$、$overline(X)_2 -> overline(X)_2$。
-      - *方程规模*：$d = 3, 5, 7, 9, 11$ 对应 $U$ 的维数 $36, 100, 196, 324, 484$。
+      - *方程规模*：$d = 3, 5, 7, 9, 11$ 对应 $U$ 的维数 $36, 100, 196, 324, 484$。$d = 3$ 时的完整输入矩阵、一个解与逐项核验见 @app:d3、@app:seq。
     ],
     image-path: "img/fig3.png",
     source: [Fig. 3：$d = 7$ 的环面码],
@@ -886,9 +927,9 @@
   #page-2col(
     [把 $overline(S)_1 overline(H)_1$ 当成一个整体来解],
     [
+      - *用途*：Fig. 5(a) 的线路可制备相位偏移 Bell 态 $(ket(00)_L + i ket(11)_L)/sqrt(2)$，用于检验纠缠的基本不等式。
       - *做法*：直接按 @sec:三条约束 @eq:目标映射 写出整个 $(overline(S)_1 overline(H)_1) overline(I)_2$ 的目标，只需要解*一条*物理门序列，而不是"先解 $overline(S)$、再解 $overline(H)$"两条串联。
       - *收益*：一步实现比两步方案少约三分之一的门数，而且只比两步方案中 $overline(S)$ 的那一步略多。
-      - *用途*：Fig. 5(a) 的线路可制备相位偏移 Bell 态 $(ket(00)_L + i ket(11)_L)/sqrt(2)$，用于检验纠缠的基本不等式。
       - *更一般地*：若干基本 Clifford 门在逻辑线路里连续出现时，可以合并成一个目标映射一次求解。
     ],
     tone: "wash",
@@ -925,6 +966,7 @@
       - *最小 ${4,5}$ 实现*：60 个物理比特；30 个 $Z$ 稳定子与 24 个 $X$ 稳定子，各含一个冗余。独立稳定子数 $29 + 23 = 52$，逻辑比特数 $k = 60 - 52 = 8$。
       - *拓扑与收益*：边界上的边配对后得到多手柄闭曲面；每个手柄携带两个逻辑比特，编码率高于环面码。
       - 该码*不是自对偶*的，即$Z$ 型与 $X$ 型稳定子数目不等，是几何方法处理不了的情形。
+      // - 铺砌如何折成有限码、$n_Z = 29$ 与 $k = 8$ 是怎么数出来的，见 @app:hypergroup、@app:hyper。
     ],
     image-path: "img/fig6.png",
     source: "Fig. 6",
@@ -980,304 +1022,618 @@
 = 附录
 #speaker-note[#talk-notes.at(24)]
 
-// 沿用正文的 page-2cards / page-2col，字号与样式仅在卡片正文中设置。
-#let app-body(body, size: 18.5pt) = {
-  set text(font: ("Libertinus Serif", "Noto Serif SC"), size: size)
-  set par(leading: 0.36em, spacing: 0.36em)
+// 沿用正文的 page-2cards / page-2col；字号交给 fit-card 自适应。
+// 这里只 set 字体、不要再 set text(size)：否则会盖掉 fit-card 传入的 body-size，
+// 卡片内容一变长就只能溢出，无法自动缩小。
+#let app-body(body) = {
+  set text(font: ("Libertinus Serif", "Noto Serif SC"))
+  set par(leading: 0.45em, spacing: 0.36em)
   set list(spacing: 0.25em, tight: true)
   set enum(spacing: 0.25em, tight: true)
   body
 }
 
-== A：CSS 输入与逻辑 Pauli 的配对 <app:css>
+// =====================================================================================
+// 附录小节编号：字母对应正文的哪一块，数字是块内序号。
+// 这样页眉与正文引用（@app:...）显示的是同一个记号，避免"正文写 6.2、标题写 B："的错位。
+#let app-tags = (
+  // "A",
+  "A.1", "A.2",
+  "B.1", "B.2", "B.3",
+  "C.1", "C.2", "C.3", "C.4", "C.5",
+  "D.1", "D.2", "D.3",
+  "E.1", "E.2", "E.3", "E.4",
+)
+#let app-num(..nums) = {
+  let n = nums.pos()
+  let i = if n.len() > 1 { n.at(1) } else { 1 }
+  app-tags.at(i - 1, default: str(i))
+}
+#set heading(numbering: app-num)
+
+// // =====================================================================================
+// // A · 导读：正文与附录的对应关系
+
+// == 正文与附录的对应关系 <app:map>
+
+// #slide[
+//   #page-2cards(
+//     [正文哪一节，对应附录哪一节],
+//     [
+//       #light-table(
+//         (0.95fr, 0.46fr, 1.75fr),
+//         ("正文", "附录", "这里补上正文省略掉的部分"),
+//         (
+//           ([§2.2 稳定子码与 CSS 码], [B.1], [$H_Z H_X^T = 0$ 的来历、逻辑 Pauli 配对与输入自检]),
+//           ([§2.3 Clifford 与辛条件], [B.2], [保辛条件的分块展开与 $n(2 n - 1)$ 条约束]),
+//           ([§3.1 三条约束], [C.1 C.2 C.3], [三条约束怎么合并；核空间参数化；特解 $B$ 与零常数块]),
+//           ([§3.2 二次约束与线性化], [D.1 D.2], [四个提升矩阵；向量化与 $cal(A)$ 的规模]),
+//           ([§3.2 线性化之后], [D.3 D.4 D.5], [七类核方向；稀疏特解与相容性；乘积匹配]),
+//           ([§3.3–§3.5 门分解与辛消元], [E.1 E.2 E.3], [门的辛矩阵与相位；消元为何收尾；两比特演示]),
+//           ([§4 结果], [F.1 F.2], [环面码 $d = 3$ 的输入、解、门序列与核验]),
+//           ([§4 结果], [F.3 F.4], [双曲码的群、陪集计数与逻辑比特数]),
+//         ),
+//         size: 12pt,
+//         inset: 4pt,
+//       )
+//     ],
+//     [记号与阅读约定],
+//     [#app-body[
+//       - 全部运算在 $bb(F)_2$ 上。公式尽量沿用补充材料（SM）的原形，并标出 (S1)–(S58) 的编号，方便与原文件对照。
+//       - *分块记号*：SM 把 $U$ 分成 $U_(Z Z), U_(Z X), U_(X Z), U_(X X)$ 四块（(S1)）；正文用 $A, B, C, D$ 表示同样四块，对应关系是 $A = U_(Z Z)$、$B = U_(Z X)$、$C = U_(X Z)$、$D = U_(X X)$。
+//       - *上标*：$1$ 表示"自由变量部分"（(S3)(S4) 中的 $U^1$），$b$ 表示"特解"（Fig. S2 中的 $u^b$）。
+//       - *讲述顺序*：SM 把算法 (S17)–(S29) 放在 §1、把证明放在 §2；本附录按正文的先后，把"怎么构造"和"为什么成立"合在一处讲，所以公式次序与 SM 不同，但每条都注明 SM 编号。
+//     ]],
+//     tone1: "wash",
+//     tone2: "plain",
+//     weights: (1.45fr, 1fr),
+//     gap: 10pt,
+//   )
+// ]
+
+// #speaker-note[#talk-notes.at(25)]
+
+// =====================================================================================
+// B · 对应正文 §2 预备知识（输入数据与保辛条件）
+
+== CSS 码的输入数据与逻辑 Pauli 的配对 <app:css>
 
 #slide[
   #page-2cards(
-    [行向量约定与独立生成元],
+    [输入必须是一套合法数据],
     [#app-body[
-      全部矩阵运算在 $bb(F)_2$ 上进行。把 $n$ 比特 Pauli 算符记为行向量 $(z | x)$。以下给出一些基本关系和约束：
-  $ H_Z in bb(F)_2^(n_Z times n), quad H_X in bb(F)_2^(n_X times n), quad
-    k = n - n_Z - n_X. $
-  $ H_Z H_X^T = 0, quad H_Z overline(X)^T = 0, quad
-    H_X overline(Z)^T = 0, quad overline(Z) overline(X)^T = I_k. $ <eq:app-css>
-  @eq:app-css 的前三项分别约束稳定子之间、及逻辑算符与稳定子之间的对易关系；最后一项给出 $k$ 对反对易的逻辑算符。$H_Z,H_X$ 均取行满秩，逻辑行须在相应稳定子的商空间中独立。
+      // 全部运算在 $bb(F)_2$ 上，Pauli 链写成行向量 $(z | x)$。
+  $ H_Z in bb(F)_2^(n_Z times n), quad H_X in bb(F)_2^(n_X times n), quad k = n - n_Z - n_X. $
+  $ H_Z H_X^T = 0, quad H_Z overline(X)^T = 0, quad H_X overline(Z)^T = 0, quad overline(Z) overline(X)^T = I_k. $ <eq:app-css>
+  - $H_Z H_X^T = 0$ 的来历：一条纯 $Z$ 链 $(z | 0)$ 与一条纯 $X$ 链 $(0 | x)$ 的辛内积是 $z dot x$，正是二者*共同支撑的比特数*。于是"两条稳定子对易" $<=>$ "共同支撑为偶数" $<=>$ $H_Z H_X^T = 0$。
+  - 中间两项约束逻辑算符与*另一类*稳定子的对易；最后一项要求同编号的 $overline(Z)_i$ 与 $overline(X)_i$ 反对易，不同编号的对易。
+  - $H_Z$、$H_X$ 都取行满秩；逻辑行要在相应稳定子的商空间中线性独立。
     ]],
-    [目标必须保持这套对易关系],
+    [目标也遵循同一关系],
     [#app-body[
-      将目标逻辑算符与保持不变的稳定子行堆叠为矩阵 $Q$。所求物理作用 $U$ 必须满足 @eq:码结构 和 @eq:目标映射；这两组等式线性地限制 $U$ 的四个块。
-
-  目标算符还必须保留 @eq:app-css 的辛配对，否则线性方程即使可解，也不可能对应 Clifford 操作。算法先解线性条件，再施加保辛条件。
+      @eq:目标映射 右端的四块 $overline(Z)^Z$、$overline(X)^Z$、$overline(Z)^X$、$overline(X)^X$ 是逻辑算符*像*的两个分量，所以它们自己也要满足 @eq:app-css 的辛配对。
+  - 一个例子：$overline(Z)_m$ 的像写成 $(overline(Z)^Z_m | overline(Z)^X_m)$，它必须与纯 $X$ 稳定子 $(0 | H_X)$ 对易。辛内积只剩 $overline(Z)^Z_m H_X^T$，故
+    $ overline(Z)^Z_m H_X^T = 0, quad "另外" quad H_Z H_X^T = 0. $
+    这两条在 C.3 里用来证明提升方程的常数块为零。
+  - *输入自检*：$n_Z + n_X + k = n$；$H_Z$、$H_X$ 各自行满秩；$overline(Z) overline(X)^T = I_k$。任一条不成立，后面方程的规格就已经错了。
     ]],
-    gap: 10pt,
+    tone1: "wash",
+    tone2: "plain",
+    // gap: 10pt,
   )
-  #speaker-note[#talk-notes.at(25)]
 ]
 
-== B：保辛条件的三组方程 <app:symp>
+#speaker-note[#talk-notes.at(26)]
+
+== 保辛条件的分块三组方程与约束计数 <app:symp>
 
 #slide[
   #page-2cards(
-    [把 $U Lambda U^T = Lambda$ 展开到可求解的形式],
+    [$U Lambda U^T = Lambda$ 展开成可求解的形式],
     [#app-body[
-      $ U = mat(A, B; C, D), quad Lambda = mat(0, I_n; I_n, 0). $
-  $ U Lambda U^T = mat(B A^T + A B^T, B C^T + A D^T;
-    D A^T + C B^T, D C^T + C D^T). $ <eq:app-expand>
-  左上块约束 $Z$ 型生成元像之间的对易，右下块对应 $X$ 型生成元像；交叉块规定两类像的配对。
+      $ U = mat(A, B; C, D) = mat(U_(Z Z), U_(Z X); U_(X Z), U_(X X)), quad Lambda = mat(0, I_n; I_n, 0). $
+  $ U Lambda U^T = mat(B A^T + A B^T, B C^T + A D^T; D A^T + C B^T, D C^T + C D^T). $ <eq:app-expand>
+  令它等于 $Lambda$，就得到四个块方程：
+  $ U_(Z X) U_(Z Z)^T + U_(Z Z) U_(Z X)^T = 0, quad U_(X X) U_(X Z)^T + U_(X Z) U_(X X)^T = 0, $ <eq:app-symp-blocks>
+  $ U_(Z X) U_(X Z)^T + U_(Z Z) U_(X X)^T = I_n, quad U_(X X) U_(Z Z)^T + U_(X Z) U_(Z X)^T = I_n. $ <eq:app-s78>
+  - $U Lambda U^T$ 左上块约束的是"$Z$ 型生成元的像之间"仍然对易，右下块对应 $X$ 型；交叉块规定两类像之间的辛配对。
+  - @eq:app-s78 互为转置，所以只有三组独立条件。
     ]],
-    [三个方程块与约束计数],
+    [约束计数],
     [#app-body[
-      两个交叉块互为转置，故只保留下列三组条件：
-  $ B A^T + A B^T = 0, quad D C^T + C D^T = 0, quad
-    D A^T + C B^T = I_n. $ <eq:app-symp-blocks>
-  - 前两式的左端对称，且对角元为 $a b + b a = 0$，各取 $j<i$ 的 $n(n-1)/2$ 个元素。
-  - 第三式取全部 $n^2$ 个元素，总计 $n(2n-1)$ 条二次方程。
-  - 这只是去掉对称重复项后的条数。在线性码条件限制下，方程之间仍可能相关。后续对 @eq:app-symp-blocks 作变量代换和提升。
+      - 前两组左端对称，且 $bb(F)_2$ 上对角元是 $a b + b a = 0$，各取 $j < i$ 的 $n(n-1)/2$ 个元素；第三组取全部 $n^2$ 个元素。总计
+        $ n^2 + 2 dot n(n-1)/2 = n (2 n - 1). $ <eq:app-s10>
+      - 这个数就是 D.2 里系数矩阵 $cal(A)$ 的*行数*：一条二次方程在提升之后变成一行线性方程。但它只是去掉对称重复后的条数，不是秩。在 @eq:码结构、@eq:目标映射 的线性条件下方程之间仍可能相关，实际秩要由 $cal(A)$ 算出来。
+      - 只对 $U$ 的某一个分块做普通消元是不行的：四个块被这些对易关系牵连在一起，这正是 E.2 里消元顺序必须专门设计的原因。
     ]],
+    tone1: "wash",
+    tone2: "plain",
     gap: 10pt,
   )
-  #speaker-note[#talk-notes.at(26)]
 ]
 
-== C：线性条件与自由变量的削减 <sm:vars>
+#speaker-note[#talk-notes.at(27)]
+// =====================================================================================
+// B · 对应正文 §3.1 三条约束与线性条件
+
+== 三条约束如何"合并"成一个线性方程组 <app:merge>
 
 #slide[
   #page-2cards(
-    [每个半块的 $2n$ 列共享同一个核空间],
+    [第一步：把 $U$ 与两条约束都按块展开],
     [#app-body[
-      $ M_Z = mat(overline(Z); H_Z), quad M_X = mat(overline(X); H_X). $
-  令 $Q_(Z Z),Q_(Z X),Q_(X Z),Q_(X X)$ 为目标像与固定稳定子的堆叠：
-  $ M_Z (U_(Z Z), U_(Z X)) = (Q_(Z Z), Q_(Z X)), quad
-    M_X (U_(X Z), U_(X X)) = (Q_(X Z), Q_(X X)). $
+      把 $U$ 分成四个 $n times n$ 的块：
+  $ U = mat(U_(Z Z), U_(Z X); U_(X Z), U_(X X)). $
+  再把 @eq:码结构 逐块展开，得到四条：
+  $ H_Z U_(Z Z) = H_Z, quad H_Z U_(Z X) = 0, quad H_X U_(X Z) = 0, quad H_X U_(X X) = H_X. $
+  @eq:目标映射 也给出四条：
+  $ overline(Z) U_(Z Z) = overline(Z)^Z, quad overline(Z) U_(Z X) = overline(X)^Z, quad overline(X) U_(X Z) = overline(Z)^X, quad overline(X) U_(X X) = overline(X)^X. $
     ]],
-    [用核空间参数化所有线性解],
+    [关键：受约束的是同一对未知块],
     [#app-body[
-      因 $M_Z H_X^T=0$，且 $dim ker M_Z=n-(k+n_Z)=n_X$，
-  $ ker M_Z = "col"(H_X^T), quad ker M_X = "col"(H_Z^T). $
-  记四个自由变量块为 $R,S,T,V$：
-  $ U_(Z Z)=H_X^T R+B_(Z Z), quad U_(Z X)=H_X^T S+B_(Z X), $
-  $ U_(X Z)=H_Z^T T+B_(X Z), quad U_(X X)=H_Z^T V+B_(X X). $
-  $R,S$ 为 $n_X times n$，$T,V$ 为 $n_Z times n$，自由变量从 $4n^2$ 降到 $2n(n-k)$。
+      #set list(spacing: 15pt)
+      - 约束 $(U_(Z Z), U_(Z X))$ 的其实只有两种行：$H_Z$ 来自码结构，$overline(Z)$ 来自目标映射。
+      - 约束 $(U_(X Z), U_(X X))$ 的同理：$H_X$ 来自码结构，$overline(X)$ 来自目标映射。
+      - 两种行左乘的未知块*完全相同*，差的只是"行"。这就是可以合并的理由：*未知块相同、行不同，就可以把行叠起来*。
     ]],
-    gap: 10pt,
-  )
-  #speaker-note[#talk-notes.at(27)]
-]
-
-== D：通过主元构造特解 $B$ <sm:particular>
-
-#slide[
-  #page-2cards(
-    [右逆把任意常数列变成一组特解],
-    [#app-body[
-      对增广矩阵做行最简形消元，并保存可逆的行操作矩阵 $L_Z$：
-  $ L_Z (M_Z, Q_(Z Z), Q_(Z X)) = (M'_Z, Q'_(Z Z), Q'_(Z X)). $
-  设 $M'_Z$ 第 $a$ 行的主元列为 $p_a$。取 $Gamma_Z$ 第 $a$ 列为标准基向量 $e_(p_a)$，则
-  $ M'_Z Gamma_Z = I_(k+n_Z), quad M_Z (Gamma_Z L_Z)=I_(k+n_Z). $
-  因此可直接取
-  $ B_(Z Z)=Gamma_Z L_Z Q_(Z Z), quad
-    B_(Z X)=Gamma_Z L_Z Q_(Z X). $
-    ]],
-    [特解的自对易常数项为何消失],
-    [#app-body[
-      令 $E_Z=Gamma_Z L_Z$，则 $M_Z E_Z=I$，从而 $M_Z B_(Z Z)=Q_(Z Z)$；其余三块同理。两块共用一个右逆，这是下一步消去常数项的关键。
-
-  $ B_(Z X)B_(Z Z)^T+B_(Z Z)B_(Z X)^T $
-  $ =E_Z (Q_(Z X)Q_(Z Z)^T+Q_(Z Z)Q_(Z X)^T) E_Z^T=0. $ <eq:app-zero-constant>
-  括号内每项是两条目标 $Z$ 型生成元像的辛配对。它们由原先互相对易的生成元得到，故和为零。$X$ 半块同理。因此提升方程的前两个常数块为零。
-
-  主元选择改变 $B$，也会改变后续稀疏解的相容性，不能把一次选择推广为任意右逆。
-    ]],
+    tone1: "wash",
+    tone2: "plain",
     gap: 10pt,
   )
   #speaker-note[#talk-notes.at(28)]
 ]
 
-== E：二次项提升与一条完整的展开式 <sm:lift>
-
 #slide[
   #page-2cards(
-    [引入的是四个内积矩阵，而非所有逐元素乘积],
+    [第二步：合并——把行上下堆叠],
     [#app-body[
-      $ F_1=S R^T, quad F_2=T V^T, quad F_3=T S^T, quad F_4=V R^T. $
-  其形状依次为 $n_X times n_X$、$n_Z times n_Z$、$n_Z times n_X$、$n_Z times n_X$。
-  例如 $U_(Z X) U_(Z Z)^T+U_(Z Z) U_(Z X)^T=0$ 展开成
-  $ 0 = H_X^T (F_1+F_1^T) H_X + K_Z + K_Z^T
-    + B_(Z X) B_(Z Z)^T + B_(Z Z) B_(Z X)^T, $
-  $ K_Z = H_X^T R B_(Z X)^T + H_X^T S B_(Z Z)^T. $
+      把作用在同一对未知块上的行堆起来，得到两个新的系数矩阵，以及对应的常数列块：
+      $ M_Z = mat(overline(Z); H_Z), quad M_X = mat(overline(X); H_X), $
+      $ M_Z (U_(Z Z), U_(Z X)) = mat(overline(Z)^Z, overline(X)^Z; H_Z, 0) = (Q_(Z Z), Q_(Z X)), $ <eq:app-stack-z>
+      $ M_X (U_(X Z), U_(X X)) = mat(overline(Z)^X, overline(X)^X; 0, H_X) = (Q_(X Z), Q_(X X)). $ <eq:app-stack-x>
+      "合并"是*按未知块把线性条件的行上下堆叠*。$M_Z$ 管上半两块，$M_X$ 管下半两块，两个系统互不耦合。
     ]],
-    [提升后的线性方程与恢复条件],
+    [合并的效果],
     [#app-body[
-      - 当 $F_1$ 先作为独立变量时，以上每一项都对 $(R,S,F_1)$ 线性。
-  - 第二组方程使用 $F_2+F_2^T$。交叉方程中的二次部分为 $H_Z^T (F_3+F_4)H_X$。
-  - 提升扩大了解空间。解出后必须恢复四条 $F_i$ 的乘积关系，才得到原方程的解。
+      #set list(spacing: 15pt)
+      - 同一半的两列（$U_(Z Z)$ 与 $U_(Z X)$）共享同一个系数矩阵 $M_Z$，所以共享同一组自由变量、只差右端——这正是 @app:vars 里"一个特解加核空间"的形式。两块也因此能*共用同一个右逆*来构造特解，见 @app:particular。
+      - 三条约束用*同一*线性方程组表示，需代进 @eq:保辛条件 之后：@app:lift 得到展开式，@app:linear 把它整理成 $cal(A) u = B'$。
+      - 也就是说，@eq:码结构 与 @eq:目标映射 是被"参数化吸收"进去的，而不是以额外的行出现。
     ]],
+    tone1: "plain",
+    tone2: "wash",
     gap: 10pt,
   )
   #speaker-note[#talk-notes.at(29)]
 ]
 
-== F：向量化与系数矩阵的规模 <app:linear>
+== 核空间参数化：自由变量从 $4 n^2$ 降到 $2 n (n - k)$ <app:vars>
 
 #slide[
   #page-2cards(
-    [按行展开八个块，统一解 $cal(A)u=b$],
+    [每个半块的两列共享同一个核],
     [#app-body[
-      $ "vec"_r(R)=(r_(1 1),dots,r_(1 n),r_(2 1),dots)^T, $
-  $ u=("vec"_r(R);"vec"_r(S);"vec"_r(T);"vec"_r(V);
-    "vec"_r(F_1);"vec"_r(F_2);"vec"_r(F_3);"vec"_r(F_4)). $
+      因为 $H_Z H_X^T = 0$（见 @app:css），而且逻辑行与另一类稳定子对易，所以 $overline(Z) H_X^T = 0$。于是
+  $ M_Z H_X^T = mat(overline(Z) H_X^T; H_Z H_X^T) = 0 quad ==> quad "col"(H_X^T) subset.eq ker M_Z. $
+      再比维数。$M_Z$ 的秩是 $k + n_Z$，而 $k = n - n_Z - n_X$，所以
+  $ dim ker M_Z = n - (k + n_Z) = n_X. $
+      $H_X$ 行满秩，$H_X^T$ 的列数正好也是 $n_X$；两个空间维数相同，于是
+  $ "col"(H_X^T) = ker M_Z. $ <eq:app-kernel>
+      同理 $"col"(H_Z^T) = ker M_X$，维数 $n_Z$。
     ]],
-    [系数矩阵的结构与变量计数],
+    [为什么必须先用这个核],
     [#app-body[
-      #text(size: 17pt)[
-    $ cal(A)=mat(A_R,A_S,0,0,A_1,0,0,0;
-      0,0,A_T,A_V,0,A_2,0,0;
-      A'_R,A'_S,A'_T,A'_V,0,0,A_3,A_3). $
-  ]
-  第三行的最后两块相同，因为交叉方程只含 $F_3+F_4$。
-  $ N_"linear"=2n(n-k), quad N_"lift"=(n-k)^2, $
-  $ cal(A) in bb(F)_2^(n(2n-1) times (n-k)(3n-k)). $
-  $d=7$ 环面码：$n=98,k=2$，得到 $19110 times 28032$ 的系数矩阵。
-  当 $k=0$ 时提升变量恰为线性变量的一半。矩阵规模为 $O(n^2)$，不等于消元成本为 $O(n^2)$。
+      - $M_Z$ 的每一列都是 $H_X^T$ 各列的线性组合，所以它*自动满足*码结构与目标映射。
+      - 如果直接在全部 $2 n times 2 n$ 的二进制矩阵里盲找，这些信息就白丢了；先参数化，每个候选点天生符合码要求。
+      - 前提仍是 @app:css 的自检：$H_Z$、$H_X$ 行满秩、逻辑行组合独立。否则 $dim ker M_Z$ 会算错，自由变量数跟着错。
     ]],
+    tone1: "wash",
+    tone2: "plain",
     gap: 10pt,
   )
   #speaker-note[#talk-notes.at(30)]
 ]
 
-== G：提升矩阵的七类核方向 <sm:proof>
-
 #slide[
   #page-2cards(
-    [前四类：从线性块的正交补构造],
+    [写成"一个特解 + 核空间"],
     [#app-body[
-      固定 $R$ 的行号 $eta$ 后，第一组方程中 $R_(eta zeta)$ 的系数为
-  $ h^X_(eta i)b^(Z X)_(j zeta)+h^X_(eta j)b^(Z X)_(i zeta). $
-  交叉方程的对应系数为 $h^X_(eta j)b^(X X)_(i zeta)$。因此这一条带的行落在 $B_(Z X)$、$B_(X X)$ 的联合行空间中。其正交补维数为 $n_Z$；交换两类生成元可得到另一个正交补。
-
-  $ Delta R=C_1W^Z, quad Delta S=C_2W^X, quad Delta T=C_3W^Z, quad Delta V=C_4W^X. $ <eq:app-linear-kernel>
-  $W^Z,W^X$ 分别取对应正交补的行基。对 @eq:app-linear-kernel 每一行与系数条带取内积，均为零。
+      #set list(spacing: 15pt)
+      于是两个半块的*所有*线性解都可以写成
+  $ U_(Z Z) = H_X^T U^1_(Z Z) + B_(Z Z), quad U_(Z X) = H_X^T U^1_(Z X) + B_(Z X), $ <eq:app-param-z>
+  $ U_(X Z) = H_Z^T U^1_(X Z) + B_(X Z), quad U_(X X) = H_Z^T U^1_(X X) + B_(X X). $ <eq:app-param-x>
+  - $U^1_(Z Z), U^1_(Z X)$ 是 $n_X times n$ 矩阵；$U^1_(X Z), U^1_(X X)$ 是 $n_Z times n$ 矩阵。
+  - $B$ 是特解，构造见 @app:particular。
     ]],
-    [后三类：利用特征二的对称性],
+    [变量数与正文记号对照],
     [#app-body[
-      第五、六类分别修改 $F_1,F_2$ 的对称部分，因为 $F_i+F_i^T=0$。其基包含对角矩阵 $E_(p p)$ 与 $E_(p q)+E_(q p)$（$p<q$）；前者不可省略。
-
-  第七类同步修改两个交叉提升块：
-  $ Delta F_3=Delta F_4=E_(p q) quad => quad H_Z^T(Delta F_3+Delta F_4)H_X=0. $ <eq:app-cross-kernel>
-  这些是后续匹配乘积所用的核方向。它们按支撑分为七类；要判定是否张成整个核，还须计算 $cal(A)$ 的秩。
+      #set list(spacing: 15pt)
+      - 自由变量数：
+        $ 2 n (n_X + n_Z) = 2 n (n - k), $
+        而不是 $4 n^2$。
+      - 正文用的 $R, S, T, V$ 就是这四个自由块：
+        $ R = U^1_(Z Z), quad S = U^1_(Z X), quad T = U^1_(X Z), quad V = U^1_(X X). $
+      - 上标 $1$ 表示"自由变量部分"，上标 $b$ 表示"特解"，全文统一用这两个记号。
     ]],
+    tone1: "wash",
+    tone2: "plain",
     gap: 10pt,
   )
   #speaker-note[#talk-notes.at(31)]
 ]
 
-== H：提升方程的稀疏特解 <sm:sparse>
+== 用主元构造特解 $B$，并消掉常数块 <app:particular>
 
 #slide[
   #page-2cards(
-    [消元安排与零块选择],
+    [对增广矩阵做行最简形消元],
     [#app-body[
-      对增广矩阵 $(cal(A),b)$ 作相容的主元选择与行消元：
-  + 将交叉方程移到前面。前四列按条带消元，两个相同的交叉提升块保持相同。
-  + 利用包含“逻辑算符与稳定子”的条带，消去只含逻辑算符的对应行。
-  + 重排行并完成交叉提升块的消元。与零常数块相连的变量可取零。
-  由此选取的特解形状为
-  $ S^b=T^b=F_1^b=F_2^b=F_3^b=0, quad
-    R^b,V^b,F_4^b " 可能非零". $
+      对增广矩阵作行最简形消元，同时保存可逆的行操作矩阵 $L_Z$：
+  $ L_Z (M_Z, Q_(Z Z), Q_(Z X)) = (M'_Z, Q'_(Z Z), Q'_(Z X)). $ <eq:app-pivot>
+      设 $M'_Z$ 第 $a$ 行的主元列是 $p_a$，取 $Gamma_Z$ 的第 $a$ 列为标准基向量 $e_(p_a)$，则
+  $ M'_Z Gamma_Z = I_(k + n_Z), quad M_Z (Gamma_Z L_Z) = I_(k + n_Z). $ <eq:app-rightinv>
+  $M'_Z$ 行满秩，所以每个主元列都存在；$Gamma_Z$ 相当于为行最简矩阵做了一个右逆。
     ]],
-    [四条乘积关系中只剩一条需要修正],
+    [右逆把任意右端变成特解],
     [#app-body[
-      $ F_1=S R^T=0, quad F_2=T V^T=0, quad F_3=T S^T=0. $
-  剩余要求是 $F_4^b=V^b (R^b)^T$。置零的是自由变量 $S,T$，原矩阵中的 $U_(Z X)=B_(Z X)$、$U_(X Z)=B_(X Z)$ 仍可能非零。
-  置零依赖特解 $B$ 的选择，需检验受限系统的相容性，不能把任意 $B$ 直接套入该形状。
+      记 $E_Z = Gamma_Z L_Z$，它就是 $M_Z$ 的一个右逆。直接取
+  $ B_(Z Z) = Gamma_Z L_Z Q_(Z Z), quad B_(Z X) = Gamma_Z L_Z Q_(Z X); $
+  $ B_(X Z) = Gamma_X L_X Q_(X Z), quad B_(X X) = Gamma_X L_X Q_(X X). $
+      验证：
+  $ M'_Z B_(Z Z) = (M'_Z Gamma_Z) (L_Z Q_(Z Z)) = Q'_(Z Z). $ <eq:app-b-verify>
+  - 关键之处：$B_(Z Z)$ 与 $B_(Z X)$ *共用同一个右逆* $E_Z$；下面两块共用 $E_X$。
     ]],
+    tone1: "wash",
+    tone2: "plain",
     gap: 10pt,
   )
   #speaker-note[#talk-notes.at(32)]
 ]
 
-== I：乘积匹配与显式修正 <sm:matching>
-
 #slide[
   #page-2cards(
-    [交叉约束给出修正所需的满秩性],
+    [共用右逆让常数块变成"夹心"形式],
     [#app-body[
-      固定 $X$ 稳定子给出 $H_X B_(X X)=H_X$、$H_X B_(X Z)=0$。此外，$B_(Z Z)$、$B_(X Z)$ 的行属于逻辑 $Z$ 与 $Z$ 稳定子的张成空间，所以
-  $ B_(Z Z)H_X^T=B_(X Z)H_X^T=0. $ <eq:app-B-orthogonal>
-  把稀疏提升解的交叉方程左乘 $H_X$；含 $H_Z^T$ 的项由 $H_X H_Z^T=0$ 消去，其余常数项由 @eq:app-B-orthogonal 消去，留下
-  $ H_X=H_X (R^b)^T H_X. $ <eq:app-rank-step>
-  $H_X$ 行满秩。右乘其右逆并转置 @eq:app-rank-step，得到 $R^b H_X^T=I_(n_X)$。
+      把右逆形式代进 $B_(Z X) B_(Z Z)^T + B_(Z Z) B_(Z X)^T$：
+  $ B_(Z X) B_(Z Z)^T + B_(Z Z) B_(Z X)^T = E_Z (Q_(Z Z) Q_(Z X)^T + Q_(Z X) Q_(Z Z)^T) E_Z^T. $ <eq:app-const-block>
+      因为两块共用 $E_Z$，括号里的表达式被整个"夹"在 $E_Z$ 与 $E_Z^T$ 之间。这就是共用右逆的用处：常数块的结构被完全暴露出来。
     ]],
-    [沿核方向修正唯一未满足的乘积关系],
+    [括号里为什么是零],
     [#app-body[
-      定义失配 $Delta=V^b (R^b)^T+F_4^b$。第四类核方向允许 $Delta V=C W^X$，且可取 $W^X=H_X$。由上一卡的恒等式，
-  $ V=V^b+Delta H_X, quad V(R^b)^T=F_4^b. $ <eq:app-match>
-  这里 $Delta H_X(R^b)^T=Delta$，故 @eq:app-match 直接成立；修改仍在 $cal(A)$ 的核中，前三条乘积关系也不变。
+      括号内第 $(m, m')$ 个元素形如
+  $ overline(Z)^Z_m (overline(X)^Z_(m'))^T + overline(X)^Z_m (overline(Z)^Z_(m'))^T = 0. $ <eq:app-const-zero>
+      它的意思是"目标逻辑 $Z$ 的像之间仍然两两对易"，由 @app:css 的辛配对保证（$U$ 不改变对易关系）。$X$ 半块同理，也等于零。
 
-  这一修正以存在稀疏提升解为前提。若选取的 $B$ 使受限系统无解，就须重新选右逆或使用一般的提升解。
+      于是提升方程的常数向量只有第三块非零：
+  $ B' = (0; 0; B'_3). $ <eq:app-bprime>
+      *提醒*：$B$ 依赖主元选择。换一组主元会换 $B$，也会改变 @app:sparse 里"稀疏特解是否相容"的结论。
     ]],
+    tone1: "wash",
+    tone2: "plain",
     gap: 10pt,
   )
   #speaker-note[#talk-notes.at(33)]
 ]
 
-== J：物理门的辛矩阵与相位 <app:gates>
+// =====================================================================================
+// C · 对应正文 §3.2 二次约束与线性化
+
+== 二次项提升：只有四种固定组合要变成新变量 <app:lift>
 
 #slide[
   #page-2cards(
-    [行向量顺序固定为 $(Z_1,Z_2 | X_1,X_2)$],
+    [把参数化代进保辛条件之后],
     [#app-body[
-      $ P_H=mat(0,1;1,0), quad P_S=mat(1,0;1,1), $
-  $ P_("CNOT"_12)=mat(1,0,0,0;1,1,0,0;0,0,1,1;0,0,0,1), quad
-    P_("SWAP"_12)=mat(0,1,0,0;1,0,0,0;0,0,0,1;0,0,1,0). $
-  - $H_i$：交换第 $i$、$i+n$ 列。$S_i$：第 $i+n$ 列加到第 $i$ 列。
-  - $"CNOT"_(i j)$：第 $j$ 列加到第 $i$ 列，同时第 $i+n$ 列加到第 $j+n$ 列。
-  - $"SWAP"_(i j)$：同步交换两半中的 $i,j$ 列。各门均满足 $P Lambda P^T=Lambda$。
+      #set par(leading: 0.8em, spacing: 1em)
+      把 $U_(Z Z) = H_X^T U^1_(Z Z) + B_(Z Z)$ 一类的表达式代进保辛条件的三组方程，展开后每一项属于三类之一：只含自由变量 $u$ 的、$u$ 与特解 $b$ 交叉的、只含 $b$ 的常数项。
+
+      以第一组方程的一个矩阵元为例（$j < i$，求和范围从略）：
+  $ 0 = sum_(eta, xi) (h^X_(eta i) h^X_(xi j) + h^X_(xi i) h^X_(eta j)) sum_zeta u^(Z X)_(eta zeta) u^(Z Z)_(xi zeta) + "（交叉项与常数项）". $
     ]],
-    [二进制逆矩阵与物理逆门须分开],
+    [关键观察],
     [#app-body[
-      这里 $P_S^2=I$，但物理 $S^(-1)=S^dagger$，且 $S^2=Z$。综合后须跟踪 Pauli 符号，用 Pauli 修正匹配所需符号，才能保证稳定子的 $+1$ 码空间。
+      #set list(spacing: 15pt)
+      - $h$ 与特解元素 $b$ 全是*已知常数*；$u$ 只以一种固定形式出现：对 $zeta$ 求和的内积 $sum_zeta u^(Z X)_(eta zeta) u^(Z Z)_(xi zeta)$，也就是矩阵乘积 $U^1_(Z X) (U^1_(Z Z))^T$ 的第 $(eta, xi)$ 个元素。
+      - 所以二次性并不散布在 $U$ 的任意两个元素之积上，只集中在极少数几种组合里——这就是可以直接"提升"的依据。
     ]],
+    tone1: "wash",
+    tone2: "plain",
     gap: 10pt,
   )
   #speaker-note[#talk-notes.at(34)]
 ]
 
-== K：可逆对角块后的严格消元 <sm:elimination>
-
 #slide[
   #page-2cards(
-    [补充推导：当左上块可逆，剩余步骤由辛条件确定],
+    [定义四个提升矩阵],
     [#app-body[
-      对 $U=mat(A,B;C,D)$，先用 CNOT/SWAP 的可逆列操作将 $A$ 化为 $I$。设所得矩阵为 $U'=mat(I,B';C',D')$。
-  由行、列两种保辛恒等式可得
-  $ B'=(B')^T, quad C'=(C')^T, quad D'=I+C'B'. $
-  因而有精确分解
-  $ U'=mat(I,0;C',I)mat(I,B';0,I). $
+  $ tilde(u)^(Z X, Z Z)_(eta xi) equiv sum_zeta u^(Z X)_(eta zeta) u^(Z Z)_(xi zeta), quad tilde(u)^(X Z, X X)_(eta xi) equiv sum_zeta u^(X Z)_(eta zeta) u^(X X)_(xi zeta), $
+  $ tilde(u)^(X Z, Z X)_(eta xi) equiv sum_zeta u^(X Z)_(eta zeta) u^(Z X)_(xi zeta), quad tilde(u)^(X X, Z Z)_(eta xi) equiv sum_zeta u^(X X)_(eta zeta) u^(Z Z)_(xi zeta). $ <eq:app-lift-def>
+      范围：前两个 $1 <= eta, xi <= n_X$（或 $n_Z$），后两个 $1 <= eta <= n_Z$、$1 <= xi <= n_X$。
     ]],
-    [剪切矩阵对应的门与逆序综合],
+    [写成矩阵：它们就是正文的四个 $F$],
     [#app-body[
-      右乘 $mat(I,B';0,I)$ 后，再右乘 $mat(I,0;C',I)$ 即得 $I_(2n)$。
-  - 对称下三角剪切的对角项用 $S_i$ 清除，非对角项 $(i,j)$ 用 $H_i "CNOT"_(j i)H_i$ 同时清除。
-  - 上三角剪切由全体 $H$ 共轭下三角剪切得到。若初始 $A$ 奇异，先通过 $H$ 换入成对列以恢复主元，再进入此分解。
-  逐步保辛。由 $U P_1 dots.c P_T=I$ 得 $U=P_T^(-1) dots.c P_1^(-1)$，使用逆序的物理逆门。
+  $ tilde(U)^(Z X, Z Z) = U^1_(Z X) (U^1_(Z Z))^T, quad tilde(U)^(X Z, X X) = U^1_(X Z) (U^1_(X X))^T, \ tilde(U)^(X Z, Z X) = U^1_(X Z) (U^1_(Z X))^T, quad tilde(U)^(X X, Z Z) = U^1_(X X) (U^1_(Z Z))^T. $
+      - 提升变量共 $(n_Z + n_X)^2 = (n - k)^2$ 个，不到线性变量 $2 n (n-k)$ 的一半；两者合计 $(n-k)(3 n - k)$。
+      - *这只是暂借*：把 $tilde(u)$ 当独立变量之后方程线性化了，但解完必须用上面的定义把它换回 $u$ 的乘积。未完成匹配之前得到的只是*放宽后*的解，不保证保辛——这一步在 @app:matching。
     ]],
+    tone1: "wash",
+    tone2: "plain",
     gap: 10pt,
   )
   #speaker-note[#talk-notes.at(35)]
 ]
 
-== L：两比特辛消元的逐步演示 <sm:toy>
+== 向量化与系数矩阵 $cal(A)$ 的规模 <app:linear>
+
+#slide[
+  #page-2cards(
+    [把八个块拉直成一个向量],
+    [#app-body[
+      每个矩阵按行转置后纵向拼接：$u_(Z Z) equiv "vec"_r (U^1_(Z Z))$，其余同理。八个部分对齐为
+  $ u = (u_(Z Z); u_(Z X); u_(X Z); u_(X X); tilde(u)^(Z X, Z Z); tilde(u)^(X Z, X X); tilde(u)^(X Z, Z X); tilde(u)^(X X, Z Z)). $ <eq:app-vec>
+      于是所有展开式整理成一张普通的线性方程组
+  $ cal(A) u = B', quad B' = (0; 0; B'_3). $ <eq:app-au>
+      常数向量的前两块为零，正是 @app:particular 证过的结论。
+    ]],
+    [系数矩阵的块结构],
+    [#app-body[
+  $ cal(A) = mat(A_(Z Z), A_(Z X), 0, 0, A^(Z X, Z Z), 0, 0, 0;
+    0, 0, A_(X Z), A_(X X), 0, A^(X Z, X X), 0, 0;
+    A'_ (Z Z), A'_ (Z X), A'_ (X Z), A'_ (X X), 0, 0, A^(X X, Z Z), A^(X X, Z Z)). $ <eq:app-Amat>
+      - 三个方程块对应八个变量块，所以 $cal(A)$ 分成 $3 times 8$ 块，其中大量块直接为零，即高度稀疏。
+      - 第三行最后两块*完全相同*，因为交叉方程里只出现 $tilde(U)^(X Z, Z X) + tilde(U)^(X X, Z Z)$ 这个和。@app:kernel 的第七类核方向与 @app:sparse 的稀疏特解都靠这一点。
+    ]],
+    tone1: "wash",
+    tone2: "plain",
+    gap: 10pt,
+  )
+  #speaker-note[#talk-notes.at(36)]
+]
+
+#slide[
+  #page-2cards(
+    [方程数与未知量数],
+    [#app-body[
+      #set list(spacing: 15pt)
+      - 行数：去重后的二次约束条数 $n (2 n - 1)$（见 @app:symp）。
+      - 列数：线性变量 $N_"linear" = 2 n (n - k)$，提升变量 $N_"lift" = (n - k)^2$，合计 $(n - k)(3 n - k)$。
+      - 于是系数矩阵的形状是
+        $ cal(A) in bb(F)_2^(n (2 n - 1) times (n - k)(3 n - k)). $
+      - $k = 0$ 时，提升变量恰好是线性变量的一半。
+    ]],
+    [一个具体例子],
+    [#app-body[
+      #set list(spacing: 15pt)
+      - $d = 7$ 环面码：$n = 2 d^2 = 98$、$k = 2$。$U$ 是 $196 times 196$（约 $3.8 times 10^4$ 个元素），$cal(A)$ 是 $19110 times 28032$。直接枚举 $2^38416$ 显然不可行。
+      - *注意区分*：矩阵的边长按 $n^2$ 增长，*不*等于求解代价也是 $O(n^2)$。论文估计整体复杂度"略高于 $O(n^4)$"，实际开销还受消元中的填充与主元顺序影响。
+      - 作对比：态矢量方法的表示空间是 $4^n$ 维。
+    ]],
+    tone1: "wash",
+    tone2: "plain",
+    // gap: 10pt,
+    rsize: 0.45
+  )
+  #speaker-note[#talk-notes.at(37)]
+]
+
+== 提升矩阵的七类核方向 <app:kernel>
+
+#slide[
+  #page-2cards(
+    [条带的正交补给出前四类],
+    [#app-body[
+      固定行指标 $eta$，$cal(A)$ 的第 $eta$ 条带的行由特解行 $b^(Z X)$、$b^(X X)$ 联合生成；由 @app:particular 的构造可以知道，这个集合的秩是 $n_X + k$。所以它的正交补维数是
+  $ n - (n_X + k) = n_Z. $ <eq:app-orth>
+      分别取 $w^Z_1, dots, w^Z_(n_Z)$ 与 $w^X_1, dots, w^X_(n_X)$ 为相应正交补的*行基*。
+    ]],
+    [四类基向量：每个基只有一行非零],
+    [#app-body[
+  $ u^((1)) : (u_(Z Z))^(p q)_(eta zeta) = delta_(eta p) (w^Z_q)_zeta, quad 1 <= eta, p <= n_X, 1 <= q <= n_Z, $
+  $ u^((2)) : (u_(Z X))^(p q)_(eta zeta) = delta_(eta p) (w^X_q)_zeta, quad 1 <= eta, p, q <= n_X, $
+  $ u^((3)) : (u_(X Z))^(p q)_(eta zeta) = delta_(eta p) (w^Z_q)_zeta, quad 1 <= eta, p, q <= n_Z, $
+  $ u^((4)) : (u_(X X))^(p q)_(eta zeta) = delta_(eta p) (w^X_q)_zeta, quad 1 <= eta, p <= n_Z, 1 <= q <= n_X. $ <eq:app-kernel-1to4>
+      矩阵语言：每个基在对应块里只有*一行*非零，那一行取 $w^Z$ 或 $w^X$ 中的一条；同一条行向量搬到该块的其他行即得另一个基。加进去后与所有相关系数条带的内积都是零，所以方程左端不变。
+    ]],
+    tone1: "wash",
+    tone2: "plain",
+    gap: 10pt,
+  )
+  #speaker-note[#talk-notes.at(38)]
+]
+
+#slide[
+  #page-2cards(
+    [第五、六类：只改提升矩阵的对称部分],
+    [#app-body[
+      #set list(spacing: 15pt)
+      方程里只出现 $tilde(U) + tilde(U)^T$，所以这两类只改提升矩阵的*对称部分*：
+  $ (tilde(u)^(Z X, Z Z))^(p p)_(eta xi) = delta_(eta p) delta_(xi p), quad (tilde(u)^(Z X, Z Z))^(p q)_(eta xi) = delta_(eta p) delta_(xi q) + delta_(eta q) delta_(xi p) quad (p < q), $
+      第六类同型，换成 $tilde(U)^(X Z, X X)$，范围 $1 <= eta, xi, p, q <= n_Z$。
+      - 对角的那一个*不能省略*：$bb(F)_2$ 上 $x + x = 0$，$tilde(U) + tilde(U)^T$ 对对角项完全不敏感。
+    ]],
+    [第七类],
+    [#app-body[
+      #set list(spacing: 15pt)
+      第七类同步修改两个交叉提升块：
+  $ Delta tilde(U)^(X Z, Z X) = Delta tilde(U)^(X X, Z Z) quad ==> quad H_Z^T (Delta tilde(U)^(X Z, Z X) + Delta tilde(U)^(X X, Z Z)) H_X = 0, $ <eq:app-kernel-7>
+      因为系数矩阵第三行的最后两块系数相同，方程只看它们的和。
+      - 直接计算可以验证这些向量确实在核里，例如 $A^(Z X, Z Z) (tilde(u)^(Z X, Z Z))^(p p) = h^X_(p i) h^X_(p j) + h^X_(p i) h^X_(p j) = 0$。
+      - 七类是七种*构造模式*，不是七个向量。要断言它们张成整个 $ker cal(A)$，还必须算 $cal(A)$ 的秩；本附录不预设这一点。
+    ]],
+    tone1: "wash",
+    tone2: "plain",
+    gap: 10pt,
+  )
+  #speaker-note[#talk-notes.at(39)]
+]
+
+== 提升方程的稀疏特解 <app:sparse>
+
+#slide[
+  #page-2cards(
+    [增广矩阵 $(cal(A), B')$ 的消元安排],
+    [#app-body[
+      SM 没有满足于"任取一个高斯消元解"，而是专门安排行与变量的顺序，让零块结构显出来：
+  + 把第三块行（交叉方程）移到最前面。
+  + 各块内部按条带独立消元，常数向量 $b$ 留在各条带里；第 5、6 列不动，第 7、8 列本来就相同，消元后仍然相同。
+  + $A_(Z X)$ 的条带行来自 $B_(Z Z)$（含*逻辑 $Z$ 与 $Z$ 稳定子*），而 $A'_ (Z X)$ 的条带行来自 $B_(X Z)$（*只含逻辑 $Z$*）。所以可以用下面那组去消上面那组——这正是 @app:particular 里两块共用右逆 $E_Z$ 的用处。$A_(X Z)$、$A'_ (X Z)$ 同理。
+  + 重排行，再对两个相同的交叉提升块消元，得到行最简形。
+    ]],
+    [特解的形状：只剩一条乘积关系要修],
+    [#app-body[
+      行最简形里有四个系数块连着*零常数项*，所以对应变量可以取零；两个相同的交叉提升块又说明 $tilde(U)^(X Z, Z X)$ 与 $tilde(U)^(X X, Z Z)$ 可任选一个为零（SM 取前者为零）。于是
+  $ u^b_(Z X) = u^b_(X Z) = tilde(U)^(Z X, Z Z)_b = tilde(U)^(X Z, X X)_b = tilde(U)^(X Z, Z X)_b = 0, quad u^b_(Z Z), " " u^b_(X X), " " tilde(U)^(X X, Z Z)_b " 可能非零". $
+      - 四条乘积定义因此前三条自动成立，只剩 $tilde(U)^(X X, Z Z)_b = U^(1 b)_(X X) (U^(1 b)_(Z Z))^T$ 需要检查。@app:matching 处理它。
+      - $u^b_(Z X) = 0$ 说的是*自由变量* $U^1_(Z X) = 0$。原矩阵里 $U_(Z X) = H_X^T U^1_(Z X) + B_(Z X) = B_(Z X)$ 一般并不为零；$U_(X Z)$ 同理。
+      - *相容性*：这个漂亮的零块形状依赖 $B$ 的选择与受限系统是否相容。实现对 $d = 3$ 环面码的 $I$、$H_1$、$S_1$、$"CNOT"_(12)$ 都相容，但也能构造出 $n_Z$、$n_X$ 同时非零而 $S = T = 0$ 不相容的例子；此时要重选右逆，或改用一般的提升解。零块形状不是无条件结论。
+    ]],
+    tone1: "wash",
+    tone2: "plain",
+    gap: 10pt,
+  )
+  #speaker-note[#talk-notes.at(40)]
+]
+
+== 乘积匹配与显式修正 <app:matching>
+
+#slide[
+  #page-2cards(
+    [交叉约束给出的两个恒等式],
+    [#app-body[
+      由 @eq:码结构 的下半组（$H_X U_(X Z) = 0$、$H_X U_(X X) = H_X$）配合参数化表达式，
+  $ H_X B_(X X) = H_X, quad H_X B_(X Z) = 0. $
+      $B_(Z Z)$、$B_(X Z)$ 的行分别落在 $Q_(Z Z)$、$Q_(X Z)$ 的行空间中，而 $Q$ 的行是逻辑算符*像*的 $Z$ 分量，与纯 $X$ 链 $(0 | H_X)$ 对易（见 @app:css），所以
+  $ B_(Z Z) H_X^T = B_(X Z) H_X^T = 0. $ <eq:app-Borth>
+    ]],
+    [左乘 $H_X$，只剩一个单位阵条件],
+    [#app-body[
+      把交叉方程 $U_(X X) U_(Z Z)^T + U_(X Z) U_(Z X)^T = I_n$ 在稀疏特解上左乘 $H_X$：含 $H_Z^T$ 的项被 $H_X H_Z^T = 0$ 消掉，其余常数项被 @eq:app-Borth 消掉，配上 $H_X B_(X X) = H_X$，只剩
+  $ H_X = H_X (U^(1 b)_(Z Z))^T H_X. $ <eq:app-HXstep>
+      $H_X$ 行满秩，两边右乘它的一个右逆再转置：
+  $ U^(1 b)_(Z Z) H_X^T = I_(n_X). $
+    ]],
+    tone1: "wash",
+    tone2: "plain",
+    gap: 10pt,
+  )
+  #speaker-note[#talk-notes.at(41)]
+]
+
+#slide[
+  #page-2cards(
+    [失配：最后一条乘积关系差多少],
+    [#app-body[
+      稀疏特解已经把前三条乘积关系做平，只剩 $tilde(U)^(X X, Z Z) = U^1_(X X) (U^1_(Z Z))^T$。把两边的差定义成失配：
+  $ Delta U^(X X, Z Z) = U^(1 b)_(X X) (U^(1 b)_(Z Z))^T - tilde(U)^(X X, Z Z)_b. $ <eq:app-mismatch>
+      修正的方向取第四类核方向，也就是只动 $U^1_(X X)$：
+  $ Delta U^1_(X X) = C W^X, quad C in bb(F)_2^(n_Z times n_X). $
+      要求 $Delta U^1_(X X) (U^(1 b)_(Z Z))^T = Delta U^(X X, Z Z)$，就得到关于 $C$ 的方程
+  $ U^(1 b)_(Z Z) (W^X)^T C^T = (Delta U^(X X, Z Z))^T. $ <eq:app-solveC>
+    ]],
+    [读出修正量：一次就补平],
+    [#app-body[
+      取 $W^X = H_X$（$H_X$ 的 $n_X$ 行正是该核的一组行基），由 $U^(1 b)_(Z Z) H_X^T = I_(n_X)$ 立刻读出 $C = Delta U^(X X, Z Z)$，于是
+  $ U^1_(X X) = U^(1 b)_(X X) + Delta U^(X X, Z Z) H_X. $ <eq:app-final>
+      - 这个改动是一个核方向，所以线性方程仍然成立；$U^1_(Z X)$、$U^1_(X Z)$ 与三个提升块都没动，前三条乘积关系也不变。*到此*才真正得到满足 @eq:保辛条件 的解，而不只是放宽方程的解。
+      - *存在性前提*：SM 假设 $n_Z >= n_X$，否则把失配转置后改用第一类核方向 $u^((1))$。也可先用 $u^((1))$ 把 $U^(1 b)_(Z Z)$ 调成行满秩，则上面的系数矩阵满秩、$C$ 必存在。
+      - 最后把四个块代回参数化表达式，即得同时满足 @eq:码结构、@eq:目标映射 与 @eq:保辛条件 的 $U$，可以进入门分解。
+    ]],
+    tone1: "wash",
+    tone2: "plain",
+    gap: 10pt,
+  )
+  #speaker-note[#talk-notes.at(42)]
+]
+
+// =====================================================================================
+// D · 对应正文 §3.3–§3.5 物理门分解与辛高斯消元
+
+== 四种物理门的辛矩阵与相位 <app:gates>
+
+#slide[
+  #page-2cards(
+    [单比特门的辛矩阵],
+    [#app-body[
+      行向量顺序固定为 $(Z_1, Z_2 | X_1, X_2)$。
+  $ P_H = mat(0, 1; 1, 0), quad P_S = mat(1, 0; 1, 1). $ <eq:app-gates-single>
+      - $H$ 交换 $Z$、$X$，所以矩阵是交换两行的形式。
+      - $S$ 把 $X$ 送到 $Z X$，即 $Z$ 分量多出一份，所以矩阵是下三角的"加一"形式。
+    ]],
+    [两比特门的辛矩阵],
+    [#app-body[
+  $ P_("CNOT"_12) = mat(1, 0, 0, 0; 1, 1, 0, 0; 0, 0, 1, 1; 0, 0, 0, 1), quad P_("SWAP"_12) = mat(0, 1, 0, 0; 1, 0, 0, 0; 0, 0, 0, 1; 0, 0, 1, 0). $ <eq:app-gates-two>
+      $n$ 个比特时，只把这些 $4 times 4$ 块放到 $2 n times 2 n$ 矩阵的对应行列，其余位置取单位阵。
+      - 每一行都可以直接读出一条 Pauli 生成元的像，例如 $P_("CNOT"_12)$ 的第二行说明 $X_1 -> X_1 X_2$。
+    ]],
+    tone1: "wash",
+    tone2: "plain",
+    gap: 10pt,
+  )
+  #speaker-note[#talk-notes.at(43)]
+]
+
+== 左上块可逆之后的严格消元 <app:elimination>
+
+#slide[
+  #page-2cards(
+    [保辛条件约束了剩余块],
+    [#app-body[
+      先用 CNOT/SWAP 的可逆列操作把左上块化成 $I_n$，记结果为
+  $ U' = mat(I_n, B'; C', D'). $
+      由 $U' Lambda U'^T = Lambda$ 与 $U'^T Lambda U' = Lambda$ 可得
+  $ B' = (B')^T, quad C' = (C')^T, quad D' = I_n + C' B'. $ <eq:app-shear>
+    ]],
+    [精确分解成两张剪切矩阵],
+    [#app-body[
+      #set list(spacing: 15pt)
+  $ U' = mat(I_n, 0; C', I_n) mat(I_n, B'; 0, I_n). $
+      - 右乘 $mat(I_n, B'; 0, I_n)$，再右乘 $mat(I_n, 0; C', I_n)$，即得 $I_(2 n)$。
+      - 所以"能否消干净"这个问题，被化成了"两张剪切矩阵能否消干净"。
+    ]],
+    tone1: "wash",
+    tone2: "plain",
+    gap: 10pt,
+  )
+  #speaker-note[#talk-notes.at(45)]
+]
+
+#slide[
+  #page-2cards(
+    [剪切矩阵对应的门],
+    [#app-body[
+      #set list(spacing: 15pt)
+      - 对称下三角剪切：对角项 $(i, i)$ 用 $S_i$ 清除。
+      - 非对角项 $(i, j)$（$i > j$）与 $(j, i)$ 因对称性成对出现，用 $H_i "CNOT"_(j i) H_i$ *一次清掉两个*。
+      - 上三角剪切不过是下三角剪切在全体 $H$ 共轭下的结果（$H$ 交换 $Z$、$X$ 两半）。
+    ]],
+    [奇异情形与逆序综合],
+    [#app-body[
+      #set list(spacing: 15pt)
+      - 若初始左上块 $A$ 奇异，并不表示失败：先用 $H$ 换入成对列恢复主元，再进入这个可逆情形——这就是正文四步消元里的第二步。
+      - *综合与读数*：每一步都是辛门，所以过程保辛；由 $U P_1 dots.c P_T = I_(2 n)$ 得 $U = P_T^(-1) dots.c P_1^(-1)$。
+      - 最终线路按*逆序*使用物理逆门（Fig. 1 的时间轴指向左侧），$T$ 就是化简前的物理门数。
+      - 两比特的完整例子（每一步都能手算）见 @app:toy；四种门的矩阵见 @app:gates。
+    ]],
+    tone1: "plain",
+    tone2: "wash",
+    gap: 10pt,
+  )
+  #speaker-note[#talk-notes.at(46)]
+]
+
+== 两比特辛消元的逐步演示 <app:toy>
 
 #slide[
   #page-2col(
     [三次右乘把 $U_0$ 消到 $I_4$],
     [#app-body[
-      $ U_0=mat(0,0,1,0;0,1,1,0;1,1,0,1;0,1,0,1). $
-    $ U_0=P_("CNOT"_12)P_(S_2)P_(H_1). $
-    + 右乘 $P_(H_1)$，交换第 1、3 列。
-    + 右乘 $P_(S_2)$，第 4 列加到第 2 列。
-    + 右乘 $P_("CNOT"_12)$，同步操作两半，得到 $I_4$。
-    右图高亮当前操作的列，每帧验证 $U_t Lambda U_t^T=Lambda$。
+      $ U_0 = mat(0, 0, 1, 0; 0, 1, 1, 0; 1, 1, 0, 1; 0, 1, 0, 1). $
+    $ U_0 = P_("CNOT"_12) P_(S_2) P_(H_1). $ <eq:app-toy>
+    + 右乘 $P_(H_1)$：交换第 1、3 列。
+    + 右乘 $P_(S_2)$：把第 4 列加到第 2 列。
+    + 右乘 $P_("CNOT"_12)$：前后两半同步操作，得到 $I_4$。
+    右侧动画每帧高亮当前操作的列，并逐步验证 $U_t Lambda U_t^T = Lambda$。这个 $4 times 4$ 例子可以逐项手算，用来复核 @app:gates 的列操作表与 @app:elimination 的逆序读数规则。
     ]],
     right: [
       #align(center + horizon)[#image(
@@ -1287,23 +1643,27 @@
     tone: "wash",
     fractions: (1.2fr, 1fr),
   )
-  #speaker-note[#talk-notes.at(36)]
+  #speaker-note[#talk-notes.at(47)]
 ]
 
-== M：$d=3$ 环面码的具体输入 <sm:d3>
+// =====================================================================================
+// E · 对应正文 §4 结果（具体计数）
+
+== $d = 3$ 环面码的具体输入 <app:d3>
 
 #slide[
   #page-2col(
     [周期格点的稳定子与逻辑支撑],
     [#app-body[
-      $ n=18, quad n_Z=n_X=8, quad k=2. $
-    各有 9 个稳定子，去掉一个整体依赖。例如
-    $ S_Z=Z_(11)Z_(14)Z_(15)Z_(17), $
-    $ S_X=X_8 X_(10)X_(11)X_(14). $
-    逻辑行的支撑为
-    $ overline(Z)_1:{1,7,13}, quad overline(X)_1:{1,2,3}, $
-    $ overline(Z)_2:{4,5,6}, quad overline(X)_2:{4,10,16}. $
-    目标 $overline(H)_1 overline(I)_2$ 交换第一对逻辑行，固定第二对及全部稳定子。
+      #set list(spacing: 15pt)
+      $ n = 18, quad n_Z = n_X = 8, quad k = 2. $
+      两类各有 9 个稳定子，去掉一条整体依赖后剩 8 个独立生成元。例如
+    $ S_Z = Z_(11) Z_(14) Z_(15) Z_(17), \
+    S_X = X_8 X_(10) X_(11) X_(14). $
+    四条逻辑行的支撑是
+    $ overline(Z)_1 : {1, 7, 13}, quad overline(X)_1 : {1, 2, 3}, \ overline(Z)_2 : {4, 5, 6}, quad overline(X)_2 : {4, 10, 16}. $
+    目标 $overline(H)_1 overline(I)_2$ 交换第一对逻辑行，固定第二对与全部选定稳定子。右图给出物理比特的编号，据此可以逐行写出 $H_Z$、$H_X$ 与四条逻辑行。
+    - 验证：$H_Z H_X^T = 0$、$overline(Z) overline(X)^T = I_2$、$n_Z + n_X + k = n$。
     ]],
     right: [
       #align(center + horizon)[#image(
@@ -1313,22 +1673,24 @@
     tone: "wash",
     fractions: (1.2fr, 1fr),
   )
-  #speaker-note[#talk-notes.at(37)]
+  #speaker-note[#talk-notes.at(48)]
 ]
 
-== N：环面码的解、门序列与核验 <sm:seq>
+== 环面码的解、门序列与检验 <app:seq>
 
 #slide[
   #page-2col(
-    [两个交叉块是逻辑行的外积],
+    [两个交叉块恰好是逻辑行的外积],
     [#app-body[
-      $ U_(Z X)=overline(X)_1^T overline(X)_1, $
-    $ U_(X Z)=overline(Z)_1^T overline(Z)_1, quad U_(Z Z)=U_(X X)^T. $
-    按门序列重建 $U$，逐项核验
-    $ U Lambda U^T=Lambda, quad H U=H, quad L U=L_"target". $
-    $H$ 为稳定子行，$L$ 为逻辑行。
-    清点：75 CNOT、5 SWAP、1 H，共 81 门，折算为 90 CNOT 当量。
-    动画从 $U$ 开始，按矩阵乘积的逆序逐门消元到 $I_(36)$。每一步均保辛，中间矩阵不必固定原稳定子。
+      #set list(spacing: 15pt)
+      SM 给出的一个解满足
+    $ U_(Z Z) = U_(X X)^T, quad U_(Z X) = overline(X)_1^T overline(X)_1, quad U_(X Z) = overline(Z)_1^T overline(Z)_1 $
+    - $overline(X)_1$、$overline(Z)_1$ 是长度 $n$ 的行向量，所以 $overline(X)_1^T overline(X)_1$ 是 $n times n$ 的秩一矩阵。这说明解与想交换的那对逻辑算符直接相关，不是随机搜出来的一张大表。
+    - 逐项检验三类原始条件：
+    $ U Lambda U^T = Lambda, quad H U = H, quad L U = L_"target". $ <eq:app-check>
+    $H$ 是稳定子行，$L$ 是逻辑行。
+    - 门数：75 个 CNOT、5 个 SWAP、1 个 $H$，共 81 个物理门；把 5 个 SWAP 各折合 3 个 CNOT 后是 90 个 CNOT。
+    - 右侧动画从 $U$ 出发，按矩阵乘积的*逆序*逐门变换到 $I_(36)$。中间矩阵只需保辛，不要求每一步都固定原稳定子；只要求整个过程满足 @eq:app-check。
     ]],
     right: [
       #align(center + horizon)[#image(
@@ -1338,52 +1700,59 @@
     tone: "wash",
     fractions: (1.2fr, 1fr),
   )
-  #speaker-note[#talk-notes.at(38)]
+  #speaker-note[#talk-notes.at(49)]
 ]
 
-== O：有限双曲码的商群与陪集 <sm:hypergroup>
+// == 有限双曲码的商群与陪集 <app:hypergroup>
 
-#slide[
-  #page-2cards(
-    [从无限双曲铺砌得到有限商群],
-    [#app-body[
-      对正则 $\{r,s\}$ 铺砌，保向对称群满足
-  $ G^+_(r,s)=chevron.l rho,sigma | rho^r=sigma^s=(rho sigma)^2=e chevron.r. $
-  $rho$、$sigma$ 分别是面中心与顶点的旋转。当 $1/r+1/s<1/2$ 时，铺砌位于双曲平面，其对称群无限。选取无挠、正规、有限指数的子群 $N$，得到
-  $ G=G^+_(r,s)/N, quad |G|=[G^+_(r,s):N]<infinity. $ <eq:app-finite-quotient>
-  无挠性用于排除旋转锥点；有限指数才保证商群有限。还须确认所得曲面连通、闭合且可定向。
-    ]],
-    [陪集的轨道数给出几何对象的数量],
-    [#app-body[
-      在有限商群中，面、顶点、边的稳定子依次为 $chevron.l rho chevron.r$、$chevron.l sigma chevron.r$、$chevron.l rho sigma chevron.r$。对应阶数为 $r,s,2$，轨道–稳定子关系给出
-  $ F=abs(G)/r, quad V=abs(G)/s, quad E=abs(G)/2=n. $ <eq:app-cosets>
-  $E$ 是物理比特数，因为每条边放置一个比特。面边界和顶点星将分别成为 $Z$ 型、$X$ 型稳定子。
-    ]],
-    gap: 10pt,
-  )
-  #speaker-note[#talk-notes.at(39)]
-]
+// #slide[
+//   #page-2cards(
+//     [从无限双曲铺砌得到有限商群],
+//     [#app-body[
+//       对正则 $\{r, s\}$ 铺砌，保向对称群是
+//   $ G^+_(r,s) = chevron.l rho, sigma | rho^r = sigma^s = (rho sigma)^2 = e chevron.r, $
+//       其中 $rho$、$sigma$ 分别是绕面中心与顶点的旋转。$1/r + 1/s < 1/2$ 时铺砌落在双曲平面上，这个群是无限的。
+//       取一个无挠、正规、有限指数的子群 $H_(r,s)$，商群
+//   $ G = G^+_(r,s) / H_(r,s), quad abs(G) = [G^+_(r,s) : H_(r,s)] < infinity $ <eq:app-finite-quotient>
+//       才可能给出有限的双曲格点。实现上用 Todd–Coxeter 算法配合 GAP 求出。
+//     ]],
+//     [陪集的轨道数给出几何对象的数量],
+//     [#app-body[
+//       取定一个三角形 $x$，$G$ 的元素把它送到不同位置。面旋转子群 $G_(rho) = {e, rho, dots, rho^(r-1)}$ 的轨道是一个 $r$-边形，每个陪集对应一个 $Z$ 稳定子；同理 $G_(sigma)$ 给出顶点与 $X$ 稳定子；而 $G_(rho sigma) = {e, rho sigma}$ 直接给出一条边，也就是一个物理比特。由轨道–稳定子关系
+//   $ F = abs(G) / r, quad V = abs(G) / s, quad E = abs(G) / 2 = n. $ <eq:app-cosets>
+//       - $F$、$V$、$E$ 分别是面、顶点、边的数目，也就是 $Z$ 稳定子、$X$ 稳定子与物理比特的*候选*数目。
+//       - *无挠*排除旋转造成的锥点；*有限指数*才保证商群有限；正规性让商群结构清楚。此外还要确认商出来的曲面连通、闭合且可定向。
+//     ]],
+//     tone1: "wash",
+//     tone2: "plain",
+//     gap: 10pt,
+//   )
+//   #speaker-note[#talk-notes.at(50)]
+// ]
 
-== P：关联矩阵的秩与逻辑比特数 <sm:hyper>
+// == 关联矩阵的秩与逻辑比特数 <app:hyper>
 
-#slide[
-  #page-2cards(
-    [链复形保证两类稳定子对易],
-    [#app-body[
-      用顶点–边关联矩阵定义 $H_X$，用面边界矩阵定义 $H_Z$。每个面的边界在任一顶点有偶数条入射边，因此
-  $ H_Z H_X^T=0. $ <eq:app-boundary>
-  对闭合连通可定向曲面，全部面边界之和为零，全部顶点星之和也为零；这两组关系各只有一条独立依赖。于是
-  $ n_Z=F-1, quad n_X=V-1, quad k=E-F-V+2=2g. $ <eq:app-euler>
-    ]],
-    [由群的阶得到码参数],
-    [#app-body[
-      联立 @eq:app-cosets 与 @eq:app-euler，得到
-  $ k=n(1-2/r-2/s)+2. $
-  例如 $\{4,5\}$ 且 $|G|=120$ 时，$(F,V,E)=(30,24,60)$，从而 $n_Z=29,n_X=23,k=8$，Euler 示性数为 $-6$，亏格为 $4$。
-
-  该计数以 @eq:app-finite-quotient 构造的商确实给出上述曲面为前提。群的阶只决定对象的数量，并不单独证明距离或逻辑门的局域性。
-    ]],
-    gap: 10pt,
-  )
-  #speaker-note[#talk-notes.at(40)]
-]
+// #slide[
+//   #page-2cards(
+//     [链复形保证两类稳定子对易],
+//     [#app-body[
+//       用顶点–边关联矩阵定义 $H_X$，用面边界矩阵定义 $H_Z$。每个面的边界在任一顶点都有偶数条入射边，所以
+//   $ H_Z H_X^T = 0. $ <eq:app-boundary>
+//       对闭合、连通、可定向的曲面：所有面边界之和为零（每条边恰好出现两次），所有顶点星之和也为零；这两组关系各只有*一条*独立依赖。于是
+//   $ n_Z = F - 1, quad n_X = V - 1, quad k = n - n_Z - n_X = E - F - V + 2 = 2 g. $ <eq:app-euler>
+//       $g$ 是亏格（手柄数）。$k = 2 g$ 就是正文"每个手柄带两个逻辑比特"的出处。
+//     ]],
+//     [由群的阶得到码参数],
+//     [#app-body[
+//       联立 @eq:app-cosets 与 @eq:app-euler，并代入 $n = E = abs(G) / 2$：
+//   $ k = abs(G) (1/2 - 1/r - 1/s) + 2 = n (1 - 2/r - 2/s) + 2. $
+//       例如 $\{4, 5\}$ 且 $abs(G) = 120$ 时，$(F, V, E) = (30, 24, 60)$，于是 $n_Z = 29$、$n_X = 23$、$k = 60 - 29 - 23 = 8$；Euler 示性数 $F - E + V = -6$，亏格 $g = 4$。
+//       - 这个计数以 @eq:app-finite-quotient 构造出的商确实给出上述曲面为前提。群的阶只决定对象的*数量*，并不能单独证明码距或逻辑门的局域性。
+//       - 也正因为 $n_Z != n_X$，$\{4, 5\}$ 码不是自对偶的；正文用它说明方法不依赖"两类稳定子数目相等"这一几何便利。
+//     ]],
+//     tone1: "wash",
+//     tone2: "plain",
+//     gap: 10pt,
+//   )
+//   #speaker-note[#talk-notes.at(51)]
+// ]
