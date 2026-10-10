@@ -1251,8 +1251,7 @@
       - $B$ 是固定的特解，构造见 @app:particular。
       - $R, S$ 的尺寸为 $n_X times n$；$T, V$ 的尺寸为 $n_Z times n$。
       - 补充材料记作
-        $ R = U^1_(Z Z), quad S = U^1_(Z X), $
-        $ T = U^1_(X Z), quad V = U^1_(X X). $
+        $ R = U^1_(Z Z), quad S = U^1_(Z X), quad T = U^1_(X Z), quad V = U^1_(X X). $
     ]],
     [减少未知量，再施加辛约束],
     [#app-body[
@@ -1281,15 +1280,15 @@
     [#app-body[
       对增广矩阵作行最简形消元，同时保存可逆的行操作矩阵 $L_Z$：
   $ L_Z (M_Z, Q_(Z Z), Q_(Z X)) = (M'_Z, Q'_(Z Z), Q'_(Z X)). $ <eq:app-pivot>
-      设 $M'_Z$ 第 $a$ 行的主元列是 $p_a$，取 $Gamma_Z$ 的第 $a$ 列为标准基向量 $e_(p_a)$，则
+      设 $M'_Z$ 第 $a$ 行的主元列是 $p_a$，取 $M'_Z$ 之右逆 $Gamma_Z$ 的第 $a$ 列为标准基向量 $e_(p_a)$，则
   $ M'_Z Gamma_Z = I_(k + n_Z), quad M_Z (Gamma_Z L_Z) = I_(k + n_Z). $ <eq:app-rightinv>
-  $M'_Z$ 行满秩，所以每个主元列都存在；$Gamma_Z$ 相当于为行最简矩阵做了一个右逆。
+  $M'_Z$ 行满秩，所以每个主元列都存在。
     ]],
     [右逆把任意右端变成特解],
     [#app-body[
       记 $E_Z = Gamma_Z L_Z$，它就是 $M_Z$ 的一个右逆。直接取
-  $ B_(Z Z) = Gamma_Z L_Z Q_(Z Z), quad B_(Z X) = Gamma_Z L_Z Q_(Z X); $
-  $ B_(X Z) = Gamma_X L_X Q_(X Z), quad B_(X X) = Gamma_X L_X Q_(X X). $
+  $ B_(Z Z) = Gamma_Z L_Z Q_(Z Z), quad B_(Z X) = Gamma_Z L_Z Q_(Z X) ; \
+    B_(X Z) = Gamma_X L_X Q_(X Z), quad B_(X X) = Gamma_X L_X Q_(X X) . $
       验证：
   $ M'_Z B_(Z Z) = (M'_Z Gamma_Z) (L_Z Q_(Z Z)) = Q'_(Z Z). $ <eq:app-b-verify>
   - 关键之处：$B_(Z Z)$ 与 $B_(Z X)$ *共用同一个右逆* $E_Z$；下面两块共用 $E_X$。
@@ -1356,17 +1355,17 @@
 
 #slide[
   #page-2cards(
-    [定义四个提升矩阵],
+    [定义四个提升矩阵 · 逐元素],
     [#app-body[
   $ tilde(u)^(Z X, Z Z)_(eta xi) equiv sum_zeta u^(Z X)_(eta zeta) u^(Z Z)_(xi zeta), quad tilde(u)^(X Z, X X)_(eta xi) equiv sum_zeta u^(X Z)_(eta zeta) u^(X X)_(xi zeta), $
   $ tilde(u)^(X Z, Z X)_(eta xi) equiv sum_zeta u^(X Z)_(eta zeta) u^(Z X)_(xi zeta), quad tilde(u)^(X X, Z Z)_(eta xi) equiv sum_zeta u^(X X)_(eta zeta) u^(Z Z)_(xi zeta). $ <eq:app-lift-def>
       范围：前两个 $1 <= eta, xi <= n_X$（或 $n_Z$），后两个 $1 <= eta <= n_Z$、$1 <= xi <= n_X$。
     ]],
-    [写成矩阵：它们就是正文的四个 $F$],
+    [写为矩阵],
     [#app-body[
+      #set list(spacing: 15pt)
   $ tilde(U)^(Z X, Z Z) = U^1_(Z X) (U^1_(Z Z))^T, quad tilde(U)^(X Z, X X) = U^1_(X Z) (U^1_(X X))^T, \ tilde(U)^(X Z, Z X) = U^1_(X Z) (U^1_(Z X))^T, quad tilde(U)^(X X, Z Z) = U^1_(X X) (U^1_(Z Z))^T. $
       - 提升变量共 $(n_Z + n_X)^2 = (n - k)^2$ 个，不到线性变量 $2 n (n-k)$ 的一半；两者合计 $(n-k)(3 n - k)$。
-      - *这只是暂借*：把 $tilde(u)$ 当独立变量之后方程线性化了，但解完必须用上面的定义把它换回 $u$ 的乘积。未完成匹配之前得到的只是*放宽后*的解，不保证保辛——这一步在 @app:matching。
     ]],
     tone1: "wash",
     tone2: "plain",
@@ -1379,20 +1378,21 @@
 
 #slide[
   #page-2cards(
-    [把八个块拉直成一个向量],
+    [将八个块拉直为一个向量],
     [#app-body[
       每个矩阵按行转置后纵向拼接：$u_(Z Z) equiv "vec"_r (U^1_(Z Z))$，其余同理。八个部分对齐为
   $ u = (u_(Z Z); u_(Z X); u_(X Z); u_(X X); tilde(u)^(Z X, Z Z); tilde(u)^(X Z, X X); tilde(u)^(X Z, Z X); tilde(u)^(X X, Z Z)). $ <eq:app-vec>
-      于是所有展开式整理成一张普通的线性方程组
+      于是所有展开式整理成一个普通的线性方程组
   $ cal(A) u = B', quad B' = (0; 0; B'_3). $ <eq:app-au>
       常数向量的前两块为零，正是 @app:particular 证过的结论。
     ]],
     [系数矩阵的块结构],
     [#app-body[
+      #set list(spacing: 15pt)
   $ cal(A) = mat(A_(Z Z), A_(Z X), 0, 0, A^(Z X, Z Z), 0, 0, 0;
     0, 0, A_(X Z), A_(X X), 0, A^(X Z, X X), 0, 0;
     A'_ (Z Z), A'_ (Z X), A'_ (X Z), A'_ (X X), 0, 0, A^(X X, Z Z), A^(X X, Z Z)). $ <eq:app-Amat>
-      - 三个方程块对应八个变量块，所以 $cal(A)$ 分成 $3 times 8$ 块，其中大量块直接为零，即高度稀疏。
+      - 三个方程块对应八个变量块，所以 $cal(A)$ 分成 $3 times 8$ 块，其中大量块为零阵，即高度稀疏。
       - 第三行最后两块*完全相同*，因为交叉方程里只出现 $tilde(U)^(X Z, Z X) + tilde(U)^(X X, Z Z)$ 这个和。@app:kernel 的第七类核方向与 @app:sparse 的稀疏特解都靠这一点。
     ]],
     tone1: "wash",
@@ -1461,7 +1461,6 @@
       方程里只出现 $tilde(U) + tilde(U)^T$，所以这两类只改提升矩阵的*对称部分*：
   $ (tilde(u)^(Z X, Z Z))^(p p)_(eta xi) = delta_(eta p) delta_(xi p), quad (tilde(u)^(Z X, Z Z))^(p q)_(eta xi) = delta_(eta p) delta_(xi q) + delta_(eta q) delta_(xi p) quad (p < q), $
       第六类同型，换成 $tilde(U)^(X Z, X X)$，范围 $1 <= eta, xi, p, q <= n_Z$。
-      - 对角的那一个*不能省略*：$bb(F)_2$ 上 $x + x = 0$，$tilde(U) + tilde(U)^T$ 对对角项完全不敏感。
     ]],
     [第七类],
     [#app-body[
@@ -1470,7 +1469,6 @@
   $ Delta tilde(U)^(X Z, Z X) = Delta tilde(U)^(X X, Z Z) quad ==> quad H_Z^T (Delta tilde(U)^(X Z, Z X) + Delta tilde(U)^(X X, Z Z)) H_X = 0, $ <eq:app-kernel-7>
       因为系数矩阵第三行的最后两块系数相同，方程只看它们的和。
       - 直接计算可以验证这些向量确实在核里，例如 $A^(Z X, Z Z) (tilde(u)^(Z X, Z Z))^(p p) = h^X_(p i) h^X_(p j) + h^X_(p i) h^X_(p j) = 0$。
-      - 七类是七种*构造模式*，不是七个向量。要断言它们张成整个 $ker cal(A)$，还必须算 $cal(A)$ 的秩；本附录不预设这一点。
     ]],
     tone1: "wash",
     tone2: "plain",
@@ -1487,13 +1485,13 @@
     [#app-body[
       SM 没有满足于"任取一个高斯消元解"，而是专门安排行与变量的顺序，让零块结构显出来：
   + 把第三块行（交叉方程）移到最前面。
-  + 各块内部按条带独立消元，常数向量 $b$ 留在各条带里；第 5、6 列不动，第 7、8 列本来就相同，消元后仍然相同。
-  + $A_(Z X)$ 的条带行来自 $B_(Z Z)$（含*逻辑 $Z$ 与 $Z$ 稳定子*），而 $A'_ (Z X)$ 的条带行来自 $B_(X Z)$（*只含逻辑 $Z$*）。所以可以用下面那组去消上面那组——这正是 @app:particular 里两块共用右逆 $E_Z$ 的用处。$A_(X Z)$、$A'_ (X Z)$ 同理。
+  + 各块内部按条带独立消元，常数向量 $b$ 留在各条带里；第 5、6 列不动，第 7、8 列本已经相同，消元后仍然相同。
+  + $A_(Z X)$ 的条带行来自 $B_(Z Z)$，而 $A'_ (Z X)$ 的条带行来自 $B_(X Z)$。所以可以用下面那组去消上面那组——这正是 @app:particular 里两块共用右逆 $E_Z$ 的用处。$A_(X Z)$、$A'_ (X Z)$ 同理。
   + 重排行，再对两个相同的交叉提升块消元，得到行最简形。
     ]],
-    [特解的形状：只剩一条乘积关系要修],
+    [特解的形状],
     [#app-body[
-      行最简形里有四个系数块连着*零常数项*，所以对应变量可以取零；两个相同的交叉提升块又说明 $tilde(U)^(X Z, Z X)$ 与 $tilde(U)^(X X, Z Z)$ 可任选一个为零（SM 取前者为零）。于是
+      行最简形里有四个系数块连着*零常数项*，所以对应变量可以取零；两个相同的交叉提升块又说明 $tilde(U)^(X Z, Z X)$ 与 $tilde(U)^(X X, Z Z)$ 可任选一个为零。于是
   $ u^b_(Z X) = u^b_(X Z) = tilde(U)^(Z X, Z Z)_b = tilde(U)^(X Z, X X)_b = tilde(U)^(X Z, Z X)_b = 0, quad u^b_(Z Z), " " u^b_(X X), " " tilde(U)^(X X, Z Z)_b " 可能非零". $
       - 四条乘积定义因此前三条自动成立，只剩 $tilde(U)^(X X, Z Z)_b = U^(1 b)_(X X) (U^(1 b)_(Z Z))^T$ 需要检查。@app:matching 处理它。
       - $u^b_(Z X) = 0$ 说的是*自由变量* $U^1_(Z X) = 0$。原矩阵里 $U_(Z X) = H_X^T U^1_(Z X) + B_(Z X) = B_(Z X)$ 一般并不为零；$U_(X Z)$ 同理。
@@ -1504,6 +1502,46 @@
     gap: 10pt,
   )
   #speaker-note[#talk-notes.at(40)]
+]
+
+#slide[
+  // 补充材料的示意图：左列是向量化的八个块，中间是七类核方向，右侧是稀疏特解。
+  // 左图右说：这张图接近正方形，所以左卡也做成正方形，图正好铺满；右侧卡片写读图要点。
+  #layout(size => {
+    let gap = 12pt
+    let left-w = size.height          // 左卡=正方形（去掉内边距后正好装下正方形图）
+    let right-w = size.width - gap - left-w
+    block(width: 100%, height: size.height)[
+      #grid(
+        columns: (left-w, right-w),
+        rows: (size.height,),
+        column-gutter: gap,
+        block(
+          width: 100%,
+          height: 100%,
+          fill: white,
+          stroke: 0.7pt + green-line,
+          radius: 4pt,
+          inset: 6pt,
+        )[
+          #align(center + horizon)[#image("img/sm_s2_crop.png", width: 100%, height: 100%, fit: "contain")]
+        ],
+        fit-card(
+          [图解],
+          [#app-body[
+            #set list(spacing: 15pt)
+            - *左*：长向量 $u$ 的八个块，也就是向量化的顺序。
+            - *中*：$u^((1))$ 到 $u^((7))$ 七类核方向各自的支撑——前四类整行非零，第五、六类只有一个元素或对称的一对，第七类同时改两个交叉块。
+            - *右*：稀疏特解 $u^b$，只有 $u_(Z Z)$、$u_(X X)$ 与 $tilde(U)^(X X, Z Z)$ 可能非零，就是上一页那组零块。
+          ]],
+          tone: "wash",
+          avail: size.height,
+          width: right-w,
+        ),
+      )
+    ]
+  })
+  #speaker-note[#talk-notes.at(41)]
 ]
 
 == 乘积匹配与显式修正 <app:matching>
@@ -1528,33 +1566,33 @@
     tone2: "plain",
     gap: 10pt,
   )
-  #speaker-note[#talk-notes.at(41)]
+  #speaker-note[#talk-notes.at(42)]
 ]
 
 #slide[
   #page-2cards(
     [失配：最后一条乘积关系差多少],
     [#app-body[
-      稀疏特解已经把前三条乘积关系做平，只剩 $tilde(U)^(X X, Z Z) = U^1_(X X) (U^1_(Z Z))^T$。把两边的差定义成失配：
+      稀疏特解已经实现前三条乘积关系，只剩 $tilde(U)^(X X, Z Z) = U^1_(X X) (U^1_(Z Z))^T$。把两边的差定义成失配：
   $ Delta U^(X X, Z Z) = U^(1 b)_(X X) (U^(1 b)_(Z Z))^T - tilde(U)^(X X, Z Z)_b. $ <eq:app-mismatch>
       修正的方向取第四类核方向，也就是只动 $U^1_(X X)$：
   $ Delta U^1_(X X) = C W^X, quad C in bb(F)_2^(n_Z times n_X). $
       要求 $Delta U^1_(X X) (U^(1 b)_(Z Z))^T = Delta U^(X X, Z Z)$，就得到关于 $C$ 的方程
   $ U^(1 b)_(Z Z) (W^X)^T C^T = (Delta U^(X X, Z Z))^T. $ <eq:app-solveC>
     ]],
-    [读出修正量：一次就补平],
+    [读出修正量],
     [#app-body[
       取 $W^X = H_X$（$H_X$ 的 $n_X$ 行正是该核的一组行基），由 $U^(1 b)_(Z Z) H_X^T = I_(n_X)$ 立刻读出 $C = Delta U^(X X, Z Z)$，于是
   $ U^1_(X X) = U^(1 b)_(X X) + Delta U^(X X, Z Z) H_X. $ <eq:app-final>
-      - 这个改动是一个核方向，所以线性方程仍然成立；$U^1_(Z X)$、$U^1_(X Z)$ 与三个提升块都没动，前三条乘积关系也不变。*到此*才真正得到满足 @eq:保辛条件 的解，而不只是放宽方程的解。
-      - *存在性前提*：SM 假设 $n_Z >= n_X$，否则把失配转置后改用第一类核方向 $u^((1))$。也可先用 $u^((1))$ 把 $U^(1 b)_(Z Z)$ 调成行满秩，则上面的系数矩阵满秩、$C$ 必存在。
+      - 这个改动是一个核方向，所以线性方程仍然成立；$U^1_(Z X)$、$U^1_(X Z)$ 与三个提升块都没动，前三条乘积关系也不变。到此才真正得到满足 @eq:保辛条件 的解，而不只是放宽方程的解。
+      - *前提*：SM 假设 $n_Z >= n_X$，否则把失配转置后改用第一类核方向 $u^((1))$。也可先用 $u^((1))$ 把 $U^(1 b)_(Z Z)$ 调成行满秩，则上面的系数矩阵满秩、$C$ 必存在。
       - 最后把四个块代回参数化表达式，即得同时满足 @eq:码结构、@eq:目标映射 与 @eq:保辛条件 的 $U$，可以进入门分解。
     ]],
     tone1: "wash",
     tone2: "plain",
     gap: 10pt,
   )
-  #speaker-note[#talk-notes.at(42)]
+  #speaker-note[#talk-notes.at(43)]
 ]
 
 // =====================================================================================
@@ -1568,10 +1606,10 @@
     [#app-body[
       行向量顺序固定为 $(Z_1, Z_2 | X_1, X_2)$。
   $ P_H = mat(0, 1; 1, 0), quad P_S = mat(1, 0; 1, 1). $ <eq:app-gates-single>
-      - $H$ 交换 $Z$、$X$，所以矩阵是交换两行的形式。
-      - $S$ 把 $X$ 送到 $Z X$，即 $Z$ 分量多出一份，所以矩阵是下三角的"加一"形式。
+      - $H$ 交换 $Z$、$X$。
+      - $S$ 把 $X$ 变换为 $Z X$。
     ]],
-    [两比特门的辛矩阵],
+    [双比特门的辛矩阵],
     [#app-body[
   $ P_("CNOT"_12) = mat(1, 0, 0, 0; 1, 1, 0, 0; 0, 0, 1, 1; 0, 0, 0, 1), quad P_("SWAP"_12) = mat(0, 1, 0, 0; 1, 0, 0, 0; 0, 0, 0, 1; 0, 0, 1, 0). $ <eq:app-gates-two>
       $n$ 个比特时，只把这些 $4 times 4$ 块放到 $2 n times 2 n$ 矩阵的对应行列，其余位置取单位阵。
@@ -1581,7 +1619,7 @@
     tone2: "plain",
     gap: 10pt,
   )
-  #speaker-note[#talk-notes.at(43)]
+  #speaker-note[#talk-notes.at(44)]
 ]
 
 == 左上块可逆之后的严格消元 <app:elimination>
@@ -1606,7 +1644,7 @@
     tone2: "plain",
     gap: 10pt,
   )
-  #speaker-note[#talk-notes.at(45)]
+  #speaker-note[#talk-notes.at(46)]
 ]
 
 #slide[
@@ -1615,8 +1653,8 @@
     [#app-body[
       #set list(spacing: 15pt)
       - 对称下三角剪切：对角项 $(i, i)$ 用 $S_i$ 清除。
-      - 非对角项 $(i, j)$（$i > j$）与 $(j, i)$ 因对称性成对出现，用 $H_i "CNOT"_(j i) H_i$ *一次清掉两个*。
-      - 上三角剪切不过是下三角剪切在全体 $H$ 共轭下的结果（$H$ 交换 $Z$、$X$ 两半）。
+      - 非对角项 $(i, j)$（$i > j$）与 $(j, i)$ 因对称性成对出现，用 $H_i "CNOT"_(j i) H_i$ 一次清理两个。
+      - 上三角剪切不过是下三角剪切在全体 $H$ 共轭下的结果（$H$ 交换 $Z$、$X$）。
     ]],
     [奇异情形与逆序综合],
     [#app-body[
@@ -1630,21 +1668,24 @@
     tone2: "wash",
     gap: 10pt,
   )
-  #speaker-note[#talk-notes.at(46)]
+  #speaker-note[#talk-notes.at(47)]
 ]
 
 == 两比特辛消元的逐步演示 <app:toy>
 
 #slide[
   #page-2col(
-    [三次右乘把 $U_0$ 消到 $I_4$],
+    [三次右乘把 $U_0$ 变换到 $I_4$],
     [#app-body[
+      #set enum(spacing: 15pt)
+      #set par(spacing: 15pt)
       $ U_0 = mat(0, 0, 1, 0; 0, 1, 1, 0; 1, 1, 0, 1; 0, 1, 0, 1). $
     $ U_0 = P_("CNOT"_12) P_(S_2) P_(H_1). $ <eq:app-toy>
     + 右乘 $P_(H_1)$：交换第 1、3 列。
     + 右乘 $P_(S_2)$：把第 4 列加到第 2 列。
     + 右乘 $P_("CNOT"_12)$：前后两半同步操作，得到 $I_4$。
-    右侧动画每帧高亮当前操作的列，并逐步验证 $U_t Lambda U_t^T = Lambda$。这个 $4 times 4$ 例子可以逐项手算，用来复核 @app:gates 的列操作表与 @app:elimination 的逆序读数规则。
+    
+    右侧动画每帧高亮当前操作的列，并逐步验证 $U_t Lambda U_t^T = Lambda$。
     ]],
     right: [
       #align(center + horizon)[#image(
@@ -1654,7 +1695,7 @@
     tone: "wash",
     fractions: (1.2fr, 1fr),
   )
-  #speaker-note[#talk-notes.at(47)]
+  #speaker-note[#talk-notes.at(48)]
 ]
 
 // =====================================================================================
@@ -1674,7 +1715,6 @@
     四条逻辑行的支撑是
     $ overline(Z)_1 : {1, 7, 13}, quad overline(X)_1 : {1, 2, 3}, \ overline(Z)_2 : {4, 5, 6}, quad overline(X)_2 : {4, 10, 16}. $
     目标 $overline(H)_1 overline(I)_2$ 交换第一对逻辑行，固定第二对与全部选定稳定子。右图给出物理比特的编号，据此可以逐行写出 $H_Z$、$H_X$ 与四条逻辑行。
-    - 验证：$H_Z H_X^T = 0$、$overline(Z) overline(X)^T = I_2$、$n_Z + n_X + k = n$。
     ]],
     right: [
       #align(center + horizon)[#image(
@@ -1684,7 +1724,7 @@
     tone: "wash",
     fractions: (1.2fr, 1fr),
   )
-  #speaker-note[#talk-notes.at(48)]
+  #speaker-note[#talk-notes.at(49)]
 ]
 
 == 环面码的解、门序列与检验 <app:seq>
@@ -1696,7 +1736,7 @@
       #set list(spacing: 15pt)
       SM 给出的一个解满足
     $ U_(Z Z) = U_(X X)^T, quad U_(Z X) = overline(X)_1^T overline(X)_1, quad U_(X Z) = overline(Z)_1^T overline(Z)_1 $
-    - $overline(X)_1$、$overline(Z)_1$ 是长度 $n$ 的行向量，所以 $overline(X)_1^T overline(X)_1$ 是 $n times n$ 的秩一矩阵。这说明解与想交换的那对逻辑算符直接相关，不是随机搜出来的一张大表。
+    - $overline(X)_1$、$overline(Z)_1$ 是长度 $n$ 的行向量，所以 $overline(X)_1^T overline(X)_1$ 是 $n times n$ 的秩一矩阵。这说明解与想交换的那对逻辑算符直接相关，不是随机搜索出来的。
     - 逐项检验三类原始条件：
     $ U Lambda U^T = Lambda, quad H U = H, quad L U = L_"target". $ <eq:app-check>
     $H$ 是稳定子行，$L$ 是逻辑行。
@@ -1711,7 +1751,7 @@
     tone: "wash",
     fractions: (1.2fr, 1fr),
   )
-  #speaker-note[#talk-notes.at(49)]
+  #speaker-note[#talk-notes.at(50)]
 ]
 
 // == 有限双曲码的商群与陪集 <app:hypergroup>
@@ -1738,7 +1778,7 @@
 //     tone2: "plain",
 //     gap: 10pt,
 //   )
-//   #speaker-note[#talk-notes.at(50)]
+//   #speaker-note[#talk-notes.at(51)]
 // ]
 
 // == 关联矩阵的秩与逻辑比特数 <app:hyper>
@@ -1765,5 +1805,5 @@
 //     tone2: "plain",
 //     gap: 10pt,
 //   )
-//   #speaker-note[#talk-notes.at(51)]
+//   #speaker-note[#talk-notes.at(52)]
 // ]

@@ -284,11 +284,19 @@ $
 #tufted.problem[
   举例说明，在压缩映射原理中，
   + 空间完备性条件不可少；
-  + 映射 $T$ 所满足的条件不能代之以条件：$ d(T x, T y) < d(x, y) quad quad (x != y) $。
+  + 映射 $T$ 所满足的条件不能代之以条件：
+  $ d(T x, T y) < d(x, y) quad quad (x != y) $
 ]
 
+取 $X = (0, 1]$，$d(x, y) = abs(x - y)$。则 $X$ 不完备。定义 $T x = x / 2$。则 $T: X -> X$，且
+$ d(T x, T y) = abs(x / 2 - y / 2) = frac(1, 2) d(x, y). $
+所以 $T$ 是压缩映射。但方程 $x = x / 2$ 只有解 $x = 0$，而 $0 in.not X$。因此 $T$ 在 $X$ 上无不动点。这说明压缩映射原理中空间完备性条件不可少。
 
-
+取 $X = [1, +infinity)$，$d(x, y) = abs(x - y)$。则 $X$ 是完备距离空间。定义 $T x = x + 1 / x$。显然 $T: X -> X$。对任意 $x != y$，由中值定理，
+$ abs(T x - T y) = abs((x + 1 / x) - (y + 1 / y)) = abs(x - y) abs(1 - 1 / xi^2), $
+其中 $xi$ 在 $x, y$ 之间。由于 $xi >= 1$，故 $abs(1 - 1 / xi^2) < 1$，所以
+$ d(T x, T y) < d(x, y) quad (x != y), $
+但是 $T x = x + 1 / x > x$，故不存在 $x in X$ 使 $T x = x$。因此 $T$ 无不动点。这说明仅仅满足 $d(T x, T y) < d(x, y)$ 不足以推出不动点存在。
 
 == 习题一之 17
 
@@ -301,7 +309,9 @@ $
 首先，易证 $C[0, 1]$ 是完备距离空间。
 
 定义映射
-$ (T x)(t) = frac(1, 2) sin x(t) - a(t) $。
+$
+(T x)(t) = frac(1, 2) sin x(t) - a(t).
+$
 由于 $a$ 连续，若 $x$ 连续，则 $T x$ 连续，所以 $T: C[0, 1] -> C[0, 1]$。
 
 对任意 $x, y in C[0, 1]$，有
@@ -331,7 +341,7 @@ $
 
 又因为 $X$ 完备，$overline(B)$ 是 $X$ 的闭子集，所以 $overline(B)$ 也是完备距离空间。在 $overline(B)$ 上，$T$ 满足
 $
-d(T x, T y) <= theta d(x, y), quad 0 <= theta < 1。
+d(T x, T y) <= theta d(x, y), quad 0 <= theta < 1.
 $
 故 $T$ 是 $overline(B)$ 上的压缩映射。由压缩映射原理，$T$ 在 $overline(B)$ 上有唯一不动点。
 
