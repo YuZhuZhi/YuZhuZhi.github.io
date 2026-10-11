@@ -921,7 +921,7 @@
   #speaker-note[#talk-notes.at(19)]
 ]
 
-== 连续 Clifford 操作：一步实现 $overline(S)$ 与 $overline(H)$
+== 连续 Clifford 操作：一步实现 $overline(S)overline(H)$
 
 #slide[
   #page-2col(
