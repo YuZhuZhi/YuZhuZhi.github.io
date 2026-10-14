@@ -8,7 +8,34 @@
 
 = 札记
 
-== 2026
+= DarkForest Project
+
+#tufted.blog-entry(
+  date: datetime(year: 2026, month: 9, day: 30),
+  path: "DarkForest/开发日志1/",
+  title: [开发日志1],
+)
+
+#tufted.blog-entry(
+  date: datetime(year: 2026, month: 10, day: 2),
+  path: "DarkForest/开发日志2/",
+  title: [开发日志2],
+)
+
+#tufted.blog-entry(
+  date: datetime(year: 2026, month: 10, day: 10),
+  path: "DarkForest/开发日志3/",
+  title: [开发日志3],
+)
+
+#tufted.blog-entry(
+  date: datetime(year: 2026, month: 10, day: 13),
+  path: "DarkForest/开发日志4/",
+  title: [开发日志4],
+)
+
+
+= 2026
 
 #tufted.blog-entry(
   date: datetime(year: 2026, month: 9, day: 18),
