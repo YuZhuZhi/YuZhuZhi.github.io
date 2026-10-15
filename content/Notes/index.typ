@@ -23,6 +23,12 @@
 )
 
 #tufted.blog-entry(
+  date: datetime(year: 2026, month: 10, day: 5),
+  path: "DarkForest/经典游走/",
+  title: [理想状况下的简化游戏之经典游走近似],
+)
+
+#tufted.blog-entry(
   date: datetime(year: 2026, month: 10, day: 10),
   path: "DarkForest/开发日志3/",
   title: [开发日志3],
@@ -42,13 +48,6 @@
   path: "Systematic Algebraic Method to Identify Clifford Operations for Quantum Error-Correction Codes/",
   title: [组会报告——量子纠错 #footnote[_Liu S-C, Lin Y-X, Wang Y-X, Peng L-Y. Systematic Algebraic Method to Identify Clifford Operations for Quantum Error-Correction Codes. Chinese Physics Letters, 2026, 43(4): 040603. doi:10.1088/0256-307X/43/4/040603._]（PowerPoint）],
 )
-
-// #tufted.blog-entry(
-//   date: datetime(year: 2026, month: 9, day: 18),
-//   path: "Systematic Algebraic Method to Identify Clifford Operations for Quantum Error-Correction Codes/speak",
-//   title: [组会报告——量子纠错（讲稿）],
-// )
-
 
 #tufted.blog-entry(
   date: datetime(year: 2026, month: 5, day: 15),

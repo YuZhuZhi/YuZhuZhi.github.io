@@ -73,7 +73,7 @@
         // load CSS
         let base-css = (
           "https://cdnjs.cloudflare.com/ajax/libs/tufte-css/1.8.0/tufte.min.css",
-          "/assets/tufted.css?v=20260924-1",
+          "/assets/tufted.css?v=20261015-3",
           "/assets/theme.css",
         )
         for (css-link) in (base-css + css).dedup() {

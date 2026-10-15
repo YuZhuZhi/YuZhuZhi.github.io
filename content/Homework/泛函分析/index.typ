@@ -215,6 +215,8 @@ $
 $
 同理 $f(x_(0)) - f(x) <= d(x_(0), x)$，即 $|f(x) - f(x_(0))| <= d(x, x_(0))$。因此 $forall epsilon>0$，只需取 $delta = epsilon$，即可有 $d(x, x_(0)) < delta$ 时，$|f(x) - f(x_(0))| < epsilon$。这便说明 $f(x)$ 在任意 $x_(0) in X$ 处连续。
 
+#html.hr()
+
 = 第三次作业：习题一之 9、10、11、14、15
 
 == 习题一之 9
@@ -277,7 +279,7 @@ $
 
 取 $M = n_(0) > 0$，于是任意 $x in U$ 有 $x in E_(n_(0))$，从而对一切 $F in cal(F)$，有 $|F(x)| <= n_(0) = M$。如此，存在开集 $U$ 和常数 $M > 0$，使得对于每一 $x in U$ 及所有 $F in cal(F)$，有 $|F(x)| <= M$。
 
-= 第三次作业：习题一之 16、17、18、19
+= 第四次作业：习题一之 16、17、18、19
 
 == 习题一之 16
 
@@ -385,3 +387,121 @@ $
 x(t) = f(t, x(t)), quad t in [t_0 - delta, t_0 + delta]，
 $
 且 $x(t_0) = s_0$。证毕。
+
+#html.hr()
+
+= 第五次作业：习题一之 8、21、22、23、24、25
+
+== 习题一之 8
+
+#tufted.problem[
+  试举一例说明有界集不是全有界集。
+]
+
+设距离空间 $X = bb(N)$ 且定义离散距离。对任意 $m, n in X$，总有 $d(m, n) <= 1$，因此 $X$ 是有界集。但若取 $epsilon = 1/2$，总有 $B(n, epsilon) = {n}$。而 $X$ 是无限集，无法以有限个开球覆盖。故 $X$ 不是全有界集。
+
+== 习题一之 21
+
+#tufted.problem[
+  设 $X={a,b}, tau = {X, emptyset, {b}}$，证明：
+  + $tau$ 是 $X$ 上的一个拓扑；
+  + ${a}$ 是闭集；
+  + $close({b}) = X$。
+]
+
+=== (1) $tau$ 是 $X$ 上的一个拓扑
+
+根据拓扑的定义，需要验证三个条件。 首先，显然有 $X in tau, quad emptyset in tau$；其次，由于 $tau$ 仅包含 $X,emptyset,{b}$，它们的任意并集仍属于 $tau$。最后，任意两个元素的交集也属于 $tau$，且 $ X inter {b}= {b },wide X inter emptyset = emptyset,wide {b }inter emptyset = emptyset . $
+
+因此，$tau$ 对有限交封闭。 综上，$tau$ 满足拓扑的全部公理，故它是 $X$ 上的一个拓扑。
+
+=== (2) ${a}$ 是闭集
+
+由于 $X without {a}= {b }in tau$，即 ${a}$ 的补集是开集，因此 ${a}$ 是闭集。
+
+=== (3) $close({b}) = X$
+
+由闭包的定义，$x in close({b})$ 当且仅当 $x$ 的每个开邻域都与 ${b}$ 相交。 对于 $a$，其唯一的开邻域是 $X$，且 $X inter {b} = {b} != emptyset$。对于 $b$，其任意开邻域显然都包含 $b$。 因此，$a,b in close({b})$，从而 $close({b}) = X$。
+
+== 习题一之 22
+
+#tufted.theorem(label: <习题一之22>)[][
+  设 $X$ 是任一集，$cal(B)$ 是 $X$ 的子集构成的集族，则 $cal(B)$ 是 $X$ 上某一拓扑基，当且仅当 $cal(B)$ 有以下性质：
+  + 任一点 $x in X$，存在 $G in cal(B)$，使得 $x in G$；
+  + 如果 $x in G_(1) inter G_(2)$，其中 $G_(1), G_(2) in cal(B)$，则存在 $G_(3) in cal(B)$，使得 $x in G_(3) subset G_(1) inter G_(2)$。
+]
+
+#tufted.problem[
+  设 $X$ 是任一集，$cal(B)_(1), cal(B)_(2)$ 是 $X$ 的子集构成的集族，它们都满足 @习题一之22 中的条件，设 $tau_(1), tau_(2)$ 分别是由它们决定的 $X$ 上的拓扑。证明：$tau_(1) subset tau_(2)$，当且仅当对于每一 $G_(1) in cal(B)_(1)$ 及任一点 $x in G_(1)$，存在 $G_(2) in cal(B)_(2)$，使得 $x in G_(2) subset G_(1)$。
+]
+
+*必要性*：
+
+假设 $tau_(1)subset tau_(2)$。 任取 $G_(1)in cal(B)_(1)$ 及 $x in G_(1)$。 由于 $cal(B)_(1)$ 是 $tau_(1)$ 的基，因此 $G_(1)in tau_(1) subset tau_(2)$。又因为 $cal(B)_(2)$ 是 $tau_(2)$ 的基，所以存在 $G_(2)in cal(B)_(2)$，使得 $ x in G_(2)subset G_(1). $
+
+*充分性*：
+
+假设对于任意 $G_(1)in cal(B)_(1)$ 及 $x in G_(1)$，都存在 $G_(2)in cal(B)_(2)$，满足 $x in G_(2) subset G_(1)$。任取 $U in tau_(1)$。 由于 $cal(B)_(1)$ 是 $tau_(1)$ 的基，对于任意 $x in U$，存在 $G_(1)in cal(B)_(1)$，使得 $x in G_(1) subset U$。根据假设，存在 $G_(2)in cal(B)_(2)$，使得
+$
+x in G_(2) subset G_(1) subset U .
+$
+因此，$U$ 中的每个点都有一个包含于 $U$ 的 $tau_(2)$ 基元素。 由拓扑基的定义，$U in tau_(2)$。 故 $tau_(1) subset tau_(2)$。
+
+== 习题一之 23
+
+#tufted.problem[
+  试举以拓扑空间的例，它是 $T_(2)$ 的但不是 $T_(3)$ 的。
+]
+
+取 $ X = RR,wide K = { 1/n: n in NN^(+) } . $
+
+令 $cal(B)$ 为所有通常开区间 $(a,b)$ 以及集合 $(a,b)without K$ 构成的集族。容易验证 $cal(B)$ 满足拓扑基条件，因此它生成一个拓扑 $tau$。现证明 $(X,tau)$ 是 $T_(2)$ 空间。由于 $tau$ 包含通常的欧氏拓扑，对任意不同的 $x,y in RR$，取 $epsilon = frac(abs(x-y), 3)$。则 $ U = (x - epsilon,x + epsilon), wide V = (y - epsilon,y + epsilon) $
+
+都是 $tau$ 中的开集，并且 $ x in U,wide y in V,wide U inter V = emptyset . $
+
+因此，$(X,tau)$ 是 $T_(2)$ 空间。 （2）证明 $(X,tau)$ 不是 $T_(3)$ 空间。 注意到 $RR without K$ 是 $tau$ 中的开集，因此 $K$ 是闭集，且 $0 in.not K$。 任取包含 $0$ 的开集 $U$ 和包含 $K$ 的开集 $V$。 由拓扑基的构造，存在 $epsilon > 0$，使得 $(- epsilon,epsilon) without K subset U$。
+
+选取充分大的 $n$，使得 $1/n < epsilon$。因为 $1/n in K subset V$，且 $V$ 是开集，所以存在 $delta > 0$，使得 $(1/n- delta, 1/n + delta) subset V$。由于该区间中存在不属于 $K$ 且属于 $(-epsilon,epsilon)$ 的点，故 $U inter V != emptyset$。因此，无法用不相交的开集分离点 $0$ 与闭集 $K$，即该空间不是正则空间。 所以 $(X,tau)$ 是 $T_(2)$ 空间，但不是 $T_(3)$ 空间。
+
+== 习题一之 24
+
+#tufted.problem[
+  设 $X$ 是 $T_(1)$ 拓扑空间，证明点 $x$ 是 $X$ 中集 $E$ 的极限点，当且仅当 $x$ 的任意邻域中包含 $E$ 中的无穷多点。如不假设 $X$ 是 $T_(1)$ 的，结论是否成立？
+]
+
+*必要性*：
+
+设 $x$ 是 $E$ 的极限点。 反设存在 $x$ 的某个开邻域 $U$，使得 $U inter E$ 是有限集。 记
+$
+(U inter E)without {x } = {x_(1),x_(2),...,x_(n)}.
+$
+由于 $X$ 是 $T_(1)$ 空间，每个单点集 ${x_(i)}$ 都是闭集，所以 $V = U without {x_(1),...,x_(n)}$是包含 $x$ 的开邻域。 但 $V inter (E without {x })= emptyset$，这与 $x$ 是 $E$ 的极限点矛盾。 因此，$x$ 的任意邻域都包含 $E$ 中的无穷多点。
+
+*充分性*：
+
+假设 $x$ 的任意邻域都包含 $E$ 中的无穷多点。 则任意邻域 $U$ 中，必然存在 $y in E$，使得 $y != x$，即 $U inter (E without {x })!= emptyset$，根据极限点的定义，$x$ 是 $E$ 的极限点。 综上，$x in E ' <=> $ $x$ 的任意邻域含有 $E$ 中无穷多点。
+
+*反例*：
+
+取 $X = {a,b },wide tau = {emptyset,X,{b }}$。并令 $E = {b}$。 对于点 $a$，其唯一的开邻域是 $X$，且 $X inter (E without {a })= {b }!= emptyset$。因此，$a$ 是 $E$ 的极限点。 但是 $X inter E = {b}$ 仅包含一个点，而不是无穷多点。 所以不假设 $T_(1)$ 时，该结论不一定成立。
+
+== 习题一之 25
+
+#tufted.problem[
+  设拓扑空间 $(X, tau)$ 满足第二可数公理，证明从 $X$ 的任意开覆盖中可选出由最多可数个集构成的子覆盖。
+]
+
+由于 $X$ 满足第二可数公理，存在一个可数拓扑基 $cal(B) = {B_(1),B_(2),... }$。任取 $X$ 的一个开覆盖
+$
+cal(U) = {U_(alpha): alpha in A }, wide X = union.big_(alpha in A)U_(alpha).
+$
+对每个能够包含于某个 $U_(alpha)$ 的基元素 $B_(n)$，选取一个这样的 $U_(alpha_(n))$，使得 $B_(n) subset U_(alpha_(n))$。由于基元素至多可数，所选取的开集族 $cal(U) '= {U_(alpha_(n))}$ 也是至多可数的。
+
+下面证明 $cal(U) '$ 覆盖 $X$。 任取 $x in X$。 因为 $cal(U)$ 是 $X$ 的开覆盖，存在 $U_(alpha) in cal(U)$，使得 $x in U_(alpha)$。又因为 $cal(B)$ 是拓扑基，存在 $B_(n)in cal(B)$，满足 $x in B_(n)subset U_(alpha)$。根据前面的选取规则，存在 $U_(alpha_(n))in cal(U) '$，使得
+$
+x in B_(n) subset U_(alpha_(n)).
+$
+因此，每个 $x in X$ 都属于 $cal(U) '$ 的某个元素，从而 $X = union.big_(U in cal(U) ')U$。故 $cal(U) '$ 是原开覆盖的一个至多可数的子覆盖。
+
+
+

@@ -1,5 +1,25 @@
 #import "layout.typ": margin-note
 
+// Images and tables already have native HTML output. Elements created only for
+// HTML must also stay native, since they have no paged representation to render.
+#let has-native-html-figure-body(body) = {
+  if type(body) == content {
+    if body.func() in (image, table, html.elem) { return true }
+    for (_, value) in body.fields() {
+      if has-native-html-figure-body(value) { return true }
+    }
+  } else if type(body) == array {
+    for item in body {
+      if has-native-html-figure-body(item) { return true }
+    }
+  } else if type(body) == dictionary {
+    for (_, value) in body {
+      if has-native-html-figure-body(value) { return true }
+    }
+  }
+  false
+}
+
 #let template-figures(content) = {
   // Redefine figure caption to use marginnote
   show figure.caption: it => html.span(
@@ -43,10 +63,21 @@
 
   // Redefine figure itself
   show figure: it => if target() == "html" {
-    html.figure({
+    let native = has-native-html-figure-body(it.body)
+    let body = {
       it.caption
-      it.body
-    })
+      if native {
+        it.body
+      } else {
+        // Render paged-only content (Fletcher diagrams, drawings, etc.) as SVG.
+        html.frame(it.body)
+      }
+    }
+    if native {
+      html.figure(body)
+    } else {
+      html.figure(class: "figure-svg", body)
+    }
   }
 
   content

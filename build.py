@@ -42,7 +42,9 @@ import base64
 import binascii
 import hashlib
 import html
+import io
 import json
+import keyword
 import os
 import re
 import shutil
@@ -51,6 +53,7 @@ import sys
 import tempfile
 import threading
 import time
+import tokenize
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from html.parser import HTMLParser
@@ -211,50 +214,11 @@ def get_file_mtime(path: Path) -> float:
         return 0.0
 
 
-def is_dep_file(path: Path) -> bool:
-    """
-    判断一个文件是否被追踪为依赖）。
-
-    content/ 下的普通页面文件不被视为模板文件，因为它们是独立的页面，
-    不应该相互依赖。
-
-    参数:
-        path: 文件路径
-
-    返回:
-        bool: 是否是依赖文件
-    """
-    try:
-        resolved_path = path.resolve()
-        project_root = Path(__file__).parent.resolve()
-        content_dir = (project_root / CONTENT_DIR).resolve()
-
-        # config.typ 是依赖文件
-        if resolved_path == (project_root / CONFIG_FILE).resolve():
-            return True
-
-        # 检查是否在 content/ 目录下
-        try:
-            relative_to_content = resolved_path.relative_to(content_dir)
-            # content/_* 目录下的文件视为依赖文件
-            parts = relative_to_content.parts
-            if len(parts) > 0 and parts[0].startswith("_"):
-                return True
-            # content/ 下的其他文件不是依赖文件
-            return False
-        except ValueError:
-            # 不在 content/ 目录下，视为依赖文件（如 config.typ）
-            return True
-
-    except Exception:
-        return True
-
-
 def find_typ_dependencies(typ_file: Path) -> set[Path]:
     """
     解析 .typ 文件中的依赖（通过 #import 和 #include 导入的文件）。
 
-    只追踪 .typ 文件的依赖，忽略 content/ 下的普通页面文件。
+    只追踪显式导入的 .typ 文件，包括充当模板入口的页面文件。
     其他资源文件（如 .md, .bib, 图片等）通过 copy_content_assets 处理。
 
     参数:
@@ -299,7 +263,9 @@ def find_typ_dependencies(typ_file: Path) -> set[Path]:
             # 规范化路径，只追踪 .typ 文件
             try:
                 dep_path = dep_path.resolve()
-                if dep_path.exists() and dep_path.suffix == ".typ" and is_dep_file(dep_path):
+                # An explicit import is always a dependency, including an
+                # index.typ that re-exports the shared site template.
+                if dep_path.exists() and dep_path.suffix == ".typ":
                     dependencies.add(dep_path)
             except Exception:
                 pass
@@ -1350,6 +1316,107 @@ def copy_assets() -> bool:
         return False
 
 
+def highlight_python(source: str) -> str:
+    """Highlight Python with the standard tokenizer while preserving all whitespace."""
+    lines = source.splitlines(keepends=True)
+    offsets = [0]
+    for line in lines:
+        offsets.append(offsets[-1] + len(line))
+
+    def position_offset(position: tuple[int, int]) -> int:
+        row, column = position
+        return offsets[min(row - 1, len(lines))] + column
+
+    fragments = []
+    cursor = 0
+    definition = False
+    try:
+        tokens = tokenize.generate_tokens(io.StringIO(source).readline)
+        for token in tokens:
+            start = position_offset(token.start)
+            end = position_offset(token.end)
+            if start < cursor or end > len(source):
+                continue
+            fragments.append(html.escape(source[cursor:start]))
+            kind = None
+            if token.type == tokenize.COMMENT:
+                kind = "comment"
+            elif token.type == tokenize.STRING:
+                kind = "string"
+            elif token.type == tokenize.NUMBER:
+                kind = "number"
+            elif token.type == tokenize.NAME:
+                if definition:
+                    kind = "function" if definition == "def" else "class"
+                    definition = False
+                elif keyword.iskeyword(token.string):
+                    kind = "keyword"
+                    if token.string in {"def", "class"}:
+                        definition = token.string
+                elif token.string in {"self", "cls"}:
+                    kind = "variable"
+            elif token.type == tokenize.OP and token.string == "@":
+                kind = "keyword"
+            value = html.escape(source[start:end])
+            fragments.append(f'<span class="tok-{kind}">{value}</span>' if kind else value)
+            cursor = end
+    except (tokenize.TokenError, IndentationError):
+        pass
+    fragments.append(html.escape(source[cursor:]))
+    return "".join(fragments)
+
+
+def render_python_viewer(source_file: Path, output_dir: Path) -> None:
+    """Publish a code viewer at the original .py URL and keep a raw download."""
+    with tokenize.open(source_file) as stream:
+        source = stream.read()
+    name = source_file.name
+    safe_name = html.escape(name, quote=True)
+    relative = source_file.relative_to(CONTENT_DIR)
+    page_dir = source_file.parent
+    while page_dir != CONTENT_DIR and not (page_dir / "index.typ").exists():
+        page_dir = page_dir.parent
+    parent_url = "/" + "/".join(page_dir.relative_to(CONTENT_DIR).parts) + "/"
+    line_count = source.count("\n") + 1
+    numbers = "".join(f"<span>{number}</span>" for number in range(1, line_count + 1))
+    markup = f'''<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>{safe_name} — 代码预览</title>
+  <link rel="stylesheet" href="/assets/code-file.css">
+</head>
+<body>
+  <header class="titlebar">
+    <a class="back" href="{html.escape(parent_url, quote=True)}" aria-label="返回所在目录">←</a>
+    <span class="title">{safe_name}</span>
+    <div class="actions">
+      <button id="copy" type="button">复制代码</button>
+      <a href="raw/{safe_name}" download="{safe_name}">下载源文件</a>
+    </div>
+  </header>
+  <main>
+    <div class="tab" aria-current="page"><span class="python-icon">Py</span>{safe_name}</div>
+    <div class="breadcrumbs">{html.escape(str(relative).replace(os.sep, " / "))}</div>
+    <div class="editor" aria-label="{safe_name} 代码，共 {line_count} 行">
+      <div class="line-numbers" aria-hidden="true">{numbers}</div>
+      <pre><code id="source">{highlight_python(source)}</code></pre>
+    </div>
+  </main>
+  <footer>Python · UTF-8 · {line_count} 行</footer>
+  <script src="/assets/code-file.js" defer></script>
+</body>
+</html>
+'''
+    output_dir.mkdir(parents=True, exist_ok=True)
+    (output_dir / "index.html").write_text(markup, encoding="utf-8")
+    raw_dir = output_dir / "raw"
+    raw_dir.mkdir(exist_ok=True)
+    shutil.copy2(source_file, raw_dir / name)
+
+
 def copy_content_assets(force: bool = False) -> bool:
     """
     复制 content 目录下的非 .typ 文件（如图片）到输出目录。
@@ -1380,6 +1447,22 @@ def copy_content_assets(force: bool = False) -> bool:
 
             # 计算目标路径
             target_path = SITE_DIR / relative_path
+
+            if item.suffix.lower() == ".py":
+                viewer_path = target_path / "index.html"
+                if target_path.is_file():
+                    target_path.unlink()  # Previous builds copied Python as plain text.
+                if (
+                    not force
+                    and viewer_path.exists()
+                    and get_file_mtime(item) <= get_file_mtime(viewer_path)
+                    and get_file_mtime(Path(__file__)) <= get_file_mtime(viewer_path)
+                ):
+                    skip_count += 1
+                    continue
+                render_python_viewer(item, target_path)
+                copy_count += 1
+                continue
 
             # 增量复制检查
             if not force and target_path.exists():

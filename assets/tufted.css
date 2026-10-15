@@ -83,6 +83,11 @@ section > figure:not(.fullwidth) > svg {
 	display: block;
 }
 
+/* Keep generated figure SVGs proportional when the text column narrows. */
+figure.figure-svg > svg {
+	height: auto !important;
+}
+
 /* Fullwidth content */
 .fullwidth {
 	width: 90vw;
@@ -755,6 +760,7 @@ BLOG INDEX
 
 .blog-entry {
 	display: flex;
+	position: relative;
 	align-items: center;
 	justify-content: space-between;
 	gap: 1.5em;
@@ -767,9 +773,25 @@ BLOG INDEX
 	flex: 1;
 }
 
-.blog-entry-content a:any-link {
+.blog-entry-content > a:any-link {
 	font-size: 1.5em;
 	text-decoration: none;
+}
+
+.blog-entry-content > a::after {
+	position: absolute;
+	inset: 0;
+	content: "";
+}
+
+.blog-entry-content > a:focus-visible::after {
+	outline: 2px solid var(--highlight-strong, #61afef);
+	outline-offset: 3px;
+}
+
+.blog-entry .footnote-ref-link {
+	position: relative;
+	z-index: 1;
 }
 
 .blog-entry-date {
