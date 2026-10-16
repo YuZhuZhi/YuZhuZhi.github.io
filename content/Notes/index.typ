@@ -40,6 +40,11 @@
   title: [开发日志4],
 )
 
+#tufted.blog-entry(
+  date: datetime(year: 2026, month: 10, day: 16),
+  path: "DarkForest/开发日志5/",
+  title: [开发日志5],
+)
 
 = 2026
 
