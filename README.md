@@ -110,6 +110,56 @@ Tufted-Blog-Template/
 └── config.typ             # 网站全局配置
 ```
 
+## 双平台部署（GitHub Pages + EdgeOne Pages / Makers）
+
+两端使用同一套源码和 `uv run build.py build -f`，发布 `_site/`：
+
+- `.github/workflows/deploy.yml` 保留 GitHub Pages 部署，访问 `https://yuzhuzhi.github.io/`。
+- `.github/workflows/edgeone.yml` 在推送 `main` 或手动运行时独立构建并发布 EdgeOne，访问 `https://yuzhuzhi.cn/`。失败不会阻止 GitHub Pages 工作流。
+- `config.typ` 的 `website-url` 统一为 `https://yuzhuzhi.cn/`，用于 Canonical、Open Graph、Sitemap、RSS 和 robots.txt；不会把镜像站访客重定向到该域名。普通导航、样式、脚本和模型使用相对或根相对路径。`build.py` 为未经过网站 HTML 模板的 Touying 演示文稿补充相同规则的 Canonical。
+
+### 首次配置
+
+1. 登录腾讯云 EdgeOne Pages（新文档称 Makers），选择**直接上传**类型创建静态网站项目，例如 `yuzhuzhi`。不要选择 Git 仓库自动构建：Typst 构建在 GitHub Actions 中完成，云端接收 `_site/`，无需另设云端构建命令、框架或 Python/Typst 环境。已有项目也必须是直接上传类型。
+2. 确认项目加速区域：`global` 为全球，`overseas` 为海外；以控制台实际项目为准。使用包含中国大陆的区域时，按控制台要求完成域名 ICP 备案。
+3. 在同一账号的 Makers 控制台 **API Token** 页创建 Token，设置合适的有效期。需要能向目标直接上传项目发布生产部署；不要使用腾讯云账户的 SecretId / SecretKey 代替，也不要提交 Token。官方 Token 文档目前只列出描述和有效期，没有可单独配置的项目权限范围；若控制台新增权限选项，仅授予目标项目部署所需权限。
+4. 在 GitHub 仓库 **Settings → Secrets and variables → Actions** 配置：
+
+   | 类型 | 名称 | 值 |
+   | --- | --- | --- |
+   | Secret | `EDGEONE_API_TOKEN` | 上一步创建的 Makers API Token |
+   | Variable | `EDGEONE_PROJECT_NAME` | 控制台中准确的项目名称，例如 `yuzhuzhi` |
+   | Variable | `EDGEONE_AREA` | 与项目一致的 `global` 或 `overseas` |
+
+   项目名和区域必须显式填写，避免默认值误部署到其他项目。CLI 在项目名不存在时可能创建新项目，运行前请核对名称。
+5. 在 Actions 中手动运行 **Deploy EdgeOne**，确认生产部署成功。可先通过控制台提供的预览地址检查资源；若测试域名有访问限制，以控制台说明为准。
+6. 在 EdgeOne 项目的自定义域名中添加 `yuzhuzhi.cn`，按提示完成域名所有权验证、DNS 配置并申请或绑定 HTTPS 证书。不要配置跨域重定向规则。
+
+### DNSPod 配置
+
+域名注册完成不等于解析已生效。在 DNSPod 的 `yuzhuzhi.cn` 解析页，按 EdgeOne **该项目自定义域名页面**给出的内容添加记录：
+
+| 主机记录 | 类型 | 记录值来源 |
+| --- | --- | --- |
+| `@` | `CNAME` | EdgeOne 为 `yuzhuzhi.cn` 分配的 CNAME 目标，只填主机名，不带 `https://` 或路径 |
+| 控制台指定的验证主机记录 | `TXT` / `CNAME`（若要求） | EdgeOne 域名所有权验证或证书验证页面给出的准确类型和值 |
+
+不要猜测 CNAME 目标，也不要指向 `yuzhuzhi.github.io`。如果同名已有冲突的 A / AAAA / CNAME 记录，先确认用途再按 DNSPod 提示处理。只有要启用 `www.yuzhuzhi.cn` 时才另行在 EdgeOne 绑定 `www` 并添加对应记录。本工作流不会修改 DNS。
+
+GitHub 仓库 **Settings → Pages** 继续使用 GitHub Actions，Custom domain 保持空白，不添加 `CNAME` 文件，以保留 `yuzhuzhi.github.io` 的独立访问。
+
+### 验证
+
+- 推送 `main` 后，在 Actions 确认 **Deploy** 和 **Deploy EdgeOne** 分别成功，并在 EdgeOne 控制台确认此次生产部署。
+- 分别访问两个 HTTPS 域名的首页、`/Docs/`、深层文章及 Touying 演示文稿；检查数学公式、图片、样式、脚本、搜索和 Live2D。刷新深层路径后仍应正常，地址栏应保持原域名。Live2D Cubism Core、部分 CDN 样式等原有外部服务仍依赖网络可达性。
+- 用浏览器 Network 或 `curl -I https://yuzhuzhi.github.io/`、`curl -I https://yuzhuzhi.cn/` 检查首页没有跳往另一域名的 `Location`；Canonical 指向新域名属于元数据，不是 HTTP 跳转。
+- 两端 `/sitemap.xml`、`/robots.txt`、`/feed.xml` 和页面 Canonical 都应使用 `https://yuzhuzhi.cn/`。现有未使用网站模板的辅助文档和代码展示页未输出 Canonical；本次保留其原有内容。
+- 本地执行 `uv run build.py build -f` 检查退出码。当前内容有 2 份 Touying 幻灯片，没有文件名含 `pdf` 的 Typst 源文件或现成 PDF，因此当前构建不产出 PDF；日后添加 PDF 内容后还需验证两端对应文件链接。
+
+CLI 于 2026-10-21 核实：固定使用 `edgeone@1.6.44 makers deploy ./_site --name … --env production --area … --token … --skip-ai-gateway-sync`。`pages` 是已弃用的兼容别名；`--skip-ai-gateway-sync` 关闭本静态网站不需要的 AI Gateway 同步。`EDGEONE_API_TOKEN` 由工作流传给 `--token`，不依赖 CLI 自动读取此变量。
+
+官方资料：[EdgeOne CLI](https://edgeone.ai/document/162228053922476032)、[API Token](https://edgeone.ai/document/177158578324279296)。本地构建成功不能证明云端部署、DNS、HTTPS 或外部资源加载成功，完成首次配置后仍需执行以上远程验收。
+
 ## 🔗 说明
 
 本模板项目基于 [MIT License](https://github.com/Yousa-Mirage/Tufted-Blog-Template/blob/main/LICENSE) 开源。

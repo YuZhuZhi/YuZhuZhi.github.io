@@ -1091,6 +1091,21 @@ def export_slide_deck(typ_file: Path, output_path: Path) -> bool:
                 get_site_lang(),
                 get_deck_back_link(typ_file),
             )
+            # 幻灯片不经过网站的 Typst HTML 模板，单独补齐规范链接。
+            site_url = re.search(
+                r'^\s*website-url\s*:\s*"([^"]+)"',
+                CONFIG_FILE.read_text(encoding="utf-8"),
+                re.MULTILINE,
+            )
+            if site_url is not None:
+                page_path = get_page_path(typ_file).strip("/")
+                canonical = site_url.group(1).rstrip("/") + "/" + page_path
+                if page_path:
+                    canonical += "/"
+                document = replace_once(
+                    document, "\n</head>",
+                    f'\n<link rel="canonical" href="{html.escape(canonical, quote=True)}">\n</head>',
+                )
         except ValueError as e:
             print(f"  ❌ 渲染幻灯片失败: {e}")
             return False
