@@ -148,6 +148,14 @@ Tufted-Blog-Template/
 
 GitHub 仓库 **Settings → Pages** 继续使用 GitHub Actions，Custom domain 保持空白，不添加 `CNAME` 文件，以保留 `yuzhuzhi.github.io` 的独立访问。
 
+### EdgeOne HTML 浏览器缓存
+
+`edgeone.json` 为首页 `/`、以 `/` 结尾的目录 URL（如 `/Docs/` 和文章目录）以及 `.html` URL 设置 `Cache-Control: public, max-age=600, must-revalidate`。浏览器在 10 分钟内可直接复用 HTML，过期后重新验证；新部署不能主动清除访客浏览器内的缓存，因此旧页面最多可能保留 10 分钟。CSS、JavaScript、图片、RSS 等文件 URL 不匹配这些规则，继续采用平台原有策略。
+
+EdgeOne 工作流在构建后把配置复制到 `_site/edgeone.json`，确保直接上传时包含规则；GitHub Pages 工作流不复制此配置。更新配置后需重新发布 EdgeOne 才会在线生效。规则语法依据[官方 edgeone.json 文档](https://edgeone.ai/document/162316940304400384)和[缓存说明](https://edgeone.ai/document/180002216702672896)。
+
+部署后在 Edge DevTools Network 中保持 **Disable cache 未勾选**，先访问 `/Docs/`，进入文章，再点击页眉“文章”返回目录。检查初次响应头包含 `max-age=600`，随后 10 分钟内返回目录应显示内存或磁盘缓存，而不是每次联网收到 `304`。浏览器后退若命中 BFCache，可能完全没有新 Document 请求，需要与普通导航分别判断。
+
 ### 验证
 
 - 推送 `main` 后，在 Actions 确认 **Deploy** 和 **Deploy EdgeOne** 分别成功，并在 EdgeOne 控制台确认此次生产部署。
