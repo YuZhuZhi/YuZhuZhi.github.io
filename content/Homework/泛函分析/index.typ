@@ -503,5 +503,365 @@ x in B_(n) subset U_(alpha_(n)).
 $
 因此，每个 $x in X$ 都属于 $cal(U) '$ 的某个元素，从而 $X = union.big_(U in cal(U) ')U$。故 $cal(U) '$ 是原开覆盖的一个至多可数的子覆盖。
 
+#html.hr()
+
+= 第六次作业：习题二之 1、2、5、6、8、9
+
+#let iff = $" 当且仅当 "$
+
+== 习题二之 1
+
+#tufted.problem[
+  设 $(X, norm(dot))$ 是赋范空间，对于 $x,y in X$ 令
+  $
+    d_(1) = cases(
+      0 ", " & x = y,
+      norm(x - y) + 1 ", " & x != y
+    )
+  $
+  证明 $d_(1)$ 是 $X$ 上的距离但不是由范数诱导的距离。
+]
+
+首先证明 $d_1$ 是距离。
++ *正定性*：显然 $d_1(x,y) >= 0$，且$d_1(x,y) = 0 iff x = y$。
++ *对称性*：由范数的性质，$d_1(x,y) = d_1(y,x)$。
++ *三角不等式*：任取 $x,y,z in X$。若 $x = z$，则不等式显然成立；若 $x = y$ 或 $y = z$，则等号成立。
+
+当 $x,y,z$ 两两不同时，由范数的三角不等式，
+$
+  d_1(x,z)
+  &= norm(x-z) + 1 \
+  &<= norm(x-y) + norm(y-z) + 1 \
+  &<= d_1(x,y) + d_1(y,z).
+$
+因此 $d_1$ 是 $X$ 上的距离。
+
+下面证明 $d_1$ 不是由范数诱导的距离。设 $X != {0}$，反设存在范数 $norm(dot)_(*)$，使得$d_1(x,y) = norm(x-y)_(*)$。任取 $x != 0$，由范数的齐次性，$norm(2x)_(*) = 2 norm(x)_(*)$。但由 $d_1$ 的定义，
+$
+  norm(x)_(*) = norm(x) + 1,
+  quad norm(2x)_(*) = 2 norm(x) + 1.
+$
+从而 $2 norm(x) + 1 = 2 norm(x) + 2$，矛盾。故 $d_1$ 不是由范数诱导的距离。
+
+== 习题二之 2
+
+#tufted.problem[
+  在 $l^(infinity)$ 中，按坐标定义线性运算且对 $x in l^(infinity), x = {xi_(k)}$ 定义
+  $
+    norm(x) = sup_(n) abs(xi_(n)),
+  $
+  证明 $l^(infinity)$ 是一个赋范空间。
+]
+
+首先证明 $l^infinity$ 是线性空间。任取 $x = (xi_n), y = (eta_n) in l^infinity$ 及标量 $alpha, beta$，由
+$
+  sup_n abs(alpha xi_n + beta eta_n)
+  <= abs(alpha) sup_n abs(xi_n) + abs(beta) sup_n abs(eta_n)
+  < infinity,
+$
+可知 $alpha x + beta y in l^infinity$，故 $l^infinity$ 是线性空间。
+
+下面验证范数的三个条件。
+
++ *正定性*：显然 $norm(x) >= 0$，且
+$
+  norm(x) = 0
+  iff sup_n abs(xi_n) = 0
+  iff xi_n = 0, quad forall n
+  iff x = 0.
+$
++ *齐次性*：对任意标量 $alpha$，
+$
+  norm(alpha x)
+  &= sup_n abs(alpha xi_n) \
+  &= abs(alpha) sup_n abs(xi_n) \
+  &= abs(alpha) norm(x).
+$
++ *三角不等式*：对任意 $x,y in l^infinity$，
+$
+  norm(x+y)
+  &= sup_n abs(xi_n + eta_n) \
+  &<= sup_n (abs(xi_n) + abs(eta_n)) \
+  &<= sup_n abs(xi_n) + sup_n abs(eta_n) \
+  &= norm(x) + norm(y).
+$
+
+综上，$(l^infinity, norm(dot))$ 是赋范空间。
+
+== 习题二之 5
+
+#tufted.problem[
+  设 $(X, norm(dot))$ 是赋范空间，$X_(0)$ 是 $X$ 中的稠密子集，证明：对于每一 $x in X$ 存在 ${x_(n)} subset X_(0)$，使得 $x = sum_(n=1)^infinity x_(n)$ 且 $sum_(n=1)^infinity norm(x_(n)) < infinity$。
+]
+
+任取 $x in X$。由于 $X_0$ 在 $X$ 中稠密，可递归选取 $x_n in X_0$，使得
+$
+  norm(x - sum_(k=1)^n x_k) < 2^(-n).
+$
+
+具体地，先取 $x_1 in X_0$，满足 $norm(x-x_1) < 1/2$。假设已取 $x_1, dots, x_(n-1)$，记
+$
+  r_(n-1) = x - sum_(k=1)^(n-1) x_k.
+$
+由 $X_0$ 的稠密性，可取 $x_n in X_0$，使得$norm(r_(n-1)-x_n) < 2^(-n)$。令 $r_n = x - sum_(k=1)^n x_k$，则 $norm(r_n) < 2^(-n)$，故
+$
+  norm(x - sum_(k=1)^n x_k) -> 0.
+$
+因此
+$
+  x = sum_(n=1)^infinity x_n.
+$
+
+下面证明级数绝对收敛。对 $n >= 2$，由三角不等式，
+$
+  norm(x_n)
+  &= norm(r_(n-1)-r_n) \
+  &<= norm(r_(n-1)) + norm(r_n) \
+  &< 2^(-(n-1)) + 2^(-n).
+$
+因而
+$
+  sum_(n=1)^infinity norm(x_n)
+  &<= norm(x_1) + sum_(n=2)^infinity (2^(-(n-1)) + 2^(-n)) \
+  &< infinity.
+$
+
+综上，存在 ${x_n} subset X_0$，使得
+$
+  x = sum_(n=1)^infinity x_n,
+  quad sum_(n=1)^infinity norm(x_n) < infinity.
+$
 
 
+== 习题二之 6
+
+#tufted.problem[
+  设 $(X, norm(dot))$ 是赋范空间，$X != {0}$，证明：$X$ 是 Banach 空间，当且仅当 $X$ 中的单位球面 $S = {x in X: norm(x) = 1}$ 是完备的。
+]
+
+（1）*必要性*：设 $X$ 是 Banach 空间。由于范数连续，单位球面 $S = {x in X: norm(x) = 1}$ 是 $X$ 中的闭集。完备距离空间的闭子集仍完备，故 $S$ 完备。
+
+（2）*充分性*：设 $S$ 完备。任取 $X$ 中的 Cauchy 列 ${x_n}$。
+
+由反三角不等式，$abs(norm(x_n)-norm(x_m)) <= norm(x_n-x_m)$，可知 ${norm(x_n)}$ 是实数域上的 Cauchy 列。由实数的完备性，存在 $a >= 0$，使得 $norm(x_n) -> a$。若 $a = 0$，则 $norm(x_n-0) = norm(x_n) -> 0$，故 $x_n -> 0$。
+
+若 $a > 0$，则当 $n$ 充分大时 $norm(x_n) > 0$。令 $y_n = x_n / norm(x_n) in S$。对充分大的 $n,m$，有
+$
+  norm(y_n-y_m)
+  &= norm(x_n / norm(x_n) - x_m / norm(x_m)) \
+  &<= norm(x_n-x_m) / norm(x_n) \
+  &quad + norm(x_m) abs(1/norm(x_n) - 1/norm(x_m)).
+$
+由于 ${x_n}$ 是 Cauchy 列，且 $norm(x_n) -> a > 0$，故
+$
+  norm(y_n-y_m) -> 0 quad (n,m -> infinity).
+$
+因此 ${y_n}$ 是 $S$ 中的 Cauchy 列。
+
+由 $S$ 完备，存在 $y in S$，使得 $y_n -> y$。又因为 $x_n = norm(x_n) y_n$，所以 $x_n -> a y in X$。因此 $X$ 中任意 Cauchy 列均收敛，即 $X$ 完备。
+
+综上，
+$
+  X " 是 Banach 空间 " iff S " 完备".
+$
+
+
+== 习题二之 8
+
+#tufted.problem[
+  设 $(X_(n), norm(dot)_(n))$ 是一列赋范空间，$x  = {x_(n)}, x_(n) in X_(n) (n = 1,2,...)$ 且满足条件 $sum_(k=1)^infinity norm(x_(k))^(p) < infinity$，用 $X$ 表示所有 $x$ 的全体，按坐标定义线性运算构成的线性空间，在 $X$ 中定义
+  $
+    norm(x) = (sum_(n=1)^infinity norm(x_(n))^(p))^(1/p) quad (p >= 1),
+  $
+  证明 $(X, norm(dot))$ 是一个赋范空间。
+]
+
+首先证明 $X$ 是线性空间。
+
+任取 $x=(x_n), y=(y_n) in X$ 及标量 $alpha,beta$。由范数的三角不等式及
+$
+  (a+b)^p <= 2^(p-1)(a^p+b^p), quad a,b >= 0,
+$
+得
+$
+  norm(alpha x_n+beta y_n)_n^p
+  &<= (abs(alpha) norm(x_n)_n + abs(beta) norm(y_n)_n)^p \
+  &<= 2^(p-1)(abs(alpha)^p norm(x_n)_n^p
+    + abs(beta)^p norm(y_n)_n^p).
+$
+两边对 $n$ 求和，由 $x,y in X$ 可知
+$
+  sum_(n=1)^infinity norm(alpha x_n+beta y_n)_n^p < infinity.
+$
+因此 $alpha x+beta y in X$，故 $X$ 是线性空间。
+
+下面验证范数的三个条件。
+
++ *正定性*：显然 $norm(x) >= 0$，且
+$
+  norm(x) = 0
+  &iff sum_(n=1)^infinity norm(x_n)_n^p = 0 \
+  &iff norm(x_n)_n = 0, quad forall n \
+  &iff x_n = 0, quad forall n \
+  &iff x = 0.
+$
++ *齐次性*：对任意标量 $alpha$，
+$
+  norm(alpha x)
+  &= (sum_(n=1)^infinity norm(alpha x_n)_n^p)^(1/p) \
+  &= (abs(alpha)^p sum_(n=1)^infinity norm(x_n)_n^p)^(1/p) \
+  &= abs(alpha) norm(x).
+$
++ *三角不等式*：由各 $X_n$ 中的三角不等式及 Minkowski 不等式，
+$
+  norm(x+y)
+  &= (sum_(n=1)^infinity norm(x_n+y_n)_n^p)^(1/p) \
+  &<= (sum_(n=1)^infinity (norm(x_n)_n+norm(y_n)_n)^p)^(1/p) \
+  &<= (sum_(n=1)^infinity norm(x_n)_n^p)^(1/p)
+    + (sum_(n=1)^infinity norm(y_n)_n^p)^(1/p) \
+  &= norm(x)+norm(y).
+$
+
+综上，$(X,norm(dot))$ 是赋范空间。
+
+== 习题二之 9
+
+#tufted.problem[
+  证明：
+  + 离散情形的 Hölder 不等式与 Minkowski 不等式;
+  + $l^(p) (p >= 1)$ 是可分的 Banach 空间。
+]
+
+=== （1）离散 Hölder 不等式
+
+设 $1 < p,q < infinity$，且 $1/p + 1/q = 1$。对任意 $(a_n) in l^p$、$(b_n) in l^q$，证明
+$
+  sum_(n=1)^infinity abs(a_n b_n)
+  <= (sum_(n=1)^infinity abs(a_n)^p)^(1/p)
+     (sum_(n=1)^infinity abs(b_n)^q)^(1/q).
+$
+
+记
+$
+  A = (sum_(n=1)^infinity abs(a_n)^p)^(1/p),
+  quad
+  B = (sum_(n=1)^infinity abs(b_n)^q)^(1/q).
+$
+若 $A=0$ 或 $B=0$，结论显然成立。
+
+当 $A,B > 0$ 时，令
+$
+  u_n = abs(a_n)/A,
+  quad
+  v_n = abs(b_n)/B.
+$
+由 Young 不等式，
+$
+  u_n v_n <= u_n^p/p + v_n^q/q.
+$
+两边求和，得到
+$
+  sum_(n=1)^infinity u_n v_n
+  &<= 1/p sum_(n=1)^infinity u_n^p
+     + 1/q sum_(n=1)^infinity v_n^q \
+  &= 1/p + 1/q = 1.
+$
+因此 $sum_(n=1)^infinity abs(a_n b_n) <= A B$。
+
+当 $p=1,q=infinity$ 时，由
+$
+  sum_(n=1)^infinity abs(a_n b_n)
+  <= sup_n abs(b_n) sum_(n=1)^infinity abs(a_n)
+$
+可知端点情形同样成立。
+
+
+=== （2）离散 Minkowski 不等式
+
+对 $p >= 1$，证明
+$
+  (sum_(n=1)^infinity abs(a_n+b_n)^p)^(1/p)
+  <= (sum_(n=1)^infinity abs(a_n)^p)^(1/p)
+   + (sum_(n=1)^infinity abs(b_n)^p)^(1/p).
+$
+
+当 $p=1$ 时，由三角不等式直接成立。
+
+当 $p>1$ 时，令 $q=p/(p-1)$。先对有限项证明。由三角不等式，
+$
+  sum_(n=1)^N abs(a_n+b_n)^p
+  &<= sum_(n=1)^N (abs(a_n)+abs(b_n)) abs(a_n+b_n)^(p-1) \
+  &= sum_(n=1)^N abs(a_n) abs(a_n+b_n)^(p-1) \
+  &quad + sum_(n=1)^N abs(b_n) abs(a_n+b_n)^(p-1).
+$
+
+对右端两项分别应用 Hölder 不等式，并利用 $(p-1)q=p$，得到
+$
+  sum_(n=1)^N abs(a_n+b_n)^p
+  &<= ((sum_(n=1)^N abs(a_n)^p)^(1/p)
+     + (sum_(n=1)^N abs(b_n)^p)^(1/p)) \
+  &quad dot (sum_(n=1)^N abs(a_n+b_n)^p)^((p-1)/p).
+$
+
+若左端为零，结论显然；否则两边除以最后一个因子，得
+$
+  (sum_(n=1)^N abs(a_n+b_n)^p)^(1/p)
+  <= (sum_(n=1)^N abs(a_n)^p)^(1/p)
+   + (sum_(n=1)^N abs(b_n)^p)^(1/p).
+$
+令 $N -> infinity$，即得 Minkowski 不等式。
+
+
+=== （3）$l^p$ 是 Banach 空间
+
+设 ${x^(m)}$ 是 $l^p$ 中的 Cauchy 列，其中 $x^(m) = (xi_1^(m), xi_2^(m), dots)$。由于
+$
+  abs(xi_n^(m)-xi_n^(k))
+  <= norm(x^(m)-x^(k))_p,
+$
+故对任意固定的 $n$，${xi_n^(m)}_m$ 是标量域中的 Cauchy 列。
+
+由标量域的完备性，存在 $xi_n$，使得 $xi_n^(m) -> xi_n quad (m -> infinity)$。记 $x=(xi_1,xi_2,dots)$。
+
+因为 ${x^(m)}$ 是 Cauchy 列，所以对任意 $epsilon>0$，存在 $M$，使得当 $m,k >= M$ 时，$norm(x^(m)-x^(k))_p < epsilon$。因而对任意正整数 $N$，
+$
+  sum_(n=1)^N abs(xi_n^(m)-xi_n^(k))^p < epsilon^p.
+$
+
+固定 $m >= M$，令 $k -> infinity$，得 $sum_(n=1)^N abs(xi_n^(m)-xi_n)^p <= epsilon^p$。再令 $N -> infinity$，得到
+$
+  sum_(n=1)^infinity abs(xi_n^(m)-xi_n)^p <= epsilon^p.
+$
+
+因此 $x-x^(m) in l^p$。又因为 $x^(m) in l^p$，故 $x in l^p$，并且 $norm(x^(m)-x)_p <= epsilon quad (m >= M)$。
+
+于是 $x^(m) -> x$，即 $l^p$ 中任意 Cauchy 列均收敛，所以 $l^p$ 是 Banach 空间。
+
+
+=== （四）$l^p$ 是可分空间
+
+先考虑实数域上的 $l^p$。令 $D = {x=(r_n): r_n in QQ, "且仅有有限个非零项"}$。由于 $D$ 是有限维有理数序列集合的可数并，故 $D$ 可数。
+
+下面证明 $D$ 在 $l^p$ 中稠密。任取 $x=(xi_n) in l^p$ 及 $epsilon>0$。由于 $sum_(n=1)^infinity abs(xi_n)^p < infinity$，存在正整数 $N$，使得
+$
+  sum_(n=N+1)^infinity abs(xi_n)^p < epsilon^p/2.
+$
+
+由于 $QQ$ 在 $RR$ 中稠密，对 $1 <= n <= N$，可取 $r_n in QQ$，使得
+$
+  abs(xi_n-r_n) < frac(epsilon, (2N)^(1/p)).
+$
+
+令 $y=(r_1,dots,r_N,0,0,dots) in D$。则
+$
+  norm(x-y)_p^p
+  &= sum_(n=1)^N abs(xi_n-r_n)^p
+     + sum_(n=N+1)^infinity abs(xi_n)^p \
+  &< N dot epsilon^p/(2N) + epsilon^p/2 \
+  &= epsilon^p.
+$
+因而 $norm(x-y)_p < epsilon$。
+
+故 $D$ 是 $l^p$ 中的可数稠密子集，$l^p$ 可分。对复数域上的 $l^p$，只需将 $QQ$ 换成 $QQ+i QQ$，证明相同。
+
+综上，$l^p$（$1 <= p < infinity$）是可分的 Banach 空间。
