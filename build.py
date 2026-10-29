@@ -16,6 +16,7 @@ Tufted Blog Template 构建脚本
     uv run build.py html        # 仅构建 HTML 文件
     uv run build.py slides      # 仅构建 Touying 幻灯片 (HTML 演示文稿)
     uv run build.py pdf         # 仅构建 PDF 文件
+    uv run build.py export-pdf content/Blog/example/index.typ --from-line 20
     uv run build.py assets      # 仅复制静态资源
     uv run build.py clean       # 清理生成的文件
     uv run build.py preview     # 启动本地预览服务器（默认端口 8000）
@@ -75,6 +76,7 @@ except Exception:
 
 CONTENT_DIR = Path("content")  # 源文件目录
 SITE_DIR = Path("_site")  # 输出目录
+ARTICLE_PDF_DIR = Path("pdf")  # 单篇文章的 PDF 导出目录
 ASSETS_DIR = Path("assets")  # 静态资源目录
 FONT_DIR = Path("fonts")  # 构建字体目录（不随站点发布）
 CONFIG_FILE = Path("config.typ")  # 全局配置文件
@@ -1272,6 +1274,205 @@ def build_pdf(force: bool = False) -> bool:
     return not stats.has_failures
 
 
+_PDF_SETUP_RE = re.compile(r"^#(?:import|let|set|show)\b")
+_SITE_SHOW_RE = re.compile(
+    r"^#show:\s*(?:template|home-template|butterfly-template)(?:\.with\b|\s|$)"
+)
+_SITE_IMPORT_RE = re.compile(r'^#import\s+"([^"]+)"\s*:\s*(.+)$')
+_HTML_RULE_RE = re.compile(r"^(\s*)#html\.hr\(\)(\s*)$")
+_HTML_BREAK_RE = re.compile(r"^\s*#html\.br\(\)\s*$")
+_HTML_ELEMENT_RE = re.compile(r"(?<![\w.])(#?)html\.elem\(")
+
+
+def _typst_statement_end(lines: list[str], start: int) -> int:
+    """Find the end of a top-level Typst setup statement, including multiline calls."""
+    depth = 0
+    quote = False
+    escaped = False
+    for index in range(start, len(lines)):
+        line = lines[index]
+        position = 0
+        while position < len(line):
+            char = line[position]
+            if quote:
+                if escaped:
+                    escaped = False
+                elif char == "\\":
+                    escaped = True
+                elif char == '"':
+                    quote = False
+            elif line[position : position + 2] == "//":
+                break
+            elif char == '"':
+                quote = True
+            elif char in "([{":
+                depth += 1
+            elif char in ")]}":
+                depth -= 1
+            position += 1
+        if depth <= 0 and not quote:
+            return index + 1
+    raise ValueError(f"第 {start + 1} 行开始的 Typst 设置语句没有闭合")
+
+
+def _pdf_setup_statement(statement: str, source: Path) -> str:
+    """Remove the website template and replace imports of its HTML entry point."""
+    if _SITE_SHOW_RE.match(statement):
+        return ""
+
+    match = _SITE_IMPORT_RE.match(statement.strip())
+    if match is None:
+        return statement
+
+    imported_path, names_text = match.groups()
+    root = Path(__file__).parent.resolve()
+    if imported_path.startswith("/"):
+        imported = (root / imported_path.lstrip("/")).resolve()
+    else:
+        imported = (source.parent / imported_path).resolve()
+    site_index = (
+        imported.name == "index.typ"
+        and imported != source
+        and imported.is_relative_to(root / CONTENT_DIR)
+        and source.is_relative_to(imported.parent)
+    )
+    if not site_index and imported != (root / "config.typ").resolve():
+        return statement
+
+    names = {name.strip() for name in names_text.split(",")}
+    supported = {"template", "home-template", "butterfly-template", "tufted", "overline", "underline"}
+    unknown = names - supported
+    if unknown:
+        raise ValueError(f"站点入口导入了尚未支持的名称：{', '.join(sorted(unknown))}")
+
+    replacement = []
+    if "tufted" in names:
+        replacement.append('#import "/tufted-lib/tufted.typ" as tufted\n')
+    for name in ("overline", "underline"):
+        if name in names:
+            replacement.append(f"#let {name} = math.{name}\n")
+    return "".join(replacement)
+
+
+def _pdf_body_html_elements(body: str) -> str:
+    """Retain the contents of HTML-only wrappers such as image grids."""
+    while match := _HTML_ELEMENT_RE.search(body):
+        depth = 1
+        quoted = False
+        escaped = False
+        position = match.end()
+        while position < len(body) and depth:
+            char = body[position]
+            if quoted:
+                if escaped:
+                    escaped = False
+                elif char == "\\":
+                    escaped = True
+                elif char == '"':
+                    quoted = False
+            elif char == '"':
+                quoted = True
+            elif char == "(":
+                depth += 1
+            elif char == ")":
+                depth -= 1
+            position += 1
+        if depth or body[position:].lstrip()[:1] != "[":
+            raise ValueError("PDF 暂不支持不带正文内容块的 html.elem 调用")
+        body = body[:match.start()] + match.group(1) + body[position:]
+    return body
+
+
+def prepare_article_pdf_source(source: Path, from_line: int) -> str:
+    """Keep setup definitions before from_line and retain the body from that line."""
+    lines = source.read_text(encoding="utf-8-sig").splitlines(keepends=True)
+    if not 1 <= from_line <= len(lines):
+        raise ValueError(f"起始行必须在 1 到 {len(lines)} 之间")
+
+    setup = []
+    index = 0
+    while index < from_line - 1:
+        if _PDF_SETUP_RE.match(lines[index]):
+            end = _typst_statement_end(lines, index)
+            if end > from_line - 1:
+                raise ValueError("起始行位于多行设置语句内部，请选择完整正文的起始行")
+            setup.append(_pdf_setup_statement("".join(lines[index:end]), source))
+            index = end
+        else:
+            index += 1
+
+    body = []
+    index = from_line - 1
+    while index < len(lines):
+        if _PDF_SETUP_RE.match(lines[index]):
+            end = _typst_statement_end(lines, index)
+            body.append(_pdf_setup_statement("".join(lines[index:end]), source))
+            index = end
+        else:
+            line = lines[index]
+            rule = _HTML_RULE_RE.match(line)
+            if rule:
+                body.append(f'{rule.group(1)}#line(length: 100%, stroke: rgb("#d6cfc4")){rule.group(2)}')
+            elif _HTML_BREAK_RE.match(line):
+                body.append("\n")
+            else:
+                body.append(line)
+            index += 1
+
+    return (
+        '#import "/tufted-lib/pdf.typ": pdf-article\n'
+        + "".join(setup)
+        + "\n#show: pdf-article\n\n"
+        + _pdf_body_html_elements("".join(body))
+    )
+
+
+def export_article_pdf(file_name: str, from_line: int = 1, output_name: str | None = None) -> bool:
+    """Compile one website article as an A4 PDF without site chrome."""
+    root = Path(__file__).parent.resolve()
+    source = Path(file_name).resolve()
+    if not source.is_relative_to(root / CONTENT_DIR) or not source.is_file() or source.suffix.lower() != ".typ":
+        print("  ❌ 请指定项目内现有的 .typ 文件")
+        return False
+
+    try:
+        prepared = prepare_article_pdf_source(source, from_line)
+    except (OSError, ValueError) as error:
+        print(f"  ❌ 无法准备 PDF 正文：{error}")
+        return False
+
+    if output_name is None:
+        relative = source.relative_to(root / CONTENT_DIR)
+        stem = source.stem if from_line == 1 else f"{source.stem}-from-line-{from_line}"
+        output = (root / ARTICLE_PDF_DIR / relative.parent / f"{stem}.pdf").resolve()
+    else:
+        output = Path(output_name).resolve()
+    if output.suffix.lower() != ".pdf" or output == source:
+        print("  ❌ 输出路径必须是不同于源文件的 .pdf 文件")
+        return False
+
+    output.parent.mkdir(parents=True, exist_ok=True)
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w", encoding="utf-8", suffix=".typ", prefix=".article-pdf-",
+            dir=source.parent, delete=False,
+        ) as handle:
+            handle.write(prepared)
+            temporary = Path(handle.name)
+        compiled = run_typst_command([
+            "compile", "--root", str(root), *get_font_args(),
+            str(temporary), str(output),
+        ])
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
+
+    if compiled:
+        print(f"✅ PDF 已导出：{output}")
+    return compiled
+
+
 def build_slides(force: bool = False) -> bool:
     """
     把 content/ 下使用 Touying 的 .typ 文件导出为 HTML 演示文稿。
@@ -2119,6 +2320,18 @@ touying-exporter/README.md：
     pdf_parser = subparsers.add_parser("pdf", help="仅构建 PDF 文件")
     pdf_parser.add_argument("-f", "--force", action="store_true", help="强制完整重建")
 
+    article_pdf_parser = subparsers.add_parser(
+        "export-pdf", help="将指定的站点文章导出为仅含正文的 A4 PDF"
+    )
+    article_pdf_parser.add_argument("file", help="要导出的 .typ 文件")
+    article_pdf_parser.add_argument(
+        "--from-line", type=int, default=1,
+        help="从源文件的指定行开始导出正文（行号从 1 开始）",
+    )
+    article_pdf_parser.add_argument(
+        "-o", "--output", help="PDF 输出路径；默认位于项目根目录的 pdf/ 对应目录",
+    )
+
     subparsers.add_parser("assets", help="仅复制静态资源")
     subparsers.add_parser("clean", help="清理生成的文件")
 
@@ -2146,7 +2359,7 @@ if __name__ == "__main__":
     script_dir = Path(__file__).parent.absolute()
     os.chdir(script_dir)
 
-    if args.command in {"build", "html", "slides", "pdf"}:
+    if args.command in {"build", "html", "slides", "pdf", "export-pdf"}:
         warn_if_typst_version_is_outdated()
 
     # 获取 force 参数
@@ -2162,6 +2375,8 @@ if __name__ == "__main__":
             success = build_slides(force)
         case "pdf":
             success = build_pdf(force)
+        case "export-pdf":
+            success = export_article_pdf(args.file, args.from_line, args.output)
         case "assets":
             success = copy_assets()
         case "clean":

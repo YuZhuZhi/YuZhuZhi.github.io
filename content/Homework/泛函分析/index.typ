@@ -553,13 +553,13 @@ $
   证明 $l^(infinity)$ 是一个赋范空间。
 ]
 
-首先证明 $l^infinity$ 是线性空间。任取 $x = (xi_n), y = (eta_n) in l^infinity$ 及标量 $alpha, beta$，由
+首先证明 $l^(infinity)$ 是线性空间。任取 $x = (xi_n), y = (eta_n) in l^(infinity)$ 及标量 $alpha, beta$，由
 $
   sup_n abs(alpha xi_n + beta eta_n)
   <= abs(alpha) sup_n abs(xi_n) + abs(beta) sup_n abs(eta_n)
   < infinity,
 $
-可知 $alpha x + beta y in l^infinity$，故 $l^infinity$ 是线性空间。
+可知 $alpha x + beta y in l^(infinity)$，故 $l^(infinity)$ 是线性空间。
 
 下面验证范数的三个条件。
 
@@ -577,7 +577,7 @@ $
   &= abs(alpha) sup_n abs(xi_n) \
   &= abs(alpha) norm(x).
 $
-+ *三角不等式*：对任意 $x,y in l^infinity$，
++ *三角不等式*：对任意 $x,y in l^(infinity)$，
 $
   norm(x+y)
   &= sup_n abs(xi_n + eta_n) \
@@ -586,7 +586,7 @@ $
   &= norm(x) + norm(y).
 $
 
-综上，$(l^infinity, norm(dot))$ 是赋范空间。
+综上，$(l^(infinity), norm(dot))$ 是赋范空间。
 
 == 习题二之 5
 
@@ -732,7 +732,7 @@ $
   + $l^(p) (p >= 1)$ 是可分的 Banach 空间。
 ]
 
-=== （1）离散 Hölder 不等式
+=== (1) 离散 Hölder 不等式
 
 设 $1 < p,q < infinity$，且 $1/p + 1/q = 1$。对任意 $(a_n) in l^p$、$(b_n) in l^q$，证明
 $
@@ -775,8 +775,7 @@ $
 $
 可知端点情形同样成立。
 
-
-=== （2）离散 Minkowski 不等式
+=== (2) 离散 Minkowski 不等式
 
 对 $p >= 1$，证明
 $
@@ -812,7 +811,7 @@ $
 令 $N -> infinity$，即得 Minkowski 不等式。
 
 
-=== （3）$l^p$ 是 Banach 空间
+=== (3) $l^p$ 是 Banach 空间
 
 设 ${x^(m)}$ 是 $l^p$ 中的 Cauchy 列，其中 $x^(m) = (xi_1^(m), xi_2^(m), dots)$。由于
 $
@@ -837,8 +836,7 @@ $
 
 于是 $x^(m) -> x$，即 $l^p$ 中任意 Cauchy 列均收敛，所以 $l^p$ 是 Banach 空间。
 
-
-=== （四）$l^p$ 是可分空间
+=== (4) $l^p$ 是可分空间
 
 先考虑实数域上的 $l^p$。令 $D = {x=(r_n): r_n in QQ, "且仅有有限个非零项"}$。由于 $D$ 是有限维有理数序列集合的可数并，故 $D$ 可数。
 
@@ -865,3 +863,354 @@ $
 故 $D$ 是 $l^p$ 中的可数稠密子集，$l^p$ 可分。对复数域上的 $l^p$，只需将 $QQ$ 换成 $QQ+i QQ$，证明相同。
 
 综上，$l^p$（$1 <= p < infinity$）是可分的 Banach 空间。
+
+#html.hr()
+
+= 第七次作业：习题二之 3、12、13、14、17、18
+
+== 习题二之 3
+
+#tufted.problem[
+  设 $M$ 是空间 $l^(infinity)$ 中除又穷个坐标之外为 $0$ 的元之全体构成的子空间，证明 $M$ 不是闭子空间。
+]
+
+考虑 $l^(infinity)$ 中的元素 $x = (1, 1/2, 1/3, dots, 1/n, dots)$，显然 $x in l^(infinity)$，但 $x$ 有无穷多个非零坐标，因此 $x in.not M$。
+
+对每个正整数 $n$，令 $x^(n) = (1, 1/2, dots, 1/n, 0, 0, dots)$。由于 $x^(n)$ 仅有有限个非零坐标，故 $x^(n) in M$。
+
+又因为
+$
+  norm(x^(n)-x)_infinity
+  = sup_(k>n) 1/k
+  = 1/(n+1) -> 0,
+$
+所以 $x^(n) -> x$。因此 $M$ 中存在收敛序列，其极限不属于 $M$，故 $M$ 不是闭子空间。
+
+== 习题二之 12
+
+#tufted.problem[
+  设 $E$ 是直线上的 Lebesgue 可测集，且 $m(E) < infinity$，用 $norm(dot)_(p)$ 表示 $L^(p)(E) (p >= 1)$ 中的范数，$norm(dot)_(infinity)$ 表示 $L^(infinity)(E)$ 的范数。证明： 对于每一 $x in L^(infinity)(E)$，
+  $
+    lim_(p -> infinity) norm(x)_(p) = norm(x)_(infinity).
+  $
+]
+
+设 $x in L^(infinity)(E)$，记
+$
+  M = norm(x)_infinity
+  = limits(op("ess sup"))_(t in E) abs(x(t)).
+$
+由于 $m(E)<infinity$，对任意 $p>=1$，有
+$
+  norm(x)_p^p
+  = integral_E abs(x(t))^p dif t
+  <= M^p m(E).
+$
+因此 $norm(x)_p <= M m(E)^(1/p)$。令 $p -> infinity$，得
+$
+  limsup_(p->infinity) norm(x)_p <= M.
+$
+
+另一方面，若 $M=0$，则 $x=0$ 几乎处处成立，结论显然。
+
+若 $M>0$，任取 $epsilon in (0,M)$，由本性上确界的定义，集合 $E_epsilon = {t in E: abs(x(t)) > M-epsilon}$ 满足 $m(E_epsilon)>0$。
+
+于是
+$
+  norm(x)_p^p
+  &= integral_E abs(x(t))^p dif t \
+  &>= integral_(E_epsilon) abs(x(t))^p dif t \
+  &>= (M-epsilon)^p m(E_epsilon).
+$
+因此 $norm(x)_p >= (M-epsilon) m(E_epsilon)^(1/p)$。令 $p -> infinity$，由于 $0<m(E_epsilon)<infinity$，得到 $liminf_(p->infinity) norm(x)_p >= M-epsilon$。由 $epsilon$ 的任意性，$liminf_(p->infinity) norm(x)_p >= M$。
+
+结合上下极限，得到
+$
+  lim_(p->infinity) norm(x)_p
+  = M = norm(x)_infinity.
+$
+
+== 习题二之 13
+
+#tufted.problem[
+  设 $(X_(1), norm(dot)_(1)), (X_(2), norm(dot)_(2))$ 是赋范空间，在乘积线性空间 $X_(1) times X_(2)$ 中定义
+  $
+    norm(z)_(1) = norm(x_(1))_(1) + norm(x_(2))_(2); quad norm(z)_(2) = max(norm(x_(1))_(1), norm(x_(2))_(2)),
+  $
+  其中 $z in X_(1) times X_(2), z=(x_(1), x_(2))$。证明：$norm(z)_(1), norm(z)_(2)$ 是 $X_(1) times X_(2)$ 上的等价范数。
+]
+
+任取 $z=(x_1,x_2) in X_1 times X_2$，记 $A = norm(x_1)_1, B = norm(x_2)_2$。则
+$
+  norm(z)_1 = A+B, quad norm(z)_2 = max(A,B).
+$
+
+首先验证二者均为范数。首先非负性与正定性显然。然后，对任意标量 $alpha$，由各分量范数的齐次性，
+$
+  norm(alpha z)_1
+  &= abs(alpha) A + abs(alpha) B \
+  &= abs(alpha) norm(z)_1,
+$
+$
+  norm(alpha z)_2
+  &= max(abs(alpha) A, abs(alpha) B) \
+  &= abs(alpha) norm(z)_2.
+$
+
+再任取 $w=(y_1,y_2)$，由分量范数的三角不等式，
+$
+  norm(z+w)_1
+  &= norm(x_1+y_1)_1+norm(x_2+y_2)_2 \
+  &<= norm(x_1)_1+norm(y_1)_1
+  +norm(x_2)_2+norm(y_2)_2 \
+  &= norm(z)_1+norm(w)_1.
+$
+同时，
+$
+  norm(z+w)_2
+  &<= max(norm(x_1)_1+norm(y_1)_1,
+           norm(x_2)_2+norm(y_2)_2) \
+  &<= max(norm(x_1)_1,norm(x_2)_2)
+     +max(norm(y_1)_1,norm(y_2)_2) \
+  &= norm(z)_2+norm(w)_2.
+$
+故二者都是范数。
+
+下面证明等价性。由于 $A,B>=0$，
+$
+  max(A,B) <= A+B <= 2 max(A,B).
+$
+即 $norm(z)_2 <= norm(z)_1 <= 2 norm(z)_2$。因此存在常数 $c=1$、$C=2$，使得
+$
+  c norm(z)_2 <= norm(z)_1 <= C norm(z)_2.
+$
+故 $norm(dot)_1$ 与 $norm(dot)_2$ 是等价范数。
+
+== 习题二之 14
+
+#tufted.problem[
+  设 $X$ 是区间 $[a,b]$ 上所有连续函数全体按通常方式定义线性运算所成的线性空间，对于 $x in X$ 定义
+  $
+    norm(x) = sup_(a <= t <= b) abs(x(t)); quad norm(x)_(1) = integral_a^b abs(x(t)) d t.
+  $
+  证明：$norm(dot), norm(dot)_(1)$ 是 $X$ 上两个不等价的范数。
+]
+
+首先证明两个函数都是 $X=C[a,b]$ 上的范数。对于一致范数 $norm(x)=sup_(a<=t<=b) abs(x(t))$，其正定性、齐次性及三角不等式均由绝对值的相应性质直接得到。
+
+对于积分范数 $norm(x)_1 = integral_a^b abs(x(t)) dif t$，显然 $norm(x)_1>=0$。
+
+若 $norm(x)_1=0$，由于 $abs(x(t))$ 连续且非负，必有 $x(t)=0$ 对所有 $t in [a,b]$ 成立，否则由连续性可找到一个正长度的区间，使其积分严格大于零。因此 $norm(x)_1=0 iff x=0$。
+
+此外，对任意标量 $alpha$，
+$
+  norm(alpha x)_1
+  &= integral_a^b abs(alpha x(t)) dif t \
+  &= abs(alpha) norm(x)_1.
+$
+对任意 $x,y in X$，
+$
+  norm(x+y)_1
+  &= integral_a^b abs(x(t)+y(t)) dif t \
+  &<= integral_a^b (abs(x(t))+abs(y(t))) dif t \
+  &= norm(x)_1+norm(y)_1.
+$
+故 $norm(dot)_1$ 也是范数。
+
+下面证明二者不等价。
+
+由 $abs(x(t)) <= norm(x)$，可得 $norm(x)_1 <= (b-a) norm(x)$。若两个范数等价，则还存在常数 $c>0$，使得对所有 $x in X$，$norm(x)_1 >= c norm(x)$。
+
+构造函数列
+$
+  x_n(t) = (1-(t-a)/(b-a))^n.
+$
+显然 $x_n in C[a,b]$，且 $norm(x_n)=1$。另一方面，
+$
+  norm(x_n)_1
+  &= integral_a^b (1-(t-a)/(b-a))^n dif t \
+  &= (b-a)/(n+1) -> 0.
+$
+
+于是
+$
+  norm(x_n)_1/norm(x_n) -> 0,
+$
+与存在统一的常数 $c>0$ 矛盾。
+
+因此两个范数不等价。
+
+== 习题二之 17
+
+#tufted.problem[
+  设 $(X, norm(dot))$ 是赋范空间，如果对任意 $x,y in X, x != y$ 且 $norm(x) = norm(y) = 1$ 必有 $norm(x+y) < 2$，称 $(X, norm(dot))$ 是*严格凸赋范空间*。
+  + 证明赋范空间 $(X, norm(dot))$ 是严格凸的，当且仅当对任意 $x,y in X, norm(x+y) = norm(x) + norm(y)$ 必有 $x = alpha y (alpha > 0)$。
+  + 证明在严格凸赋范空间中，对于每一个 $x in X$，$x$ 关于任意子空间 $Y$ 的最佳逼近是唯一的。
+]
+
+=== (1) 严格凸的等价条件
+
+先证明必要性。设 $X$ 严格凸，任取非零向量 $x,y$，且 $norm(x+y)=norm(x)+norm(y)$。
+
+令
+$
+  u=x/norm(x),
+  quad v=y/norm(y),
+$
+则 $norm(u)=norm(v)=1$。
+
+再令
+$
+  lambda=norm(x)/(norm(x)+norm(y)),
+$
+显然 $0<lambda<1$，并且
+$
+  norm(lambda u+(1-lambda)v)
+  &= norm((x+y)/(norm(x)+norm(y))) \
+  &= 1.
+$
+
+若 $u!=v$，由严格凸性及三角不等式的等号条件可知，单位球面上两个不同点的非平凡凸组合范数严格小于 $1$，与上式矛盾。
+
+故 $u=v$，即
+$
+  x/norm(x)=y/norm(y).
+$
+因此
+$
+  x=norm(x)/norm(y) y=alpha y,
+  quad alpha>0.
+$
+
+再证明充分性。设上述等号条件成立。
+
+任取 $x,y in X$，满足 $norm(x)=norm(y)=1, x!=y$。由三角不等式，$norm(x+y)<=2$。若 $norm(x+y)=2$，根据假设，存在 $alpha>0$，使得 $x=alpha y$。由 $norm(x)=norm(y)=1$，可得 $alpha=1$，即 $x=y$，矛盾。
+
+因此 $norm(x+y)<2$。故 $X$ 严格凸。
+
+综上，两个条件等价。
+
+=== (2) 最佳逼近的唯一性
+
+设 $X$ 是严格凸赋范空间，$Y$ 是 $X$ 的任意线性子空间。
+
+任取 $x in X$，假设 $y_1,y_2 in Y$ 均为 $x$ 的最佳逼近，即
+$
+  norm(x-y_1)=norm(x-y_2)=d,
+$
+其中 $d=inf_(y in Y) norm(x-y)$。
+
+若 $d=0$，则 $x=y_1=y_2$，唯一性显然成立。
+
+若 $d>0$，反设 $y_1!=y_2$，令
+$
+  u=(x-y_1)/d,
+  quad v=(x-y_2)/d.
+$
+则 $norm(u)=norm(v)=1, u!=v$。由严格凸性，$norm((u+v)/2)<1$。
+
+又因为 $Y$ 是线性子空间，$(y_1+y_2)/2 in Y$。于是
+$
+  norm(x-(y_1+y_2)/2)
+  &= norm(((x-y_1)+(x-y_2))/2) \
+  &= d norm((u+v)/2) \
+  &< d.
+$
+
+这与 $d$ 是 $x$ 到 $Y$ 的最小距离矛盾。因此 $y_1=y_2$。
+
+故在严格凸赋范空间中，任意子空间上的最佳逼近若存在，则必唯一。
+
+== 习题二之 18
+
+#tufted.problem[
+  设 $(X, norm(dot))$ 是赋范空间。如果对任意 $epsilon > 0$，存在 $delta > 0$，当 $norm(x-y) >= epsilon$，$norm(x) = norm(y) = 1$ 时必有 $norm(x+y) <= 2 - delta$，称 $(X, norm(dot))$ 是*一致凸的*。证明：
+  + $C[a,b]$ 不是一致凸的。
+  + $L^(1)[a,b]$ 不是一致凸的。
+  + 一致凸赋范空间必是严格凸的。
+]
+
+=== (1) $C[a,b]$ 不是一致凸的
+
+设 $a<b$，考虑 $C[a,b]$ 上的一致范数
+$
+  norm(x)_infinity = max_(t in [a,b]) abs(x(t)).
+$
+
+构造两个函数
+$
+  x(t)=1,
+  quad
+  y(t)=1-2(t-a)/(b-a).
+$
+显然 $x,y in C[a,b]$，且 $norm(x)_infinity=norm(y)_infinity=1$。
+
+由于 $y(b)=-1$，有 $norm(x-y)_infinity=2$。但在 $t=a$ 处，$x(a)+y(a)=2$，因此 $norm(x+y)_infinity=2$。
+
+取 $epsilon=1$，则对于任意 $delta>0$，上述 $x,y$ 均满足 $norm(x-y)_infinity>=epsilon$，但 $norm(x+y)_infinity=2>2-delta$。
+
+故 $C[a,b]$ 不是一致凸空间。
+
+
+=== (2) $L^1[a,b]$ 不是一致凸的
+
+设 $a<b$，取两个不相交且具有正测度的可测子集
+$
+  A=[a,(a+b)/2],
+  quad B=((a+b)/2,b].
+$
+
+定义
+$
+  f(t)=1/m(A) bb(1)_A(t),
+  quad
+  g(t)=1/m(B) bb(1)_B(t),
+$
+其中 $bb(1)_A, bb(1)_B$ 为示性函数。
+
+由于 $A inter B=emptyset$，且 $m(A),m(B)>0$，
+$
+  norm(f)_1=integral_a^b abs(f(t)) d t=1,
+  quad
+  norm(g)_1=integral_a^b abs(g(t)) d t=1.
+$
+
+又由于 $f,g$ 的支集不相交，
+$
+  norm(f-g)_1
+  &= integral_a^b abs(f(t)-g(t)) dif t \
+  &= norm(f)_1+norm(g)_1=2.
+$
+同时，
+$
+  norm(f+g)_1
+  &= integral_a^b abs(f(t)+g(t)) dif t \
+  &= norm(f)_1+norm(g)_1=2.
+$
+
+取 $epsilon=1$，则对任意 $delta>0$，都有
+$
+  norm(f-g)_1>=epsilon,
+  quad norm(f+g)_1=2>2-delta.
+$
+这与一致凸性的定义矛盾。
+
+因此 $L^1[a,b]$ 不是一致凸空间。
+
+
+=== (3) 一致凸空间必严格凸
+
+设 $X$ 是一致凸赋范空间。
+
+任取 $x,y in X$，满足
+$
+  norm(x)=norm(y)=1,
+  quad x!=y.
+$
+由于 $x!=y$，有 $epsilon=norm(x-y)>0$。
+
+由一致凸性，存在 $delta>0$，使得 $norm(x+y)<=2-delta<2$。
+
+因此对于任意两个不同的单位向量，都有 $norm(x+y)<2$。
+
+故 $X$ 是严格凸赋范空间。

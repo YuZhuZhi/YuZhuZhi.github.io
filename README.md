@@ -23,6 +23,18 @@
 - 🌙 支持浅色/深色模式自动选择和一键切换
 - 📄 丰富的示例和文档，无需任何前置知识，[简单学习 Typst](https://github.com/Yousa-Mirage/Tufted-Blog-Template/wiki/Typst-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E8%B5%84%E6%96%99) 后即可开始编写
 
+## 导出文章正文为 PDF
+
+使用 `export-pdf` 将 `content/` 下的单个 Typst 文件排版为 A4 PDF。PDF 使用白色纸面并保留网站浅色主题的文字与环境样式，只包含正文，不包含网站页眉、页脚或导航栏。
+
+```sh
+uv run build.py export-pdf content/Homework/泛函分析/index.typ
+uv run build.py export-pdf content/Homework/泛函分析/index.typ --from-line 1133
+uv run build.py export-pdf content/Homework/泛函分析/index.typ --from-line 1133 -o output.pdf
+```
+
+`--from-line` 使用源文件中从 1 开始的行号。该行以前的正文不会导出；此前定义的导入、变量和排版设置仍可供后文使用。起始行应位于完整的正文段落或标题之前，不能落在多行设置语句内部。默认输出到项目根目录的 `pdf/` 文件夹中，并保留源文件在 `content/` 下的相对路径；指定起始行时，文件名会附加 `-from-line-行号`。此命令需要已安装 Typst，且使用项目的 `fonts/` 字体目录。
+
 ## 🖼️ 幻灯片（Touying）
 
 `content/` 下使用 Touying 编写的 `.typ` 文件不会被编译成普通网页，而是导出为

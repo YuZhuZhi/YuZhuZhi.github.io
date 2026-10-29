@@ -61,6 +61,10 @@ document.addEventListener("DOMContentLoaded", () => {
 			}
 		} else if (node.nodeType === 1) {
 			// Node type 1 is an element node, such as an anchor inside a heading.
+			// MathML and SVG formulas keep their own typography and structure.
+			if (node.matches(".math-inline, .math-block, [role='math'], math, svg")) {
+				return;
+			}
 			Array.from(node.childNodes).forEach(processNode);
 		}
 	}

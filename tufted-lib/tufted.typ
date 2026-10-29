@@ -83,7 +83,7 @@
         // load JS scripts
         let base-js = (
           "/assets/code-blocks.js",
-          "/assets/format-headings.js",
+          "/assets/format-headings.js?v=20261029-1",
           "/assets/theme-toggle.js",
           "/assets/marginnote-toggle.js",
           "/assets/toc.js?v=20260924-1",
