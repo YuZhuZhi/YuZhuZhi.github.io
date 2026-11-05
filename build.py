@@ -1282,6 +1282,8 @@ _SITE_IMPORT_RE = re.compile(r'^#import\s+"([^"]+)"\s*:\s*(.+)$')
 _HTML_RULE_RE = re.compile(r"^(\s*)#html\.hr\(\)(\s*)$")
 _HTML_BREAK_RE = re.compile(r"^\s*#html\.br\(\)\s*$")
 _HTML_ELEMENT_RE = re.compile(r"(?<![\w.])(#?)html\.elem\(")
+_TYPST_LABEL_RE = re.compile(r"<([^<>\s]+)>")
+_LABELED_HEADING_RE = re.compile(r"^\s*=+\s+(.+?)\s+<([^<>\s]+)>\s*$", re.MULTILINE)
 
 
 def _typst_statement_end(lines: list[str], start: int) -> int:
@@ -1383,6 +1385,17 @@ def _pdf_body_html_elements(body: str) -> str:
     return body
 
 
+def _replace_refs_to_omitted_labels(omitted: str, body: str) -> str:
+    """Show the label name when its target was cut from a partial PDF."""
+    omitted_labels = set(_TYPST_LABEL_RE.findall(omitted))
+    included_labels = set(_TYPST_LABEL_RE.findall(body))
+    heading_text = {label: title for title, label in _LABELED_HEADING_RE.findall(omitted)}
+    for label in sorted(omitted_labels - included_labels, key=len, reverse=True):
+        reference = re.compile(r"(?<!@)@" + re.escape(label) + r"(?![\w-])")
+        body = reference.sub(lambda _: heading_text.get(label, label), body)
+    return body
+
+
 def prepare_article_pdf_source(source: Path, from_line: int) -> str:
     """Keep setup definitions before from_line and retain the body from that line."""
     lines = source.read_text(encoding="utf-8-sig").splitlines(keepends=True)
@@ -1419,11 +1432,15 @@ def prepare_article_pdf_source(source: Path, from_line: int) -> str:
                 body.append(line)
             index += 1
 
+    pdf_body = _pdf_body_html_elements("".join(body))
+    if from_line > 1:
+        pdf_body = _replace_refs_to_omitted_labels("".join(lines[:from_line - 1]), pdf_body)
+
     return (
         '#import "/tufted-lib/pdf.typ": pdf-article\n'
         + "".join(setup)
         + "\n#show: pdf-article\n\n"
-        + _pdf_body_html_elements("".join(body))
+        + pdf_body
     )
 
 

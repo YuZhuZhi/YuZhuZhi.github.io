@@ -33,7 +33,7 @@ uv run build.py export-pdf content/Homework/泛函分析/index.typ --from-line 1
 uv run build.py export-pdf content/Homework/泛函分析/index.typ --from-line 1133 -o output.pdf
 ```
 
-`--from-line` 使用源文件中从 1 开始的行号。该行以前的正文不会导出；此前定义的导入、变量和排版设置仍可供后文使用。起始行应位于完整的正文段落或标题之前，不能落在多行设置语句内部。默认输出到项目根目录的 `pdf/` 文件夹中，并保留源文件在 `content/` 下的相对路径；指定起始行时，文件名会附加 `-from-line-行号`。此命令需要已安装 Typst，且使用项目的 `fonts/` 字体目录。
+`--from-line` 使用源文件中从 1 开始的行号。该行以前的正文不会导出；此前定义的导入、变量和排版设置仍可供后文使用。若后文引用了被截去的标签，PDF 会显示标签名称作为文字；导出范围内的引用保持原样。起始行应位于完整的正文段落或标题之前，不能落在多行设置语句内部。默认输出到项目根目录的 `pdf/` 文件夹中，并保留源文件在 `content/` 下的相对路径；指定起始行时，文件名会附加 `-from-line-行号`。此命令需要已安装 Typst，且使用项目的 `fonts/` 字体目录。
 
 ## 🖼️ 幻灯片（Touying）
 
