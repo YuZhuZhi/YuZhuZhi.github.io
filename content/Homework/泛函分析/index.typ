@@ -269,7 +269,7 @@ $
 
 == 习题一之 15
 
-#tufted.problem[
+#tufted.problem(label: <习题一之15>)[
   设 $X$ 是完备距离空间，$cal(F)$ 是 $X$ 上的实连续函数族且具有性质：对于每一 $x in X$，存在常数 $M_x>0$ 使得对每一 $F in cal(F)$ 有 $|F(x)| <= M_x$。证明：存在开集 $U$ 及常数 $M>0$，使得对于每一 $x in U$ 及所有 $F in cal(F)$，有 $|F(x)| <= M$。
 ]
 
@@ -734,7 +734,7 @@ $
 
 === (1) 离散 Hölder 不等式
 
-设 $1 < p,q < infinity$，且 $1/p + 1/q = 1$。对任意 $(a_n) in l^p$、$(b_n) in l^q$，证明
+设 $1 < p,q < infinity$，且 $1/p + 1/q = 1$。对任意 $(a_n) in l^p$、$(b_n) in l^(q)$，证明
 $
   sum_(n=1)^infinity abs(a_n b_n)
   <= (sum_(n=1)^infinity abs(a_n)^p)^(1/p)
@@ -1023,7 +1023,7 @@ $
 
 构造函数列
 $
-  x_n(t) = (1-(t-a)/(b-a))^n.
+  x_(n)(t) = (1-(t-a)/(b-a))^n.
 $
 显然 $x_n in C[a,b]$，且 $norm(x_n)=1$。另一方面，
 $
@@ -1214,3 +1214,315 @@ $
 因此对于任意两个不同的单位向量，都有 $norm(x+y)<2$。
 
 故 $X$ 是严格凸赋范空间。
+
+#html.hr()
+
+= 第八次作业：习题三之 1、2、6、7、9
+
+== 习题三之 1
+
+#tufted.problem[
+  设 $sup_(n >= 1) abs(a_(n)) < infinity$，在 $l^(1)$ 上定义算子 $T: y = T x$，其中 $x = {xi_(k)}, y = {eta_(k)}, eta_(k) = alpha_(k) xi_(k) (k=1,2,...)$。证明 $T$ 是 $l^(1)$ 上的有界线性算子，并且 $norm(T) = sup_(n >= 1) abs(a_(n))$。
+]
+
+记 $M = sup_(n >= 1) abs(alpha_n) < infinity$。任取 $x=(xi_k) in l^1$，有
+$
+  sum_(k=1)^infinity abs(alpha_(k) xi_k)
+  <= M sum_(k=1)^infinity abs(xi_k) < infinity.
+$
+因此 $T x in l^1$，即 $T$ 是从 $l^1$ 到自身的算子。
+
+对任意 $x=(xi_k), y=(eta_k) in l^1$ 及标量 $lambda, mu$，有
+$
+  T(lambda x+mu y)
+  &= (alpha_(k)(lambda xi_k+mu eta_k))_(k=1)^infinity \
+  &= lambda T x+mu T y.
+$
+故 $T$ 是线性算子。
+
+又由于
+$
+  norm(T x)_1
+  &= sum_(k=1)^infinity abs(alpha_(k) xi_k) \
+  &<= M sum_(k=1)^infinity abs(xi_k) \
+  &= M norm(x)_1,
+$
+所以 $T$ 有界，且 $norm(T) <= M$。
+
+另一方面，对任意正整数 $n$，取 $l^1$ 中的标准基向量 $e_n=(0,dots,0,1,0,dots)$，其中第 $n$ 个坐标为 $1$。显然
+$
+  norm(e_n)_1=1,
+  quad norm(T e_n)_1=abs(alpha_n).
+$
+由算子范数的定义，
+$
+  norm(T) >= norm(T e_n)_1=abs(alpha_n).
+$
+由于 $n$ 任意，故
+$
+  norm(T) >= sup_(n >= 1) abs(alpha_n)=M.
+$
+
+结合两个不等式，得到
+$
+  norm(T)=sup_(n >= 1) abs(alpha_n).
+$
+
+
+== 习题三之 2
+
+#tufted.problem[
+  设 $e_(1) = (1,0,...,0)$，$e_(2) = (0,1,0,...,0)$，$...$，$e_(n) = (0,...,0,1,0,...,0)$，是 $bb(R)^(n)$ 的基。对于 $x in bb(R)^(n), x = (xi_(1), xi_(2), ..., xi_(n))$，如果在 $bb(R)^(n)$ 上定义范数为：
+  + $norm(x) = sup_(1 <= k <= n) abs(xi_(k))$；
+  + $norm(x)_(1) = sum_(k=1)^n abs(xi_(k))$。
+  试分别求出 $(bb(R)^(n))^(*)$ 的范数。
+]
+
+设 $f in (RR^n)^*$，记 $a_k=f(e_k), quad k=1,2,dots,n$。由于 ${e_1,dots,e_n}$ 是 $RR^n$ 的一组基，任意 $x=(xi_1,dots,xi_n)$ 可表示为 $x=sum_(k=1)^n xi_k e_k$。由 $f$ 的线性性，
+$
+  f(x)=sum_(k=1)^n a_k xi_k.
+$
+
+（1）当 $RR^n$ 上的范数为 $norm(x)=sup_(1 <= k <= n) abs(xi_k)$ 时，对任意 $norm(x)<=1$，有
+$
+  abs(f(x))
+  &<= sum_(k=1)^n abs(a_k) abs(xi_k) \
+  &<= sum_(k=1)^n abs(a_k).
+$
+故 $norm(f)_* <= sum_(k=1)^n abs(a_k)$。
+
+另一方面，若所有 $a_k$ 均为零，则结论显然。否则，取
+$
+  xi_k=cases(
+    1 quad & "若 " a_k>0,
+    -1 quad & "若 " a_k<0,
+    0 quad & "若 " a_k=0.
+  )
+$
+则 $norm(x)=1$，且 $f(x)=sum_(k=1)^n abs(a_k)$。因此 $norm(f)_* >= sum_(k=1)^n abs(a_k)$。所以此时对偶空间的范数为
+$
+  norm(f)_*=sum_(k=1)^n abs(a_k).
+$
+
+（2）当 $RR^n$ 上的范数为 $norm(x)_1=sum_(k=1)^n abs(xi_k)$ 时，对任意 $norm(x)_1<=1$，有
+$
+  abs(f(x))
+  &<= sum_(k=1)^n abs(a_k) abs(xi_k) \
+  &<= max_(1 <= k <= n) abs(a_k)
+    sum_(k=1)^n abs(xi_k) \
+  &<= max_(1 <= k <= n) abs(a_k).
+$
+故 $norm(f)_* <= max_(1 <= k <= n) abs(a_k)$。
+
+取 $j$ 使得 $abs(a_j)=max_(1 <= k <= n) abs(a_k)$。由于 $norm(e_j)_1=1$，有
+$
+  norm(f)_* >= abs(f(e_j))
+  =abs(a_j)=max_(1 <= k <= n) abs(a_k).
+$
+因此
+$
+  norm(f)_*=max_(1 <= k <= n) abs(a_k).
+$
+
+综上，以坐标表示对偶空间中的线性泛函时，原空间的最大范数对应对偶空间的 $l^1$ 范数，原空间的 $l^1$ 范数对应对偶空间的最大范数。
+
+== 习题三之 6
+
+#tufted.problem[
+  设 ${x_(n)} subset L^(p)[a,b] (1 < p < infinity)$。证明对于每一个 $y in L^(q)[a,b] (1/p + 1/q = 1)$，$integral_a^b x_(n)(t) y(t) d t -> 0 (n -> infinity)$，当且仅当 $sup_(n) norm(x_(n)) < infinity$，并且对于每一个可测子集 $E subset [a,b]$，$integral_E x_(n)(t) d t -> 0 (n -> infinity)$。
+]
+
+（1）*必要性*：
+
+设对任意 $y in L^(q)[a,b]$，都有 $integral_a^b x_(n)(t)y(t) dif t -> 0$。
+
+对每个 $n$，定义 $L^(q)[a,b]$ 上的线性泛函
+$
+  F_(n)(y)=integral_a^b x_(n)(t)y(t) dif t.
+$
+由 Hölder 不等式，$abs(F_(n)(y)) <= norm(x_n)_p norm(y)_q$，故 $F_(n)$ 是有界线性泛函，且 $norm(F_(n)) <= norm(x_n)_p$。
+
+当 $x_n != 0$ 时，取
+$
+  y_n(t)=
+  (abs(x_(n)(t))^(p-1) op("sgn")(x_(n)(t)))
+  /norm(x_n)_p^(p-1).
+$
+这里先考虑实值函数。由于 $(p-1)q=p$，有
+$
+  norm(y_n)_q=1,
+  quad F_(n)(y_n)=norm(x_n)_p.
+$
+故 $norm(F_(n))=norm(x_n)_p$。对于复值函数，只需将 $op("sgn")(x_(n)(t))$ 换为其共轭。
+
+根据假设，对任意固定的 $y in L^(q)[a,b]$，${F_(n)(y)}$ 收敛于零，因此 $sup_n abs(F_(n)(y))<infinity$。由于 $L^(q)[a,b]$ 是 Banach 空间，由 Banach-Steinhaus 定理，$sup_n norm(F_(n))<infinity$。从而
+$
+  sup_n norm(x_n)_p<infinity.
+$
+
+另一方面，任取可测集 $E subset [a,b]$。由于 $[a,b]$ 测度有限，示性函数 $bb(1)_E in L^(q)[a,b]$。
+
+令 $y=bb(1)_E$，由假设，
+$
+  integral_E x_(n)(t) dif t
+  =integral_a^b x_(n)(t)bb(1)_E(t) dif t
+  ->0.
+$
+必要性得证。
+
+（2）*充分性*：
+
+设 $M=sup_n norm(x_n)_p<infinity$，且对于任意可测集 $E subset [a,b]$，有$integral_E x_(n)(t) dif t ->0$。
+
+首先，对任意简单函数 $s(t)=sum_(k=1)^m c_k bb(1)_(E_k)(t)$，由积分的线性性，
+$
+  integral_a^b x_(n)(t)s(t) dif t
+  &=sum_(k=1)^m c_k integral_(E_k) x_(n)(t) dif t \
+  &->0.
+$
+
+再任取 $y in L^(q)[a,b]$ 及 $epsilon>0$。
+
+由于 $1<q<infinity$，简单函数在 $L^(q)[a,b]$ 中稠密，故存在简单函数 $s$，使得 $norm(y-s)_q<epsilon/(2(M+1))$。
+
+由 Hölder 不等式，
+$
+  abs(integral_a^b x_(n)(t)(y(t)-s(t)) dif t)
+  &<=norm(x_n)_p norm(y-s)_q \
+  &<=M norm(y-s)_q \
+  &<epsilon/2.
+$
+
+又因为 $integral_a^b x_(n)(t)s(t) dif t ->0$，故存在正整数 $N$，当 $n>=N$ 时，
+$
+  abs(integral_a^b x_(n)(t)s(t) dif t)<epsilon/2.
+$
+
+于是当 $n>=N$ 时，
+$
+  abs(integral_a^b x_(n)(t)y(t) dif t)
+  &<=abs(integral_a^b x_(n)(t)(y(t)-s(t)) dif t) + abs(integral_a^b x_(n)(t)s(t) dif t) \
+  &<epsilon.
+$
+
+由 $epsilon$ 的任意性，
+$
+  integral_a^b x_(n)(t)y(t) dif t ->0.
+$
+
+因此，对任意 $y in L^(q)[a,b]$，上述积分趋于零。
+
+综上，两个条件等价。
+
+== 习题三之 7
+
+#tufted.problem[
+  设 $X$ 是 Banach 空间，$p(x)$ 是 $X$ 上的泛函，满足：
+  + $p(x) >= 0$；
+  + 当 $alpha >= 0$ 时，$p(alpha x) = alpha p(x)$；
+  + $p(x+y) <= p(x)+p(y)$。
+  并且当 $x, x_(n) in X, x_(n) -> x (n -> infinity)$ 时，$liminf_(n) p(x_(n)) >= p(x)$。证明存在常数 $M$ 使得
+  $
+    p(x) <= M norm(x), quad (x in X).
+  $
+]
+
+由条件可知，$p$ 是非负、正齐次且次可加的泛函，并满足下半连续性。
+
+对每个正整数 $n$，令 $E_n={x in X:p(x)<=n}$。首先证明 $E_n$ 是闭集。
+
+设 ${x_k} subset E_n$ 且 $x_k -> x$。由 $p$ 的下半连续性，$p(x)<=liminf_(k->infinity) p(x_k)<=n$。故 $x in E_n$，所以 $E_n$ 是闭集。
+
+由于 $p(x)$ 对每个 $x in X$ 均为有限实数，故 $X=union_(n=1)^infinity E_n$。
+
+又因为 $X$ 是 Banach 空间，由 Baire 纲定理，至少存在一个 $E_(n_0)$ 具有非空内部。
+
+因此存在 $x_0 in X$ 及 $r>0$，使得 $B(x_0,r) subset E_(n_0)$。于是对任意满足 $norm(h)<r$ 的 $h in X$，有 $p(x_0+h)<=n_0$。
+
+由次可加性，
+$
+  p(h)
+  &=p((x_0+h)+(-x_0)) \
+  &<=p(x_0+h)+p(-x_0) \
+  &<=n_0+p(-x_0).
+$
+记 $C=n_0+p(-x_0)>0$，则
+$
+  p(h)<=C, quad norm(h)<r.
+$
+
+任取 $x in X$ 且 $x!=0$，令 $lambda=r/(2 norm(x))>0$。由于 $norm(lambda x)=r/2<r$，故 $p(lambda x)<=C$。再由正齐次性，$lambda p(x)=p(lambda x)<=C$，即$p(x)<=frac(2C, r) norm(x)$。
+
+令 $M=frac(2(n_0+p(-x_0)), r)$，则 $M>0$，且对任意 $x!=0$，$p(x)<=M norm(x)$。
+
+当 $x=0$ 时，由正齐次性可知 $p(0)=0$，故不等式同样成立。
+
+综上，存在常数 $M>0$，使得
+$
+  p(x)<=M norm(x), quad forall x in X.
+$
+
+== 习题三之 9
+
+#tufted.problem[
+  试应用 @习题一之15 的结果证明 Banach-Steinhaus 定理。
+]
+
+设 $X$ 是 Banach 空间，$Y$ 是赋范空间，$cal(T)$ 是一族从 $X$ 到 $Y$ 的有界线性算子，并且对任意 $x in X$，都有$sup_(T in cal(T)) norm(T x)_Y<infinity$。需要证明 $sup_(T in cal(T)) norm(T)<infinity$。
+
+对每个 $T in cal(T)$，定义实值函数
+$
+  F_T(x)=norm(T x)_Y, quad x in X.
+$
+由于 $T$ 是有界线性算子，范数函数连续，故 $F_T$ 是 $X$ 上的实连续函数。
+
+由题设，对于任意 $x in X$，存在常数 $M_x>0$，使得
+$
+  abs(F_T(x))=norm(T x)_Y<=M_x,
+  quad forall T in cal(T).
+$
+
+因此，函数族 $cal(F)={F_T:T in cal(T)}$
+满足 @习题一之15 的全部条件。
+
+根据 @习题一之15，存在非空开集 $U subset X$ 及常数 $M>0$，使得对任意 $x in U$ 及 $T in cal(T)$，有 $norm(T x)_Y<=M$。
+
+由于 $U$ 非空且为开集，存在 $x_0 in U$ 及 $r>0$，使得 $B(x_0,r) subset U$。
+
+于是对于任意 $h in X$，当 $norm(h)<r$ 时，有
+$
+  x_0+h in U, quad x_0 in U.
+$
+由 $T$ 的线性性及三角不等式，
+$
+  norm(T h)_Y
+  &=norm(T(x_0+h)-T x_0)_Y \
+  &<=norm(T(x_0+h))_Y+norm(T x_0)_Y \
+  &<=2M.
+$
+
+下面将这个局部有界性推广到整个单位球面。任取 $x in X$，满足 $norm(x)=1$，令 $h=r/2 x$。则 $norm(h)=r/2<r$。因此对于任意 $T in cal(T)$，$norm(T h)_Y<=2M$。由线性性，
+$
+  r/2 norm(T x)_Y<=2M,
+$
+即
+$
+  norm(T x)_Y<=frac(4M, r).
+$
+
+由于 $x$ 是任意单位向量，得到
+$
+  norm(T)
+  =sup_(norm(x)=1) norm(T x)_Y
+  <=frac(4M, r).
+$
+
+这里右端与 $T$ 无关，因此
+$
+  sup_(T in cal(T)) norm(T)<=frac(4M, r)<infinity.
+$
+
+故 Banach-Steinhaus 定理得证。
+
+
+#html.hr()
