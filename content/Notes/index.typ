@@ -46,6 +46,15 @@
   title: [开发日志5],
 )
 
+#tufted.blog-entry(
+  date: datetime(year: 2026, month: 11, day: 3),
+  path: "DarkForest/世界历史/",
+  title: [DarkForest 的世界历史的数据库设计],
+)
+
+
+
+
 = 2026
 
 #tufted.blog-entry(
