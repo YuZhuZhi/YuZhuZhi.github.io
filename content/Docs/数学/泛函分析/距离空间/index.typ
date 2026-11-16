@@ -226,7 +226,75 @@ $
 
 典型距离空间 $bb(R)^(n), C[a,b]$ 都是可分的。
 
-#html.hr()
+#line()
 
 = 二、距离空间的完备性
 
+== 1. Cauchy 列与完备性
+
+不妨首先复习何为 Cauchy 列。
+#tufted.definition[Cauchy 列][
+  设 ${x_(n)}$ 是距离空间 $(X, d)$ 中的点列。若对任意 $epsilon > 0$，存在 $N in bb{N}$，当 $m, n > N$ 时有 $d(x_(m), x_(n)) < epsilon$，则称 ${x_(n)}$ 是一个*Cauchy 列*#footnote[也称*基本列*。]。
+]
+
+根据 Cauchy 列即可定义完备性。
+#tufted.definition[完备性][
+  若距离空间 $(X, d)$ 中任意 Cauchy 列都收敛，则称 $(X, d)$ 是*完备的*。
+]
+通俗地说，完备性的关键在于收敛点是否在空间内部。也就是说，Cauchy 列的极限存在不是判定完备性的关键条件，而是该极限是否在空间中。$bb(R)^(n), C[a,b], l^(infinity)$ 都是完备空间。
+
+#tufted.corollary[][
+  + 距离空间中#footnote[注意，不要求完备。]，任意收敛点列是 Cauchy 列；
+  + 完备距离空间的任一闭子空间仍是完备的。
+]
+
+== 2. 闭球套定理
+
+只有在完备距离空间中，闭球套定理及其逆命题才成立：
+#tufted.theorem[闭球套定理][
+  设 $X$ 是完备的距离空间，$close(B)_(n) = close(B)(x_(n), r_(n)) (n=1,2,...)$ 是 $X$ 中的一列闭球套：
+  $
+    close(B)_(1) supset close(B)_(2) supset ... supset close(B)_(n) supset ...
+  $
+  且半径 $r_(n) -> 0 (n -> infinity)$，则存在唯一的点 $x in inter.big_(n=1)^(infinity) close(B)_(n)$。
+]
+
+== 3. Baire 纲定理
+
+#tufted.definition[疏集][
+  设 $E$ 是距离空间 $X$ 中的点集，如果 $E$ 不在 $X$ 中任何开集中稠密，则称 $E$ 是*疏集*。
+]
+
+#tufted.definition[第一纲集][
+  如果一集可表示为可数个疏集的并集，则称为第一纲集；否则称为第二纲集。
+]
+
+#tufted.theorem[Baire 纲定理][
+  完备距离空间是第二纲集。
+]
+
+== 4. 完备化
+
+#tufted.theorem[完备化][
+  对于每一距离空间 $(X, d)$，必存在一个完备的距离空间 $(tilde(X), tilde(d))$，使得 $(X, d)$ 与 $(tilde(X), tilde(d))$ 的一个稠密子空间等距。且在等距意义下，这样的空间 $(tilde(X), tilde(d))$ 是唯一的。
+]
+
+#line()
+
+= 三、压缩映射原理
+
+#tufted.theorem[压缩映射原理][
+  设 $(X, d)$ 是完备的距离空间，$T: X -> X$，并且对任意 $x, y in X$，不等式
+  $
+    d(T(x), T(y)) <= theta d(x, y)
+  $
+  成立，其中 $0 <= theta < 1$。则存在唯一的 $overline(x) in X$，使得 $T(overline(x)) = overline(x)$。
+]
+
+#tufted.corollary[压缩映射原理的推广][
+  设 $(X, d)$ 是完备的距离空间，$T: X -> X$，如果存在自然数 $n_(0)$，是的对所有 $x,y in X$，
+  $
+    d(T^(n_(0))(x), T^(n_(0))(y)) <= theta d(x, y),
+  $
+  其中 $0 <= theta < 1$，则 $T$ 有唯一的不动点。
+]

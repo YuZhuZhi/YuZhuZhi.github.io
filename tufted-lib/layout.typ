@@ -2,7 +2,12 @@
 
 #let margin-note(content) = context {
   if target() == "html" {
-    html.span(class: "marginnote", content)
+    html.elem(
+      "span",
+      attrs: (class: "sidenote-anchor", aria-hidden: "true"),
+      "\u{2060}",
+    )
+    html.span(class: "marginnote sidenote-manual", role: "note", content)
   } else {
     block(
       width: 100%,

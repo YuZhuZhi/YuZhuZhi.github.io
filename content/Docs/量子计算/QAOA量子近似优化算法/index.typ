@@ -3,6 +3,7 @@
 
 #import "../../index.typ": template, tufted
 #show: template.with(
+    margin-citations: true,
     title: "量子计算（八）——QAOA量子近似优化算法",
     description: "量子近似优化算法（Quantum Approximate Optimization Algorithm，QAOA）是一种混合量子–经典架构的变分算法，即用经典优化器迭代训练一个含参量子线路，主要用于求解组合优化问题。所谓组合优化问题，典型的如旅行商问题、背包问题等，是在有限且离散的解空间中寻找最优解的优化问题，这一解空间会随着问题规模指数增长，因此一般是NP-hard的。",
 )

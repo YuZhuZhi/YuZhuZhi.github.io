@@ -49,28 +49,60 @@
 	function buildToc(headings) {
 		const nav = document.createElement("nav");
 		nav.className = "toc-sidebar";
+		nav.id = "toc-sidebar";
 		nav.setAttribute("aria-label", "文章目录");
 
+		const toggle = document.createElement("button");
+		toggle.className = "toc-toggle";
+		toggle.type = "button";
+		toggle.setAttribute("aria-label", "文章目录");
+		toggle.setAttribute("aria-controls", nav.id);
 		const list = document.createElement("ol");
 		const usedIds = new Set();
+		const entriesById = new Map();
 
 		headings.forEach((heading, index) => {
 			const id = ensureHeadingId(heading, index, usedIds);
 			const item = document.createElement("li");
 			const link = document.createElement("a");
+			const indicator = document.createElement("span");
 
 			const level = heading.tagName === "H2" ? 1 : 2;
 			item.classList.add(`toc-${heading.tagName.toLowerCase()}`);
 			item.classList.add(`toc-level-${level}`);
 			link.href = `#${id}`;
 			link.textContent = heading.textContent.trim();
+			indicator.className = "toc-toggle-line";
+			indicator.classList.toggle("is-indented", level === 2);
+			indicator.setAttribute("aria-hidden", "true");
 
 			item.appendChild(link);
 			list.appendChild(item);
+			toggle.appendChild(indicator);
+			entriesById.set(id, { link, indicator });
 		});
 
 		nav.appendChild(list);
-		return nav;
+		return { nav, toggle, entriesById };
+	}
+
+	function bindToggle(toggle, nav) {
+		function setOpen(open) {
+			nav.classList.toggle("is-open", open);
+			toggle.setAttribute("aria-expanded", String(open));
+			nav.inert = !open;
+		}
+
+		setOpen(true);
+		toggle.addEventListener("click", () => {
+			setOpen(!nav.classList.contains("is-open"));
+		});
+		nav.addEventListener("keydown", (event) => {
+			if (event.key === "Escape") {
+				setOpen(false);
+				toggle.focus();
+			}
+		});
 	}
 
 	function bindSmoothScroll(nav) {
@@ -91,17 +123,17 @@
 		});
 	}
 
-	function bindScrollSpy(nav, headings) {
-		const linksById = new Map(
-			Array.from(nav.querySelectorAll("a")).map((link) => [
-				link.hash.slice(1),
-				link,
-			]),
-		);
+	function bindScrollSpy(entriesById, headings) {
+		let activeEntry;
 
 		function setActive(id) {
-			nav.querySelector("a.is-active")?.classList.remove("is-active");
-			linksById.get(id)?.classList.add("is-active");
+			activeEntry?.link.classList.remove("is-active");
+			activeEntry?.link.removeAttribute("aria-current");
+			activeEntry?.indicator.classList.remove("is-active");
+			activeEntry = entriesById.get(id);
+			activeEntry.link.classList.add("is-active");
+			activeEntry.link.setAttribute("aria-current", "location");
+			activeEntry.indicator.classList.add("is-active");
 		}
 
 		setActive(headings[0].id);
@@ -144,10 +176,11 @@
 			return;
 		}
 
-		const nav = buildToc(headings);
-		document.body.insertBefore(nav, document.querySelector("article"));
+		const { nav, toggle, entriesById } = buildToc(headings);
+		bindToggle(toggle, nav);
+		document.querySelector("article").before(toggle, nav);
 		bindSmoothScroll(nav);
-		bindScrollSpy(nav, headings);
+		bindScrollSpy(entriesById, headings);
 	}
 
 	if (document.readyState === "loading") {

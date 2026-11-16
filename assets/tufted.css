@@ -447,6 +447,18 @@ div[style*="border-inline-start"] p {
 	width: 100%;
 }
 
+div[style*="border-inline-start"] > figure.math-block {
+	width: 100%;
+	max-width: 100%;
+	font-size: 1em;
+}
+
+article hr {
+	border: 0;
+	border-top: 1px solid var(--theme-table-border, #ccc);
+	margin: 1.5rem 0;
+}
+
 div[style*="border-inline-start"] .footnote-ref,
 div[style*="border-inline-start"] .marginnote,
 div[style*="border-inline-start"] .footnote-ref a {
@@ -465,9 +477,23 @@ table {
 	line-height: 1.2;
 }
 
-/* Naked tables behave like the main text column */
-section > table {
+.table-scroll {
+	box-sizing: border-box;
+	width: fit-content;
+	max-width: 100%;
+	overflow-x: auto;
+	margin: 1.5em auto;
+}
+
+.table-scroll > table {
 	width: auto;
+	max-width: none;
+	margin: 0;
+}
+
+/* Standalone tables stay inside the main text column. */
+section > .table-scroll {
+	max-width: 55%;
 	position: relative;
 	left: 27.5%;
 	transform: translateX(-50%);
@@ -503,8 +529,9 @@ table tbody tr:hover {
 		font-size: 1.2rem;
 	}
 
-	/* Reset naked table positioning on mobile */
-	section > table {
+	/* Reset standalone table positioning on mobile */
+	section > .table-scroll {
+		max-width: 100%;
 		left: 0;
 		transform: none;
 		margin: 1.5em auto;
@@ -548,8 +575,9 @@ RESPONSIVE LAYOUT
 		display: block;
 	}
 
-	/* Footnote margin notes collapse by default */
-	.footnote-ref + .marginnote {
+	/* Footnotes and citation notes collapse by default. */
+	.footnote-ref + .marginnote,
+	.sidenote-cite:not(.is-expanded) {
 		display: none;
 	}
 
@@ -623,11 +651,6 @@ RESPONSIVE LAYOUT
 		width: 100%;
 	}
 
-
-	/* Blog index rows take full width on mobile */
-	.blog-entry {
-		width: 100%;
-	}
 
 	.article-byline {
 		width: 100%;
@@ -716,8 +739,44 @@ sup.footnote-ref {
 }
 
 @media (min-width: 761px) {
+	.sidenote-anchor {
+		display: none;
+	}
+
+	p.sidenote-only {
+		display: contents;
+	}
+
 	sup.marginnote-ref {
 		display: none;
+	}
+
+	article > section {
+		--sidenote-content-width: 0.55;
+		--sidenote-column-start: 0.605;
+		--sidenote-column-width: 0.275;
+		container-type: inline-size;
+	}
+
+	article > section .marginnote:where(:not(.blog-entry *)) {
+		inline-size: calc(100cqi * var(--sidenote-column-width));
+		margin-inline-end: calc(
+			100cqi *
+			(
+				var(--sidenote-content-width) -
+				var(--sidenote-column-start) -
+				var(--sidenote-column-width)
+			)
+		);
+	}
+
+	/* Keep nested notes in flow and notes inside scrollable tables visible. */
+	article > section :is(.marginnote, .table-scroll) .marginnote {
+		display: block;
+		float: none;
+		inline-size: auto;
+		min-inline-size: 0;
+		margin: 0.5em 0;
 	}
 }
 
@@ -801,6 +860,12 @@ BLOG INDEX
 	white-space: nowrap;
 }
 
+@media (max-width: 760px) {
+	.blog-entry {
+		width: 100%;
+	}
+}
+
 /*******************************************************************************
 TABLE OF CONTENTS
 *******************************************************************************/
@@ -852,9 +917,62 @@ TABLE OF CONTENTS
 	outline: none;
 }
 
+.toc-sidebar a.is-active {
+	font-weight: 700;
+}
+
+.toc-toggle {
+	position: fixed;
+	top: 7rem;
+	left: 1%;
+	z-index: 11;
+	display: none;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 0.4rem;
+	max-height: min(24rem, 60vh);
+	overflow-y: auto;
+	padding: 0.55rem;
+	border: 0;
+	border-radius: 0.55rem;
+	background: var(--theme-bg, #fffff8);
+	color: var(--theme-copy-btn-text, #666);
+	cursor: pointer;
+}
+
+.toc-toggle:focus-visible {
+	outline: 2px solid currentColor;
+	outline-offset: 2px;
+}
+
+.toc-toggle-line {
+	width: 1.35rem;
+	height: 2px;
+	flex: none;
+	background: currentColor;
+	opacity: 0.4;
+}
+
+.toc-toggle-line.is-indented {
+	width: 0.85rem;
+}
+
+.toc-toggle-line.is-active {
+	background: var(--theme-heading, #111);
+	opacity: 1;
+}
+
+.toc-toggle[aria-expanded="true"] .toc-toggle-line:not(.is-active) {
+	display: none;
+}
+
 @media (min-width: 1200px) {
-	.toc-sidebar {
+	.toc-sidebar.is-open {
 		display: block;
+	}
+
+	.toc-toggle {
+		display: flex;
 	}
 }
 

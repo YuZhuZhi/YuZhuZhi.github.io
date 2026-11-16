@@ -40,6 +40,9 @@
   css: ("/assets/custom.css",),
   js-scripts: (),
 
+  // Show complete author-date bibliography entries beside their first citation.
+  margin-citations: false,
+
   content,
 ) = {
   // Apply styling
@@ -49,8 +52,15 @@
   show: template-figures
   show: template-links
   show: template-byline.with(author: author, date: date, extra-info: extra-info)
+  show line: it => if target() == "html" { html.hr() } else { it }
 
   set text(lang: lang)
+  set raw(syntaxes: (
+    "custom-syntaxes/Just.sublime-syntax",
+    "custom-syntaxes/Mermaid.sublime-syntax",
+    "custom-syntaxes/JSON5.sublime-syntax",
+    "custom-syntaxes/JSONC.sublime-syntax",
+  ))
 
   html.html(
     lang: lang,
@@ -73,7 +83,7 @@
         // load CSS
         let base-css = (
           "https://cdnjs.cloudflare.com/ajax/libs/tufte-css/1.8.0/tufte.min.css",
-          "/assets/tufted.css?v=20261015-3",
+          "/assets/tufted.css?v=20261015-4",
           "/assets/theme.css",
         )
         for (css-link) in (base-css + css).dedup() {
@@ -86,13 +96,18 @@
           "/assets/format-headings.js?v=20261029-1",
           "/assets/theme-toggle.js",
           "/assets/marginnote-toggle.js",
-          "/assets/toc.js?v=20260924-1",
+          "/assets/toc.js?v=20260924-2",
           "/assets/back-to-top.js",
           "/assets/math-copy.js",
         )
         for (js-src) in (base-js + js-scripts).dedup() {
           html.script(src: js-src)
         }
+        // Insert citation notes before the layout module collects them.
+        if margin-citations {
+          html.script(type: "module", src: "/assets/cite-margin.js")
+        }
+        html.script(type: "module", src: "/assets/sidenote-layout.js")
       })
 
       // Body

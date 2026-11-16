@@ -102,6 +102,8 @@
 
     = *泛函分析* #footnote[刘炳初. 泛函分析[M]. 3版. 北京: 科学出版社, 2015.]
       + #link("数学/泛函分析/距离空间")[距离空间]
+      + #link("数学/泛函分析/拓扑空间")[拓扑空间]
+      + #link("数学/泛函分析/赋范线性空间")[赋范线性空间]
   ]
 
   #html.elem("section", attrs: (class: "docs-tab-panel docs-tab-panel-physics"))[
