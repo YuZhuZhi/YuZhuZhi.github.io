@@ -288,8 +288,11 @@
 
 				group.querySelectorAll("ol, ul").forEach((list) => {
 					list.classList.add("docs-archive-list");
+					const isUnnumbered = list.tagName === "UL";
+					if (isUnnumbered) list.classList.add("is-unnumbered");
 					Array.from(list.children).forEach((item) => {
 						item.classList.add("docs-archive-item");
+						if (isUnnumbered) item.classList.add("is-unnumbered");
 
 						const link = item.querySelector("a");
 						if (

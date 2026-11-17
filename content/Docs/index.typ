@@ -151,7 +151,8 @@
 
   #html.elem("section", attrs: (class: "docs-tab-panel docs-tab-panel-essay"))[
     = 诗语词云
-      #link("杂文/临江仙/")[临江仙 · 乱心听江潮]
+      - #link("杂文/临江仙乱心听江潮/")[临江仙 · 乱心听江潮]
+      - #link("杂文/咏树/")[咏树]
   ]
 
 ]

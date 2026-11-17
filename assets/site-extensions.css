@@ -52,43 +52,43 @@ figure:has(> .tufted-problem) {
 .tufted-theorem {
 	--env-accent: #b91c1c;
 	--env-bg: color-mix(in srgb, var(--env-accent) 5%, var(--theme-bg, #fffff8));
-	font-family: KaiTi, STKaiti, "Kaiti SC", serif;
+	font-family: "Times New Roman", KaiTi, STKaiti, "Kaiti SC", serif;
 }
 
 .tufted-corollary {
 	--env-accent: #a21caf;
 	--env-bg: color-mix(in srgb, var(--env-accent) 5%, var(--theme-bg, #fffff8));
-	font-family: KaiTi, STKaiti, "Kaiti SC", serif;
+	font-family: "Times New Roman", KaiTi, STKaiti, "Kaiti SC", serif;
 }
 
 .tufted-definition {
 	--env-accent: #c2410c;
 	--env-bg: color-mix(in srgb, var(--env-accent) 5%, var(--theme-bg, #fffff8));
-	font-family: KaiTi, STKaiti, "Kaiti SC", serif;
+	font-family: "Times New Roman", KaiTi, STKaiti, "Kaiti SC", serif;
 }
 
 .tufted-lemma {
 	--env-accent: #0f766e;
 	--env-bg: color-mix(in srgb, var(--env-accent) 5%, var(--theme-bg, #fffff8));
-	font-family: KaiTi, STKaiti, "Kaiti SC", serif;
+	font-family: "Times New Roman", KaiTi, STKaiti, "Kaiti SC", serif;
 }
 
 .tufted-proposition {
 	--env-accent: #2563eb;
 	--env-bg: color-mix(in srgb, var(--env-accent) 5%, var(--theme-bg, #fffff8));
-	font-family: KaiTi, STKaiti, "Kaiti SC", serif;
+	font-family: "Times New Roman", KaiTi, STKaiti, "Kaiti SC", serif;
 }
 
 .tufted-problem {
 	--env-accent: #7c3aed;
 	--env-bg: color-mix(in srgb, var(--env-accent) 5%, var(--theme-bg, #fffff8));
-	font-family: KaiTi, STKaiti, "Kaiti SC", serif;
+	font-family: "Times New Roman", KaiTi, STKaiti, "Kaiti SC", serif;
 }
 
 .tufted-remark {
 	--env-accent: #118d8d;
 	--env-bg: color-mix(in srgb, var(--env-accent) 5%, var(--theme-bg, #fffff8));
-	font-family: inherit;
+	font-family: "Times New Roman", "Noto Serif SC", serif;
 }
 
 .tufted-proof {
@@ -96,7 +96,7 @@ figure:has(> .tufted-problem) {
 	--env-bg: transparent;
 	border-inline-start-width: 0.2em;
 	padding-left: 1em;
-	font-family: inherit;
+	font-family: "Times New Roman", "Noto Serif SC", serif;
 }
 
 .tufted-theorem-heading,

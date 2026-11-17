@@ -23,9 +23,12 @@
 
     #body
   ]
-  if font != none {
-    content = text(font: font, content)
+  let fonts = if font == none {
+    ("Times New Roman", "Noto Serif SC")
+  } else {
+    ("Times New Roman", font, "Noto Serif SC")
   }
+  content = text(font: fonts, content)
   block(
     width: 100%,
     breakable: true,
