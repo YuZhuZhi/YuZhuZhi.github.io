@@ -101,7 +101,11 @@
           "/assets/math-copy.js",
         )
         for (js-src) in (base-js + js-scripts).dedup() {
-          html.script(src: js-src)
+          if js-src == "/assets/theme-toggle.js" {
+            html.script(src: js-src)
+          } else {
+            html.script(src: js-src, defer: true)
+          }
         }
         // Insert citation notes before the layout module collects them.
         if margin-citations {
