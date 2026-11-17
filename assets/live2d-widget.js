@@ -3,7 +3,7 @@
  */
 (() => {
 	const WIDGET_BASE = "/assets/vendor/live2d-widget/";
-	const TIPS_PATH = "/assets/live2d-tips.json?v=7";
+	const TIPS_PATH = "/assets/live2d-tips.json";
 	const LINK_MESSAGE_DELAY = 120;
 	const MOTION_INTERVAL = 30000;
 	const MOTION_CHOICES = [
@@ -432,7 +432,7 @@
 		bindModelChanges();
 
 		try {
-			await loadModule(`${WIDGET_BASE}waifu-tips.js?v=8`);
+			await loadModule(`${WIDGET_BASE}waifu-tips.js`);
 			if (typeof window.initWidget === "function") startWidget();
 		} catch (error) {
 			console.warn("Live2D widget loader failed.", error);

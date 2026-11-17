@@ -415,13 +415,13 @@
     {
       "message": "已经切换为 Albion。",
       "paths": [
-        "/assets/live2d-models/Albion/albion%20l2d.model3.json?v=3"
+        "/assets/live2d-models/Albion/albion%20l2d.model3.json"
       ]
     },
     {
       "message": "已经切换为 Vert Classic。",
       "paths": [
-        "/assets/live2d-models/HyperdimensionNeptunia/vert_classic/index.json?v=1"
+        "/assets/live2d-models/HyperdimensionNeptunia/vert_classic/index.json"
       ]
     }
   ]

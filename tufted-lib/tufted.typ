@@ -83,7 +83,7 @@
         // load CSS
         let base-css = (
           "https://cdnjs.cloudflare.com/ajax/libs/tufte-css/1.8.0/tufte.min.css",
-          "/assets/tufted.css?v=20261015-4",
+          "/assets/tufted.css",
           "/assets/theme.css",
         )
         for (css-link) in (base-css + css).dedup() {
@@ -93,10 +93,10 @@
         // load JS scripts
         let base-js = (
           "/assets/code-blocks.js",
-          "/assets/format-headings.js?v=20261029-1",
+          "/assets/format-headings.js",
           "/assets/theme-toggle.js",
           "/assets/marginnote-toggle.js",
-          "/assets/toc.js?v=20260924-2",
+          "/assets/toc.js",
           "/assets/back-to-top.js",
           "/assets/math-copy.js",
         )
